@@ -277,15 +277,6 @@
         "Pedreguer"
       ],
       "priority": 2
-    },
-    {
-      "slug": "gandia",
-      "es": "Gandia",
-      "en": "Gandia",
-      "aliases": [
-        "Gandia"
-      ],
-      "priority": 3
     }
   ]
 }
