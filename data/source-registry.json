@@ -62,5 +62,21 @@
     "type": "discovery",
     "checkHours": false,
     "notes": "Used only to discover additional locations and coordinates. Opening hours must be verified from first-party or other authoritative sources before being presented as confirmed."
+  },
+  {
+    "id": "diputacion-open-data",
+    "name": "Datos Abiertos Diputación de Alicante",
+    "url": "https://datosabiertos.diputacionalicante.es/",
+    "type": "official-open-data",
+    "checkHours": false,
+    "notes": "Official provincial open-data catalogue; candidate source for municipal/context datasets and future location enrichment."
+  },
+  {
+    "id": "diputacion-municipalities",
+    "name": "Diputación de Alicante — Los Municipios",
+    "url": "https://www.diputacionalicante.es/los-municipios/",
+    "type": "official-reference",
+    "checkHours": false,
+    "notes": "Official municipality index used for labels, aliases and municipality-aware navigation."
   }
 ]
