@@ -54,5 +54,13 @@
     "url": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
     "type": "official-locator",
     "scope": "Repsol"
+  },
+  {
+    "id": "osm-discovery-alicante",
+    "name": "OpenStreetMap discovery (business locations)",
+    "url": "https://www.openstreetmap.org/",
+    "type": "discovery",
+    "checkHours": false,
+    "notes": "Used only to discover additional locations and coordinates. Opening hours must be verified from first-party or other authoritative sources before being presented as confirmed."
   }
 ]
