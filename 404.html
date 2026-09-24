@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Today Alicante</title>
+</head>
+<body>
+<script>
+(function () {
+  var base = '/open-today-alicante';
+  var path = window.location.pathname;
+  var logical = '/';
+  if (path === base || path === base + '/') {
+    logical = '/';
+  } else if (path.indexOf(base + '/') === 0) {
+    logical = path.slice(base.length) || '/';
+  }
+  var params = new URLSearchParams(window.location.search);
+  params.set('route', logical);
+  window.location.replace(base + '/?' + params.toString());
+}());
+</script>
+<noscript>Open Today Alicante. Please enable JavaScript.</noscript>
+</body>
+</html>
