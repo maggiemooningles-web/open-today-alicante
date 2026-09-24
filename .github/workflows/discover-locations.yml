@@ -4,19 +4,18 @@ on:
   schedule:
     - cron: '31 3 * * 1'
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - scripts/ingest-osm.mjs
-      - data/source-registry.json
 
 permissions:
   contents: write
 
+concurrency:
+  group: location-discovery
+  cancel-in-progress: true
+
 jobs:
   discover:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,11 +28,14 @@ jobs:
       - name: Discover additional locations
         run: node scripts/ingest-osm.mjs
 
+      - name: Regenerate sitemap
+        run: node scripts/generate-sitemap.mjs
+
       - name: Commit discovered locations
         run: |
           git config user.name "Open Today Alicante Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/stores.json data/update-report.json
+          git add data/stores.json data/update-report.json sitemap.xml
           git diff --cached --quiet && exit 0
           git commit -m "chore(data): discover additional locations"
           git push
