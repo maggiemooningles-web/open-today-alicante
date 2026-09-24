@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "update:data": "node scripts/update-data.mjs"
+    "update:data": "node scripts/update-data.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "discover:locations": "node scripts/ingest-osm.mjs"
   }
 }
