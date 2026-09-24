@@ -1,73 +1,16 @@
 {
-  "version": "10.1.0",
-  "checkedAt": "2026-09-24T12:57:15.717Z",
-  "status": "sources-needing-review",
-  "automaticMode": "source-health",
-  "note": "The scheduled job verifies first-party source availability. Store hours are not overwritten blindly; changes should be promoted only after a structured source match or human verification.",
-  "sources": [
-    {
-      "id": "alicante-commerce-calendar",
-      "name": "Ayuntamiento de Alicante — Horarios apertura comercial",
-      "url": "https://www.alicante.es/es/contenidos/horarios-apertura-comercial-alicante-2026",
-      "ok": true,
-      "status": 200,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "cofa-guardias",
-      "name": "Colegio Oficial de Farmacéuticos de Alicante — Guardias",
-      "url": "https://cofalicante.com/farmacias-de-guardia/",
-      "ok": true,
-      "status": 200,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "consum-alicante",
-      "name": "Consum — Alicante store locator",
-      "url": "https://www.consum.es/supermercados/alicante/",
-      "ok": true,
-      "status": 200,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "carrefour-alicante",
-      "name": "Carrefour — Alicante store locator",
-      "url": "https://www.carrefour.es/tiendas-carrefour/comunidad-valenciana/alicante/",
-      "ok": false,
-      "status": 403,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "lidl-locator",
-      "name": "Lidl — Store locator",
-      "url": "https://tiendas.lidl.es/",
-      "ok": false,
-      "status": 502,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "aldi-locator",
-      "name": "ALDI — Store locator",
-      "url": "https://www.aldi.es/supermercados/encuentra-tu-supermercado.html/l/m",
-      "ok": false,
-      "status": 410,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "dia-alicante",
-      "name": "DIA — Alicante store locator",
-      "url": "https://www.dia.es/tiendas/buscador-tiendas/alicante",
-      "ok": false,
-      "status": 403,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    },
-    {
-      "id": "repsol-alicante",
-      "name": "Repsol — Alicante service stations",
-      "url": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
-      "ok": true,
-      "status": 200,
-      "checkedAt": "2026-09-24T12:57:15.717Z"
-    }
+  "version": "11.0.0",
+  "checkedAt": "2026-09-24T13:41:54.819Z",
+  "automaticMode": "osm-discovery-plus-source-health",
+  "dataset": {
+    "before": 255,
+    "discovered": 0,
+    "after": 255,
+    "source": "OpenStreetMap"
+  },
+  "notes": [
+    "OSM records are discovery-only and never treated as hours-verified.",
+    "Existing first-party or manually verified records are preserved.",
+    "Opening hours must be promoted from a checkable source before a place can appear in Open Now results."
   ]
 }
