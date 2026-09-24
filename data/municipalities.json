@@ -1,0 +1,291 @@
+{
+  "version": "1.0.0",
+  "source": "Diputación de Alicante — Los Municipios",
+  "sourceUrl": "https://www.diputacionalicante.es/los-municipios/",
+  "note": "Priority municipality labels and aliases. The UI also discovers additional towns directly from the live dataset.",
+  "municipalities": [
+    {
+      "slug": "alicante",
+      "es": "Alicante / Alacant",
+      "en": "Alicante / Alacant",
+      "aliases": [
+        "Alicante",
+        "Alacant"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "elche",
+      "es": "Elche / Elx",
+      "en": "Elche / Elx",
+      "aliases": [
+        "Elche",
+        "Elx"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "benidorm",
+      "es": "Benidorm",
+      "en": "Benidorm",
+      "aliases": [
+        "Benidorm"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "torrevieja",
+      "es": "Torrevieja",
+      "en": "Torrevieja",
+      "aliases": [
+        "Torrevieja"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "orihuela",
+      "es": "Orihuela",
+      "en": "Orihuela",
+      "aliases": [
+        "Orihuela"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "denia",
+      "es": "Dénia",
+      "en": "Dénia",
+      "aliases": [
+        "Dénia",
+        "Denia"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "javea",
+      "es": "Jávea / Xàbia",
+      "en": "Jávea / Xàbia",
+      "aliases": [
+        "Jávea",
+        "Xàbia",
+        "Javea",
+        "Xabia"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "altea",
+      "es": "Altea",
+      "en": "Altea",
+      "aliases": [
+        "Altea"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "calp",
+      "es": "Calp / Calpe",
+      "en": "Calp / Calpe",
+      "aliases": [
+        "Calp",
+        "Calpe"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "santa-pola",
+      "es": "Santa Pola",
+      "en": "Santa Pola",
+      "aliases": [
+        "Santa Pola"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "guardamar-del-segura",
+      "es": "Guardamar del Segura",
+      "en": "Guardamar del Segura",
+      "aliases": [
+        "Guardamar del Segura",
+        "Guardamar"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "pilar-de-la-horadada",
+      "es": "Pilar de la Horadada",
+      "en": "Pilar de la Horadada",
+      "aliases": [
+        "Pilar de la Horadada"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "san-vicente-del-raspeig",
+      "es": "San Vicente del Raspeig / Sant Vicent del Raspeig",
+      "en": "San Vicente del Raspeig / Sant Vicent del Raspeig",
+      "aliases": [
+        "San Vicente del Raspeig",
+        "Sant Vicent del Raspeig"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "mutxamel",
+      "es": "Mutxamel",
+      "en": "Mutxamel",
+      "aliases": [
+        "Mutxamel"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "sant-joan-dalacant",
+      "es": "Sant Joan d'Alacant",
+      "en": "Sant Joan d'Alacant",
+      "aliases": [
+        "Sant Joan d'Alacant",
+        "San Juan de Alicante"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "el-campello",
+      "es": "El Campello",
+      "en": "El Campello",
+      "aliases": [
+        "El Campello",
+        "Campello",
+        "Muchavista"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "finestrat",
+      "es": "Finestrat",
+      "en": "Finestrat",
+      "aliases": [
+        "Finestrat"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "villena",
+      "es": "Villena",
+      "en": "Villena",
+      "aliases": [
+        "Villena"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "elda",
+      "es": "Elda",
+      "en": "Elda",
+      "aliases": [
+        "Elda"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "petrer",
+      "es": "Petrer",
+      "en": "Petrer",
+      "aliases": [
+        "Petrer"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "alcoy",
+      "es": "Alcoy / Alcoi",
+      "en": "Alcoy / Alcoi",
+      "aliases": [
+        "Alcoy",
+        "Alcoi"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "ibi",
+      "es": "Ibi",
+      "en": "Ibi",
+      "aliases": [
+        "Ibi"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "crevillent",
+      "es": "Crevillent",
+      "en": "Crevillent",
+      "aliases": [
+        "Crevillent"
+      ],
+      "priority": 1
+    },
+    {
+      "slug": "castalla",
+      "es": "Castalla",
+      "en": "Castalla",
+      "aliases": [
+        "Castalla"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "novelda",
+      "es": "Novelda",
+      "en": "Novelda",
+      "aliases": [
+        "Novelda"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "aspe",
+      "es": "Aspe",
+      "en": "Aspe",
+      "aliases": [
+        "Aspe"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "monforte-del-cid",
+      "es": "Monforte del Cid",
+      "en": "Monforte del Cid",
+      "aliases": [
+        "Monforte del Cid"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "ondara",
+      "es": "Ondara",
+      "en": "Ondara",
+      "aliases": [
+        "Ondara"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "pedreguer",
+      "es": "Pedreguer",
+      "en": "Pedreguer",
+      "aliases": [
+        "Pedreguer"
+      ],
+      "priority": 2
+    },
+    {
+      "slug": "gandia",
+      "es": "Gandia",
+      "en": "Gandia",
+      "aliases": [
+        "Gandia"
+      ],
+      "priority": 3
+    }
+  ]
+}
