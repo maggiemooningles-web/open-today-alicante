@@ -19634,6 +19634,7 @@ body { background:var(--ota-cream) !important; }
         function verificationLabel(store) {
             const type = store.verification?.sourceType || store.sourceType;
             if (type === 'official-locator') return currentLang === 'es' ? 'Fuente oficial' : 'Official source';
+            if (type === 'official-open-data') return currentLang === 'es' ? 'Datos abiertos oficiales' : 'Official open data';
             if (type === 'business-directory') return currentLang === 'es' ? 'Directorio actual' : 'Current directory';
             if (type === 'osm-discovery') return currentLang === 'es' ? 'Descubierto en OpenStreetMap' : 'Discovered on OpenStreetMap';
             return currentLang === 'es' ? 'Fuente configurada' : 'Configured source';
@@ -19805,7 +19806,7 @@ body { background:var(--ota-cream) !important; }
             const hasReported = Boolean(localReport.status);
             const openReports = store.community.openToday || 0;
             const closedReports = store.community.closedToday || 0;
-            const verificationState = store.verification?.verifiedAt ? 'configured-source' : 'unverified';
+            const verificationState = store.verification?.sourceType || (store.verification?.verifiedAt ? 'configured-source' : 'unverified');
             const verificationAgeDays = store.verification?.verifiedAt ? Math.floor((Date.now() - new Date(store.verification.verifiedAt + 'T00:00:00').getTime()) / 86400000) : null;
             const isVerificationStale = Number.isFinite(verificationAgeDays) && verificationAgeDays > 30;
 
@@ -19928,7 +19929,7 @@ body { background:var(--ota-cream) !important; }
                                 <div class="flex items-start space-x-2 text-xs text-slate-400 pt-3 border-t border-slate-700">
                                     <i class="fa-solid fa-building-columns text-slate-500 mt-0.5"></i>
                                     <div>
-                                        <div><strong>${store.verification?.status === 'official-locator' ? (currentLang === 'es' ? 'Fuente oficial' : 'Official source') : (store.verification?.status === 'business-directory' ? (currentLang === 'es' ? 'Directorio comercial actual' : 'Current business directory') : (store.verification?.status === 'current-listing' ? (currentLang === 'es' ? 'Fuente actual comprobada' : 'Current checked source') : I18N[currentLang].sourceUnverified))}:</strong> ${escapeHtml(store.verification?.sourceName || store.officialSource || '—')}</div>
+                                        <div><strong>${store.verification?.status === 'official-locator' ? (currentLang === 'es' ? 'Fuente oficial' : 'Official source') : (store.verification?.status === 'official-open-data' ? (currentLang === 'es' ? 'Datos abiertos oficiales' : 'Official open data') : (store.verification?.status === 'business-directory' ? (currentLang === 'es' ? 'Directorio comercial actual' : 'Current business directory') : (store.verification?.status === 'current-listing' ? (currentLang === 'es' ? 'Fuente actual comprobada' : 'Current checked source') : I18N[currentLang].sourceUnverified)))}:</strong> ${escapeHtml(store.verification?.sourceName || store.officialSource || '—')}</div>
                                         <div class="mt-1 ${isVerificationStale ? 'text-amber-400' : 'text-slate-500'}">${isVerificationStale ? I18N[currentLang].staleVerification + ' · ' : ''}${I18N[currentLang].lastVerifiedLabel} ${escapeHtml(store.verification?.verifiedAt || '—')}</div>
                                     </div>
                                 </div>
