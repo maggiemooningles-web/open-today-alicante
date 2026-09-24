@@ -3,19 +3,23 @@ import fs from 'node:fs/promises';
 const DATA_PATH = new URL('../data/stores.json', import.meta.url);
 const REPORT_PATH = new URL('../data/update-report.json', import.meta.url);
 
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
-const USER_AGENT = 'OpenTodayAlicante/1.2 (+https://github.com/maggiemooningles-web/open-today-alicante)';
+const OVERPASS_ENDPOINTS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.private.coffee/api/interpreter'
+];
+const USER_AGENT = 'OpenTodayAlicante/1.3 (+https://github.com/maggiemooningles-web/open-today-alicante)';
 
-const SHOP_TAGS = [
-  'supermarket','convenience','department_store','mall','bakery','butcher',
-  'greengrocer','seafood','deli','hardware','doityourself','garden_centre',
-  'electronics','computer','mobile_phone','pet','clothes','shoes','beauty',
-  'hairdresser','cosmetics','optician','jewelry','furniture','sports','bicycle',
-  'car','car_parts','motorcycle','laundry','florist','books','stationery','toys',
-  'gift','travel_agency','copyshop','photo','outdoor','fabric','tailor','variety_store'
+const SHOP_GROUPS = [
+  ['supermarket','convenience','department_store','mall','bakery','butcher','greengrocer','seafood','deli'],
+  ['hardware','doityourself','garden_centre','electronics','computer','mobile_phone','pet','car_parts','bicycle','motorcycle'],
+  ['clothes','shoes','beauty','hairdresser','cosmetics','optician','jewelry','furniture','sports','outdoor'],
+  ['books','stationery','toys','gift','travel_agency','copyshop','photo','fabric','tailor','variety_store'],
+  ['car','laundry']
 ];
 
-const AMENITY_TAGS = ['pharmacy','fuel','veterinary','bank','atm','post_office','clinic','dentist'];
+const AMENITY_GROUPS = [
+  ['pharmacy','fuel','veterinary','bank','atm','post_office','clinic','dentist']
+];
 
 const CATEGORY_BY_TAG = {
   supermarket: 'supermarket',
@@ -49,10 +53,6 @@ function slugify(value = '') {
   return normalize(value).replace(/\s+/g, '-').slice(0, 80) || 'local';
 }
 
-function esc(value = '') {
-  return String(value).replace(/"/g, '&quot;');
-}
-
 function haversineKm(aLat, aLng, bLat, bLng) {
   const R = 6371;
   const p1 = aLat * Math.PI / 180;
@@ -74,31 +74,40 @@ function townFromTags(tags = {}) {
   return tags['addr:city'] || tags['addr:town'] || tags['addr:village'] || tags['addr:municipality'] || 'Alicante';
 }
 
-function buildQuery() {
-  const shops = SHOP_TAGS.join('|');
-  const amenities = AMENITY_TAGS.join('|');
-  return `[out:json][timeout:180];
-// Province of Alicante OSM relation 349012 -> Overpass area 3600349012
+function buildQuery(kind, tags) {
+  const values = tags.join('|');
+  const key = kind === 'shop' ? 'shop' : 'amenity';
+  return `[out:json][timeout:90][maxsize:536870912];
 area(3600349012)->.province;
-(
-  nwr["shop"~"^(${shops})$"](area.province);
-  nwr["amenity"~"^(${amenities})$"](area.province);
-);
+nwr["${key}"~"^(${values})$"]["name"](area.province);
 out center tags;`;
 }
 
-async function fetchOverpass() {
-  const response = await fetch(OVERPASS_URL, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'user-agent': USER_AGENT,
-      'accept': 'application/json'
-    },
-    body: 'data=' + encodeURIComponent(buildQuery())
-  });
-  if (!response.ok) throw new Error(`Overpass HTTP ${response.status}`);
-  return response.json();
+async function pause(ms) {
+  await new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchQuery(query) {
+  const errors = [];
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'user-agent': USER_AGENT,
+          'accept': 'application/json'
+        },
+        body: 'data=' + encodeURIComponent(query),
+        signal: AbortSignal.timeout(150000)
+      });
+      if (response.ok) return await response.json();
+      errors.push(`${endpoint} HTTP ${response.status}`);
+    } catch (error) {
+      errors.push(`${endpoint}: ${String(error)}`);
+    }
+  }
+  throw new Error(errors.join(' | '));
 }
 
 function elementPoint(el) {
@@ -109,16 +118,9 @@ function elementPoint(el) {
 
 async function main() {
   const current = JSON.parse(await fs.readFile(DATA_PATH, 'utf8'));
-  const osm = await fetchOverpass();
-  const elements = Array.isArray(osm.elements) ? osm.elements : [];
-
-  const existingByOsmId = new Set(
-    current.filter(x => x.osmId).map(x => x.osmId)
-  );
+  const existingByOsmId = new Set(current.filter(x => x.osmId).map(x => x.osmId));
   const existingSlugs = new Set(current.map(x => x.slug));
-  const nameAddressKeys = new Set(
-    current.map(x => `${normalize(x.name)}|${normalize(x.address)}`)
-  );
+  const nameAddressKeys = new Set(current.map(x => `${normalize(x.name)}|${normalize(x.address)}`));
   const groupedByName = new Map();
   for (const store of current) {
     const key = normalize(store.name);
@@ -128,105 +130,124 @@ async function main() {
   }
 
   const discovered = [];
-  const seenThisRun = new Set();
+  const errors = [];
+  const groups = [
+    ...SHOP_GROUPS.map(tags => ({ kind: 'shop', tags })),
+    ...AMENITY_GROUPS.map(tags => ({ kind: 'amenity', tags }))
+  ];
 
-  for (const el of elements) {
-    const tags = el.tags || {};
-    const name = tags.name || tags['name:es'] || tags['name:ca'] || tags['name:en'];
-    if (!name) continue;
+  for (const group of groups) {
+    try {
+      const payload = await fetchQuery(buildQuery(group.kind, group.tags));
+      const elements = Array.isArray(payload.elements) ? payload.elements : [];
 
-    const [lat, lng] = elementPoint(el);
-    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+      for (const el of elements) {
+        const tags = el.tags || {};
+        const name = tags.name || tags['name:es'] || tags['name:ca'] || tags['name:en'];
+        if (!name) continue;
 
-    const osmId = `osm:${el.type}:${el.id}`;
-    if (existingByOsmId.has(osmId) || seenThisRun.has(osmId)) continue;
-    seenThisRun.add(osmId);
+        const [lat, lng] = elementPoint(el);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
 
-    const rawTag = tags.shop || tags.amenity || '';
-    const category = CATEGORY_BY_TAG[rawTag] || GENERIC_CATEGORY;
-    const town = townFromTags(tags);
-    const address = addressFromTags(tags);
-    const key = `${normalize(name)}|${normalize(address)}`;
+        const osmId = `osm:${el.type}:${el.id}`;
+        if (existingByOsmId.has(osmId)) continue;
 
-    if (nameAddressKeys.has(key)) continue;
+        const rawTag = tags.shop || tags.amenity || '';
+        const category = CATEGORY_BY_TAG[rawTag] || GENERIC_CATEGORY;
+        const town = townFromTags(tags);
+        const address = addressFromTags(tags);
+        const key = `${normalize(name)}|${normalize(address)}`;
+        if (nameAddressKeys.has(key)) continue;
 
-    const sameName = groupedByName.get(normalize(name)) || [];
-    const nearExisting = sameName.some(s =>
-      Number.isFinite(s.lat) && Number.isFinite(s.lng) &&
-      haversineKm(lat, lng, s.lat, s.lng) < 0.08
-    );
-    if (nearExisting) continue;
+        const sameName = groupedByName.get(normalize(name)) || [];
+        const nearExisting = sameName.some(store =>
+          Number.isFinite(store.lat) && Number.isFinite(store.lng) &&
+          haversineKm(lat, lng, store.lat, store.lng) < 0.08
+        );
+        if (nearExisting) continue;
 
-    let slug = slugify(`${name}-${town}`);
-    if (existingSlugs.has(slug)) slug = `${slug}-osm-${el.id}`;
-    existingSlugs.add(slug);
+        let slug = slugify(`${name}-${town}`);
+        if (existingSlugs.has(slug)) slug = `${slug}-osm-${el.id}`;
+        existingSlugs.add(slug);
 
-    const store = {
-      id: `osm-${el.type}-${el.id}`,
-      osmId,
-      slug,
-      name,
-      chain: tags.brand || tags.operator || '',
-      town,
-      townSlug: slugify(town),
-      address,
-      lat,
-      lng,
-      category,
-      weekOpenHour: null,
-      weekCloseHour: null,
-      sunOpenHour: null,
-      sunCloseHour: null,
-      isSundayOpen: null,
-      holidayOpenNote: '',
-      phone: tags.phone || tags['contact:phone'] || '',
-      descriptionES: 'Local descubierto mediante OpenStreetMap. Horario pendiente de verificación.',
-      descriptionEN: 'Location discovered via OpenStreetMap. Opening hours pending verification.',
-      sourceType: 'osm-discovery',
-      sourceName: 'OpenStreetMap',
-      sourceUrl: `https://www.openstreetmap.org/${esc(el.type)}/${el.id}`,
-      officialSource: 'OpenStreetMap',
-      lastVerified: null,
-      hoursVerified: false,
-      dataScope: 'discovery',
-      discoveryStatus: 'unverified',
-      rawOpeningHours: tags.opening_hours || null,
-      community: { seedReports: 0, openToday: 0, closedToday: 0, updatedAt: null },
-      locationStatus: 'mapped',
-      hoursStatus: 'unknown',
-      verification: {
-        sourceName: 'OpenStreetMap',
-        sourceUrl: `https://www.openstreetmap.org/${el.type}/${el.id}`,
-        sourceType: 'osm-discovery',
-        verifiedAt: null,
-        status: 'discovered',
-        hoursVerified: false
-      },
-      weeklyHours: null
-    };
+        const sourceUrl = `https://www.openstreetmap.org/${el.type}/${el.id}`;
+        discovered.push({
+          id: `osm-${el.type}-${el.id}`,
+          osmId,
+          slug,
+          name,
+          chain: tags.brand || tags.operator || '',
+          town,
+          townSlug: slugify(town),
+          address,
+          lat,
+          lng,
+          category,
+          weekOpenHour: null,
+          weekCloseHour: null,
+          sunOpenHour: null,
+          sunCloseHour: null,
+          isSundayOpen: null,
+          holidayOpenNote: '',
+          phone: tags.phone || tags['contact:phone'] || '',
+          descriptionES: 'Local descubierto mediante OpenStreetMap. Horario pendiente de verificación.',
+          descriptionEN: 'Location discovered via OpenStreetMap. Opening hours pending verification.',
+          sourceType: 'osm-discovery',
+          sourceName: 'OpenStreetMap',
+          sourceUrl,
+          officialSource: 'OpenStreetMap',
+          lastVerified: null,
+          hoursVerified: false,
+          dataScope: 'discovery',
+          discoveryStatus: 'unverified',
+          rawOpeningHours: tags.opening_hours || null,
+          community: { seedReports: 0, openToday: 0, closedToday: 0, updatedAt: null },
+          locationStatus: 'mapped',
+          hoursStatus: 'unknown',
+          verification: {
+            sourceName: 'OpenStreetMap',
+            sourceUrl,
+            sourceType: 'osm-discovery',
+            verifiedAt: null,
+            status: 'discovered',
+            hoursVerified: false
+          },
+          weeklyHours: null
+        });
 
-    discovered.push(store);
-    nameAddressKeys.add(key);
+        nameAddressKeys.add(key);
+        existingByOsmId.add(osmId);
+        if (!groupedByName.has(normalize(name))) groupedByName.set(normalize(name), []);
+        groupedByName.get(normalize(name)).push(discovered[discovered.length - 1]);
+      }
+    } catch (error) {
+      errors.push({ kind: group.kind, tags: group.tags, error: String(error) });
+    }
+
+    await pause(1500);
   }
 
   const merged = current.concat(discovered);
-
   await fs.writeFile(DATA_PATH, JSON.stringify(merged, null, 2) + '\n');
 
   const report = {
-    version: '11.0.0',
+    version: '11.1.0',
     checkedAt: new Date().toISOString(),
     automaticMode: 'osm-discovery-plus-source-health',
     dataset: {
       before: current.length,
       discovered: discovered.length,
       after: merged.length,
-      source: 'OpenStreetMap'
+      source: 'OpenStreetMap',
+      groupsAttempted: groups.length,
+      groupsFailed: errors.length
     },
+    errors,
     notes: [
       'OSM records are discovery-only and never treated as hours-verified.',
       'Existing first-party or manually verified records are preserved.',
-      'Opening hours must be promoted from a checkable source before a place can appear in Open Now results.'
+      'Opening hours must be promoted from a checkable source before a place can appear in Open Now results.',
+      'Public Overpass services are queried conservatively and sequentially.'
     ]
   };
 
