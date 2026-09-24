@@ -1,0 +1,58 @@
+[
+  {
+    "id": "alicante-commerce-calendar",
+    "name": "Ayuntamiento de Alicante — Horarios apertura comercial",
+    "url": "https://www.alicante.es/es/contenidos/horarios-apertura-comercial-alicante-2026",
+    "type": "official-rules",
+    "scope": "Alicante commercial opening calendar"
+  },
+  {
+    "id": "cofa-guardias",
+    "name": "Colegio Oficial de Farmacéuticos de Alicante — Guardias",
+    "url": "https://cofalicante.com/farmacias-de-guardia/",
+    "type": "official-health",
+    "scope": "Duty pharmacies"
+  },
+  {
+    "id": "consum-alicante",
+    "name": "Consum — Alicante store locator",
+    "url": "https://www.consum.es/supermercados/alicante/",
+    "type": "official-locator",
+    "scope": "Consum / Charter"
+  },
+  {
+    "id": "carrefour-alicante",
+    "name": "Carrefour — Alicante store locator",
+    "url": "https://www.carrefour.es/tiendas-carrefour/comunidad-valenciana/alicante/",
+    "type": "official-locator",
+    "scope": "Carrefour / Express / Market"
+  },
+  {
+    "id": "lidl-locator",
+    "name": "Lidl — Store locator",
+    "url": "https://tiendas.lidl.es/",
+    "type": "official-locator",
+    "scope": "Lidl"
+  },
+  {
+    "id": "aldi-locator",
+    "name": "ALDI — Store locator",
+    "url": "https://www.aldi.es/supermercados/encuentra-tu-supermercado.html/l/m",
+    "type": "official-locator",
+    "scope": "ALDI"
+  },
+  {
+    "id": "dia-alicante",
+    "name": "DIA — Alicante store locator",
+    "url": "https://www.dia.es/tiendas/buscador-tiendas/alicante",
+    "type": "official-locator",
+    "scope": "DIA"
+  },
+  {
+    "id": "repsol-alicante",
+    "name": "Repsol — Alicante service stations",
+    "url": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+    "type": "official-locator",
+    "scope": "Repsol"
+  }
+]
