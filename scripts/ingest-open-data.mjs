@@ -76,7 +76,7 @@ function distributionUrls(item) {
       const vals = Array.isArray(o[k]) ? o[k] : [o[k]];
       for (const v of vals) {
         const u = text(v);
-        if (/^https?:\\/\\//i.test(u) && /\\.(csv|json|geojson)(?:[?#].*)?$/i.test(u)) found.add(u);
+        if (/^https?:\/\//i.test(u) && /\.(csv|json|geojson)(?:[?#].*)?$/i.test(u)) found.add(u);
       }
     }
   }
