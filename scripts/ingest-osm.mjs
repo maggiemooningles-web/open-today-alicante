@@ -4,7 +4,7 @@ const DATA_PATH = new URL('../data/stores.json', import.meta.url);
 const REPORT_PATH = new URL('../data/update-report.json', import.meta.url);
 
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
-const USER_AGENT = 'OpenTodayAlicante/1.1 (+https://github.com/maggiemooningles-web/open-today-alicante)';
+const USER_AGENT = 'OpenTodayAlicante/1.2 (+https://github.com/maggiemooningles-web/open-today-alicante)';
 
 const SHOP_TAGS = [
   'supermarket','convenience','department_store','mall','bakery','butcher',
