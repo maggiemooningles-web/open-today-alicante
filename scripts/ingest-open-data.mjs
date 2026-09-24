@@ -9,15 +9,15 @@ const API_BASE = 'https://datos.gob.es/apidata/catalog/dataset';
 const TERMS = ['Alicante comercio','Alicante locales','Alicante establecimientos','Alicante censo','Alicante actividades','Alicante mercados','Alicante gasolineras','Alicante farmacias'];
 const ALLOWED_HOSTS = ['alicante.es','datosabiertos.alicante.es','datosabiertos.diputacionalicante.es','diputacionalicante.es','dadesobertes.gva.es','gva.es'];
 const CATEGORY_RULES = [
-  ['pharmacy', /\\bfarmacia\\b|\\bparafarmacia\\b/i],
-  ['petrol', /\\bgasolinera\\b|\\bestación de servicio\\b|\\bestacio de servei\\b|\\bcarburante\\b/i],
-  ['bakery', /\\bpanadería\\b|\\bforn de pa\\b|\\bpastelería\\b|\\bbakery\\b/i],
-  ['vet', /\\bveterinari\\b|\\bveterinario\\b|\\bclínica veterinaria\\b/i],
-  ['supermarket', /\\bsupermercado\\b|\\bsupermercat\\b|\\balimentación\\b|\\bgrocery\\b|\\bhipermercado\\b/i],
-  ['hardware', /\\bferretería\\b|\\bferreteria\\b|\\bbricolaje\\b|\\bherramientas\\b/i],
-  ['garden', /\\bjardinería\\b|\\bvivero\\b|\\bviver\\b|\\bplantas\\b/i],
-  ['electronics', /\\belectrónica\\b|\\binformática\\b|\\btelefonía\\b/i],
-  ['mall', /\\bcentro comercial\\b|\\bcentre comercial\\b|\\bmercado\\b/i]
+  ['pharmacy', /\bfarmacia\b|\bparafarmacia\b/i],
+  ['petrol', /\bgasolinera\b|\bestación de servicio\b|\bestacio de servei\b|\bcarburante\b/i],
+  ['bakery', /\bpanadería\b|\bforn de pa\b|\bpastelería\b|\bbakery\b/i],
+  ['vet', /\bveterinari\b|\bveterinario\b|\bclínica veterinaria\b/i],
+  ['supermarket', /\bsupermercado\b|\bsupermercat\b|\balimentación\b|\bgrocery\b|\bhipermercado\b/i],
+  ['hardware', /\bferretería\b|\bferreteria\b|\bbricolaje\b|\bherramientas\b/i],
+  ['garden', /\bjardinería\b|\bvivero\b|\bviver\b|\bplantas\b/i],
+  ['electronics', /\belectrónica\b|\binformática\b|\btelefonía\b/i],
+  ['mall', /\bcentro comercial\b|\bcentre comercial\b|\bmercado\b/i]
 ];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -29,13 +29,13 @@ function text(v) {
     if (v['@value'] != null) return text(v['@value']);
     return '';
   }
-  return String(v).replace(/\\s+/g, ' ').trim();
+  return String(v).replace(/\s+/g, ' ').trim();
 }
 function norm(v) {
-  return text(v).normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase()
-    .replace(/&/g,' y ').replace(/[^\\p{L}\\p{N}]+/gu,' ').replace(/\\b(s l|slu|sll|sa)\\b/g,' ').replace(/\\s+/g,' ').trim();
+  return text(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+    .replace(/&/g,' y ').replace(/[^\p{L}\p{N}]+/gu,' ').replace(/\b(s l|slu|sll|sa)\b/g,' ').replace(/\s+/g,' ').trim();
 }
-function slug(v) { return norm(v).replace(/\\s+/g,'-').slice(0,80); }
+function slug(v) { return norm(v).replace(/\s+/g,'-').slice(0,80); }
 function first(o, keys) {
   if (!o || typeof o !== 'object') return '';
   for (const k of keys) if (o[k] != null && text(o[k])) return text(o[k]);
@@ -62,9 +62,9 @@ function blob(x) { return text(JSON.stringify(x)).toLowerCase(); }
 function candidate(x) {
   const b = blob(x);
   const where = ALLOWED_HOSTS.some(h => b.includes(h)) || b.includes('alicante');
-  const useful = /\\blocales?\\b|\\bcomercio\\b|\\bcomerciales?\\b|\\bestablecimientos?\\b|\\bempresas?\\b|\\bactividades?\\b|\\bgasoliner|\\bfarmaci|\\bmercados?\\b/.test(b);
+  const useful = /\blocales?\b|\bcomercio\b|\bcomerciales?\b|\bestablecimientos?\b|\bempresas?\b|\bactividades?\b|\bgasoliner|\bfarmaci|\bmercados?\b/.test(b);
   const location = /direcci[oó]n|address|coordenadas?|latitud|longitud|georreferenc|ubicaci[oó]n|mapa|calle/.test(b);
-  const aggregateNoise = /explotaci[oó]n del directorio estad[ií]stico|series?\\b|por sector|por tipo de empresa|n[uú]mero de locales/.test(b);
+  const aggregateNoise = /explotaci[oó]n del directorio estad[ií]stico|series?\b|por sector|por tipo de empresa|n[uú]mero de locales/.test(b);
   return where && useful && location && !aggregateNoise;
 }
 function distributionUrls(item) {
@@ -94,9 +94,9 @@ async function get(url, timeout, maxBytes) {
 }
 function parseCsv(s) {
   const sample=s.slice(0,5000);
-  const ds=[',',';','\\t','|'].map(d => [d,(sample.match(new RegExp('\\\\'+d,'g'))||[]).length]).sort((a,b)=>b[1]-a[1]);
+  const ds=[',',';','\t','|'].map(d => [d,(sample.match(new RegExp('\\'+d,'g'))||[]).length]).sort((a,b)=>b[1]-a[1]);
   const d=ds[0][1]?ds[0][0]:',', rows=[], row=[]; let cell='', q=false;
-  for(let i=0;i<s.length;i++){const ch=s[i],n=s[i+1];if(ch==='"'){if(q&&n==='"'){cell+='"';i++;}else q=!q;}else if(ch===d&&!q){row.push(cell);cell='';}else if((ch==='\\n'||ch==='\\r')&&!q){if(ch==='\\r'&&n==='\\n')i++;row.push(cell);cell='';if(row.some(x=>String(x).trim()!==''))rows.push(row);row.length=0;}else cell+=ch;}
+  for(let i=0;i<s.length;i++){const ch=s[i],n=s[i+1];if(ch==='"'){if(q&&n==='"'){cell+='"';i++;}else q=!q;}else if(ch===d&&!q){row.push(cell);cell='';}else if((ch==='\n'||ch==='\r')&&!q){if(ch==='\r'&&n==='\n')i++;row.push(cell);cell='';if(row.some(x=>String(x).trim()!==''))rows.push(row);row.length=0;}else cell+=ch;}
   if(cell||row.length){row.push(cell);rows.push(row);}
   if(!rows.length)return [];
   const headers=rows.shift().map((h,i)=>text(h)||'field_'+(i+1));
@@ -128,8 +128,8 @@ function makeRecord(r,dataset,url) {
   const c=coords(r), cat=category((name+' '+activity+' '+rawAddress+' '+town).trim());
   const phone=first(r,['telefono','teléfono','phone','movil','móvil','contacto']);
   const hoursText=first(r,['horario','horarios','hours','opening hours','opening_hours']);
-  const week=hoursText.match(/(?:lunes|dilluns)[^\\d]{0,30}(\\d{1,2})(?::(\\d{2}))?\\s*[-–]\\s*(\\d{1,2})(?::(\\d{2}))?/i);
-  const sun=hoursText.match(/(?:domingo|diumenge)[^\\d]{0,30}(\\d{1,2})(?::(\\d{2}))?\\s*[-–]\\s*(\\d{1,2})(?::(\\d{2}))?/i);
+  const week=hoursText.match(/(?:lunes|dilluns)[^\d]{0,30}(\d{1,2})(?::(\d{2}))?\s*[-–]\s*(\d{1,2})(?::(\d{2}))?/i);
+  const sun=hoursText.match(/(?:domingo|diumenge)[^\d]{0,30}(\d{1,2})(?::(\d{2}))?\s*[-–]\s*(\d{1,2})(?::(\d{2}))?/i);
   const wh=week?[Number(week[1])+Number(week[2]||0)/60,Number(week[3])+Number(week[4]||0)/60]:null;
   const sh=sun?[Number(sun[1])+Number(sun[2]||0)/60,Number(sun[3])+Number(sun[4]||0)/60]:null;
   const source=text(dataset.title||dataset.label||'Alicante open data');
@@ -194,7 +194,7 @@ for(const ds of datasetsMap.values()){
     stats.distributionsChecked++;
     try{
       const result=await get(url,60000,25000000);
-      const payload=/\\.csv(?:[?#]|$)/i.test(url)||String(result.contentType).includes('csv')?parseCsv(result.text):JSON.parse(result.text);
+      const payload=/\.csv(?:[?#]|$)/i.test(url)||String(result.contentType).includes('csv')?parseCsv(result.text):JSON.parse(result.text);
       const rows=records(payload);
       stats.distributionsLoaded++;stats.recordsRead+=rows.length;
       for(const row of rows.slice(0,50000)){
@@ -214,11 +214,11 @@ for(const ds of datasetsMap.values()){
     await sleep(200);
   }
 }
-await fs.writeFile(DATA_PATH,JSON.stringify(stores,null,2)+'\\n');
+await fs.writeFile(DATA_PATH,JSON.stringify(stores,null,2)+'\n');
 let previous={};try{previous=JSON.parse(await fs.readFile(REPORT_PATH,'utf8'));}catch(_){}
 await fs.writeFile(REPORT_PATH,JSON.stringify({
   version:'11.0.0',checkedAt:new Date().toISOString(),status:stats.errors.length?'open-data-complete-with-review':'open-data-complete',
   automaticMode:'official-open-data-ingestion',note:'Discovered individual/location-oriented public datasets through datos.gob.es and accepted records from machine-readable CSV/JSON/GeoJSON distributions. Hours remain unconfirmed unless structured hours are published by the source.',
   openData:stats,previousReportStatus:previous.status||null
-},null,2)+'\\n');
+},null,2)+'\n');
 console.log(JSON.stringify(stats,null,2));
