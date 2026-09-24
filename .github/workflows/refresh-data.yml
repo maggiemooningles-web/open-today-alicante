@@ -1,0 +1,33 @@
+name: Refresh store data
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Refresh source health and dataset snapshot
+        run: node scripts/update-data.mjs
+
+      - name: Commit report changes
+        run: |
+          git config user.name "Open Today Alicante Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/update-report.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(data): refresh source health"
+          git push
