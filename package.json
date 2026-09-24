@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "update:data": "node scripts/update-data.mjs",
+    "ingest:open-data": "node scripts/ingest-open-data.mjs",
+    "ingest:first-party": "node scripts/ingest-first-party.mjs",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "discover:locations": "node scripts/ingest-osm.mjs"
   }
