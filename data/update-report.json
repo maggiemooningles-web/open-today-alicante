@@ -1,0 +1,8 @@
+{
+  "version": "10.1.0",
+  "checkedAt": null,
+  "status": "not-run-yet",
+  "automaticMode": "source-health",
+  "note": "GitHub Actions checks first-party sources every six hours. Store hours are not overwritten blindly; only verified/structured matches should be promoted into the dataset.",
+  "sources": []
+}
