@@ -427,6 +427,7 @@
             <div>
                 <p class="font-semibold text-slate-300">Open Today Alicante &copy; 2026</p>
                 <p class="mt-0.5 text-slate-500" data-i18n="footerTagline">Encuentra un lugar abierto cerca de ti, ahora mismo.</p>
+                <p class="mt-2 text-slate-600">Datos de ubicación: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="hover:text-slate-300">© OpenStreetMap contributors</a></p>
             </div>
             <div class="flex items-center space-x-4"><a href="/open-today-alicante/panaderias-abiertas" onclick="event.preventDefault(); navigateTo('/panaderias-abiertas')" class="hover:text-emerald-400 transition"><span data-i18n="footerBakery">Panaderías</span></a><a href="/open-today-alicante/veterinarios-urgencias-24h" onclick="event.preventDefault(); navigateTo('/veterinarios-urgencias-24h')" class="hover:text-emerald-400 transition"><span data-i18n="footerVet">Urgencias vet</span></a><a href="/open-today-alicante/privacy.html" class="hover:text-emerald-400 transition"><span data-i18n="footerPrivacy">Privacidad</span></a><a href="#faqSection" class="hover:text-brand-400 transition" data-i18n="footerFaq">Preguntas Frecuentes</a>
                 <span class="text-slate-700">|</span>
@@ -19461,6 +19462,7 @@
             const type = store.verification?.sourceType || store.sourceType;
             if (type === 'official-locator') return currentLang === 'es' ? 'Fuente oficial' : 'Official source';
             if (type === 'business-directory') return currentLang === 'es' ? 'Directorio actual' : 'Current directory';
+            if (type === 'osm-discovery') return currentLang === 'es' ? 'Descubierto en OpenStreetMap' : 'Discovered on OpenStreetMap';
             return currentLang === 'es' ? 'Fuente configurada' : 'Configured source';
         }
         function holidayDisplayStatus(store) {
