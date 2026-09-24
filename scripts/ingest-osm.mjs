@@ -78,7 +78,8 @@ function buildQuery() {
   const shops = SHOP_TAGS.join('|');
   const amenities = AMENITY_TAGS.join('|');
   return `[out:json][timeout:180];
-area["boundary"="administrative"]["admin_level"="6"]["name"="Alicante"]->.province;
+// Province of Alicante OSM relation 349012 -> Overpass area 3600349012
+area(3600349012)->.province;
 (
   nwr["shop"~"^(${shops})$"](area.province);
   nwr["amenity"~"^(${amenities})$"](area.province);
