@@ -5,20 +5,14 @@ const REPORT_PATH = new URL('../data/update-report.json', import.meta.url);
 
 const OVERPASS_ENDPOINTS = [
   'https://overpass-api.de/api/interpreter',
-  'https://overpass.private.coffee/api/interpreter'
+  'https://overpass.private.coffee/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter'
 ];
 const USER_AGENT = 'OpenTodayAlicante/1.4 (+https://github.com/maggiemooningles-web/open-today-alicante)';
 
-const SHOP_TAGS = [
-  'supermarket','convenience','department_store','mall','bakery','butcher',
-  'greengrocer','seafood','deli','hardware','doityourself','garden_centre',
-  'electronics','computer','mobile_phone','pet','clothes','shoes','beauty',
-  'hairdresser','cosmetics','optician','jewelry','furniture','sports','bicycle',
-  'car','car_parts','motorcycle','laundry','florist','books','stationery','toys',
-  'gift','travel_agency','copyshop','photo','outdoor','fabric','tailor','variety_store'
-];
+const SHOP_TAGS = ['supermarket','convenience','department_store','mall','bakery','butcher','greengrocer','seafood','deli','hardware','doityourself','garden_centre','electronics','computer','mobile_phone','pet'];
 
-const AMENITY_TAGS = ['pharmacy','fuel','veterinary','bank','atm','post_office','clinic','dentist'];
+const AMENITY_TAGS = ['pharmacy','fuel','veterinary'];
 
 const CATEGORY_BY_TAG = {
   supermarket:'supermarket', convenience:'express', bakery:'bakery',
@@ -67,11 +61,10 @@ function makeBboxes() {
 }
 function buildQuery(bbox) {
   const shops=SHOP_TAGS.join('|'), amenities=AMENITY_TAGS.join('|');
-  return `[out:json][timeout:60][maxsize:536870912];
-area(3600349012)->.province;
+  return `[out:json][timeout:45];
 (
-  nwr["shop"~"^(${shops})$"]["name"](area.province)(${bbox});
-  nwr["amenity"~"^(${amenities})$"]["name"](area.province)(${bbox});
+  nwr["shop"~"^(${shops})$"]["name"](${bbox});
+  nwr["amenity"~"^(${amenities})$"]["name"](${bbox});
 );
 out center tags;`;
 }
@@ -87,7 +80,7 @@ async function fetchQuery(query) {
           'accept':'application/json'
         },
         body:'data='+encodeURIComponent(query),
-        signal:AbortSignal.timeout(90000)
+        signal:AbortSignal.timeout(55000)
       });
       if(response.ok) return await response.json();
       errors.push(`${endpoint} HTTP ${response.status}`);
@@ -169,7 +162,7 @@ async function main(){
     }catch(error){
       errors.push({bbox,error:String(error)});
     }
-    await pause(1200);
+    await pause(1800);
   }
 
   const merged=current.concat(discovered);
