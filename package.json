@@ -1,0 +1,8 @@
+{
+  "name": "open-today-alicante",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update:data": "node scripts/update-data.mjs"
+  }
+}

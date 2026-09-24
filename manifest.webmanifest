@@ -1,0 +1,14 @@
+{
+  "name": "Open Today Alicante",
+  "short_name": "Open Today Alicante",
+  "description": "Qué está abierto ahora en Alicante y Costa Blanca.",
+  "lang": "es",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f6",
+  "theme_color": "#047857",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
