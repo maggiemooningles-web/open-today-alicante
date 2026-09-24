@@ -1,5 +1,12 @@
-const CACHE_NAME = 'open-today-alicante-v10';
-const APP_SHELL = ['/', '/data/stores.json', '/manifest.webmanifest', '/icon.svg', '/privacy.html'];
+const CACHE_NAME = 'open-today-alicante-v10-pages';
+const BASE_PATH = '/open-today-alicante';
+const APP_SHELL = [
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/data/stores.json`,
+  `${BASE_PATH}/manifest.webmanifest`,
+  `${BASE_PATH}/icon.svg`,
+  `${BASE_PATH}/privacy.html`
+];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -36,7 +43,7 @@ self.addEventListener('fetch', event => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put('/', copy));
         return response;
-      }).catch(() => caches.match('/'))
+      }).catch(() => caches.match(`${BASE_PATH}/`))
     );
     return;
   }
