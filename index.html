@@ -309,17 +309,8 @@
 
                 <!-- Town Filter Dropdown -->
                 <div class="md:col-span-3">
-                    <select id="townSelect" onchange="handleTownChange(this.value)" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
+                    <select id="townSelect" onchange="handleTownChange(this.value)" aria-label="Seleccionar municipio" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
                         <option value="all" data-i18n="optAllTowns">🏙️ Todos los municipios</option>
-                        <option value="alicante" data-i18n="townAlicante">Alicante Centro / Ciudad</option>
-                        <option value="mutxamel" data-i18n="townMutxamel">Mutxamel</option>
-                        <option value="playa-san-juan" data-i18n="townPlaya">Playa San Juan / Cabo</option>
-                        <option value="sant-joan" data-i18n="townSantJoan">Sant Joan d'Alacant</option>
-                        <option value="campello" data-i18n="townCampello">El Campello / Muchavista</option>
-                        <option value="san-vicente" data-i18n="townSanVicente">San Vicente del Raspeig</option>
-                        <option value="santa-pola" data-i18n="townSantaPola">Santa Pola</option>
-                        <option value="gran-alacant" data-i18n="townGranAlacant">Gran Alacant</option>
-                        <option value="benidorm" data-i18n="townBenidorm">Benidorm</option>
                     </select>
                 </div>
 
@@ -337,6 +328,7 @@
                         <option value="garden" data-i18n="optGarden">Jardinería / Viveros</option>
                         <option value="electronics" data-i18n="optElectronics">Electrónica</option>
                         <option value="vet" data-i18n="optVet">Veterinarios / Urgencias</option>
+                        <option value="other" data-i18n="optOther">Otros servicios y comercios</option>
                     </select>
                 </div>
 
@@ -384,6 +376,12 @@
             <div id="resultsToolbar" class="results-toolbar flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2" aria-live="polite"><div><span id="resultsCountV6" class="font-black text-slate-900">0</span> <span id="resultsLabelV6" class="font-semibold text-slate-500">locales</span></div><div id="resultsContextV6" class="text-[11px] font-semibold text-slate-500">Ordenados por apertura</div></div>
             <div id="storeGridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- Store cards dynamically rendered here -->
+            </div>
+            <div id="resultsPager" class="hidden mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button type="button" id="loadMoreResultsBtn" onclick="loadMoreResults()" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-extrabold shadow-sm">
+                    <span data-i18n="loadMoreResults">Cargar más resultados</span>
+                </button>
+                <span id="resultsPagerText" class="text-xs font-semibold text-slate-500"></span>
             </div>
 
             <!-- LEAFLET MAP VIEW -->
@@ -18524,6 +18522,71 @@
 ];
 
         // Normalize metadata so the UI never treats seed/static data as live verification.
+        function normalizeTownKey(value = '') {
+            return String(value)
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        async function loadMunicipalityIndex() {
+            if (MUNICIPALITY_INDEX_LOADED) return;
+            MUNICIPALITY_INDEX_LOADED = true;
+            try {
+                const response = await fetch(`${SITE_BASE_PATH}/data/municipalities.json`, { cache: 'no-store' });
+                if (response.ok) {
+                    const payload = await response.json();
+                    MUNICIPALITY_INDEX = Array.isArray(payload.municipalities) ? payload.municipalities : [];
+                }
+            } catch (_) {
+                MUNICIPALITY_INDEX = [];
+            }
+            populateTownSelect();
+        }
+
+        function getTownEntries() {
+            const bySlug = new Map();
+            for (const item of MUNICIPALITY_INDEX) {
+                if (item?.slug) bySlug.set(item.slug, item);
+            }
+            for (const store of STORES_DATA) {
+                const slug = store.townSlug || normalizeTownKey(store.town);
+                if (!slug || bySlug.has(slug)) continue;
+                bySlug.set(slug, {
+                    slug,
+                    es: store.town || slug,
+                    en: store.town || slug,
+                    aliases: [store.town || slug],
+                    priority: 99
+                });
+            }
+            return [...bySlug.values()]
+                .filter(item => STORES_DATA.some(store => (store.townSlug || normalizeTownKey(store.town)) === item.slug))
+                .sort((a, b) => {
+                    const priority = (a.priority || 99) - (b.priority || 99);
+                    if (priority !== 0) return priority;
+                    const aCount = STORES_DATA.filter(store => (store.townSlug || normalizeTownKey(store.town)) === a.slug).length;
+                    const bCount = STORES_DATA.filter(store => (store.townSlug || normalizeTownKey(store.town)) === b.slug).length;
+                    if (aCount !== bCount) return bCount - aCount;
+                    return String(a.es).localeCompare(String(b.es));
+                });
+        }
+
+        function populateTownSelect() {
+            const select = document.getElementById('townSelect');
+            if (!select) return;
+            const selected = selectedTown || 'all';
+            const options = [`<option value="all" data-i18n="optAllTowns">${escapeHtml(I18N[currentLang].optAllTowns)}</option>`];
+            for (const town of getTownEntries()) {
+                const label = currentLang === 'en' ? (town.en || town.es) : (town.es || town.en);
+                options.push(`<option value="${escapeHtml(town.slug)}">${escapeHtml(label)}</option>`);
+            }
+            select.innerHTML = options.join('');
+            select.value = options.some(option => option.includes(`value="${selected}"`)) ? selected : 'all';
+        }
+
         function normalizeStoresData() {
             STORES_DATA.forEach(store => {
                 store.verification = {
@@ -18542,6 +18605,7 @@
                     if (Array.isArray(sunday)) { store.sunOpenHour = sunday[0]; store.sunCloseHour = sunday[1]; store.isSundayOpen = true; }
                     else if (store.hoursVerified === false) { store.sunOpenHour = null; store.sunCloseHour = null; store.isSundayOpen = false; }
                 }
+                store.townSlug = store.townSlug || normalizeTownKey(store.town || '');
                 store.locationStatus = (Number.isFinite(store.lat) && Number.isFinite(store.lng)) ? 'mapped' : 'pending';
                 store.hoursStatus = store.hoursVerified === false ? 'unconfirmed' : 'checked';
                 store.community = { ...(store.community || {}), seedReports: 0, openToday: 0, closedToday: 0, updatedAt: null };
@@ -18604,11 +18668,13 @@
                 optGarden: "Jardinería / Viveros",
                 optElectronics: "Electrónica",
                 optVet: "Veterinarios / Urgencias",
+                optOther: "Otros servicios y comercios",
                 sortOpenFirst: "⚡ Abiertos primero",
                 sortDistance: "📍 Distancia GPS",
                 sortName: "🔤 Nombre (A-Z)",
                 lblSundayOnly: "Domingos",
                 lblOpenNow: "Abiertos ahora",
+                loadMoreResults: "Cargar más resultados",
                 btnViewGrid: "Lista",
                 btnViewMap: "Mapa",
                 noResultsTitle: "No se encontraron tiendas",
@@ -18684,11 +18750,13 @@
                 optGarden: "Garden Centres",
                 optElectronics: "Electronics",
                 optVet: "Veterinary / Emergency",
+                optOther: "Other services & shops",
                 sortOpenFirst: "⚡ Open Now First",
                 sortDistance: "📍 Distance (GPS)",
                 sortName: "🔤 Name (A-Z)",
                 lblSundayOnly: "Sundays",
                 lblOpenNow: "Open now",
+                loadMoreResults: "Load more results",
                 btnViewGrid: "List",
                 btnViewMap: "Map",
                 noResultsTitle: "No stores found",
@@ -19056,6 +19124,7 @@
                 const key = el.getAttribute('data-i18n');
                 if (I18N[currentLang][key]) el.innerText = I18N[currentLang][key];
             });
+            populateTownSelect();
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
                 if (I18N[currentLang][key]) el.placeholder = I18N[currentLang][key];
@@ -19198,11 +19267,44 @@
             activeRouteDate = null;
             activeRouteType = 'default';
             openNowOnly = false;
+            const requestedTown = urlParams.get('town');
             const sharedQuery = urlParams.get('q');
+            if (requestedTown) selectedTown = normalizeTownKey(requestedTown);
             if (sharedQuery) {
                 searchTerm = sharedQuery;
                 const searchInput = document.getElementById('searchInput');
                 if (searchInput) searchInput.value = sharedQuery;
+            }
+
+            if (path.startsWith('/zona/')) {
+                const zoneSlug = normalizeTownKey(path.slice('/zona/'.length));
+                const zone = getTownEntries().find(item => item.slug === zoneSlug);
+                if (!zone) {
+                    navigateTo('/', false);
+                    return;
+                }
+                selectedTown = zoneSlug;
+                openNowOnly = true;
+                const zoneLabel = currentLang === 'en' ? (zone.en || zone.es) : (zone.es || zone.en);
+                const zoneTitle = currentLang === 'en'
+                    ? `Open now in ${zoneLabel} | Open Today Alicante`
+                    : `Abierto ahora en ${zoneLabel} | Open Today Alicante`;
+                const zoneDescription = currentLang === 'en'
+                    ? `Places currently open in ${zoneLabel}. Use GPS, search and category filters to find what you can use now.`
+                    : `Comercios y servicios abiertos ahora en ${zoneLabel}. Usa GPS, búsqueda y categorías para encontrar lo que necesitas.`;
+                updateHeroBanner(currentLang === 'en' ? `What's open now in ${zoneLabel}?` : `¿Qué está abierto ahora en ${zoneLabel}?`, zoneDescription);
+                updateRouteSeo(path, zoneTitle, zoneDescription);
+                document.getElementById('townSelect').value = zoneSlug;
+                document.getElementById('categorySelect').value = selectedCategory;
+                document.getElementById('sundayOnlyToggle').checked = false;
+                document.getElementById('storeLandingView').classList.add('hidden');
+                document.getElementById('heroSection').classList.remove('hidden');
+                document.getElementById('controlsToolbar').classList.remove('hidden');
+                document.getElementById('faqSection').classList.remove('hidden');
+                const resultsToolbarEl = document.getElementById('resultsToolbar');
+                if (resultsToolbarEl) resultsToolbarEl.classList.remove('hidden');
+                renderStoresList();
+                return;
             }
 
             if (path.startsWith('/tienda/')) {
@@ -19452,7 +19554,7 @@
         const CATEGORY_ICONS = {
             supermarket: 'fa-cart-shopping', pharmacy: 'fa-prescription-bottle-medical', express: 'fa-basket-shopping',
             petrol: 'fa-gas-pump', mall: 'fa-building', bakery: 'fa-bread-slice', hardware: 'fa-screwdriver-wrench',
-            garden: 'fa-seedling', electronics: 'fa-microchip', vet: 'fa-paw'
+            garden: 'fa-seedling', electronics: 'fa-microchip', vet: 'fa-paw', other: 'fa-store'
         };
         function categoryLabel(category) {
             const key = 'opt' + String(category).charAt(0).toUpperCase() + String(category).slice(1);
@@ -19502,6 +19604,7 @@
         }
         function toggleOpenNowOnly() {
             openNowOnly = !openNowOnly;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
             if (openNowOnly) sundayOnlyFilter = false;
             document.getElementById('sundayOnlyToggle').checked = sundayOnlyFilter;
             updateOpenNowToggle();
@@ -19541,6 +19644,18 @@
                 routeDateNotice.classList.add('hidden');
             }
 
+            const visibleStores = stores.slice(0, visibleResultLimit);
+            const pager = document.getElementById('resultsPager');
+            const pagerBtn = document.getElementById('loadMoreResultsBtn');
+            const pagerText = document.getElementById('resultsPagerText');
+            if (pager && pagerBtn && pagerText) {
+                const hasMore = stores.length > visibleStores.length;
+                pager.classList.toggle('hidden', !hasMore);
+                pagerText.textContent = currentLang === 'es'
+                    ? `Mostrando ${visibleStores.length} de ${stores.length}`
+                    : `Showing ${visibleStores.length} of ${stores.length}`;
+                pagerBtn.querySelector('[data-i18n="loadMoreResults"]').textContent = I18N[currentLang].loadMoreResults;
+            }
             if (stores.length === 0) {
                 gridContainer.innerHTML = '';
                 noResults.classList.remove('hidden');
@@ -19552,7 +19667,7 @@
             if (viewMode === 'grid') {
                 document.getElementById('storeGridView').classList.remove('hidden');
                 document.getElementById('mapViewContainer').classList.add('hidden');
-                gridContainer.innerHTML = stores.map(store => {
+                gridContainer.innerHTML = visibleStores.map(store => {
                     const rawStatus = activeRouteType === 'holiday' ? holidayDisplayStatus(store) : getStoreStatus(store, routeDate);
                     const badgeClass = rawStatus.isHolidaySchedule ? (rawStatus.isOpen === false ? 'status-closed' : rawStatus.isConfirmed ? 'status-holiday' : 'status-unconfirmed') : (rawStatus.isConfirmed === false ? 'status-unconfirmed' : rawStatus.isOpen ? 'status-open' : 'status-closed');
                     const icon = CATEGORY_ICONS[store.category] || 'fa-store';
@@ -19600,7 +19715,7 @@
             } else {
                 document.getElementById('storeGridView').classList.add('hidden');
                 document.getElementById('mapViewContainer').classList.remove('hidden');
-                initLeafletMap(stores);
+                initLeafletMap(stores.slice(0, MAP_RESULT_LIMIT));
             }
         }
 
@@ -19959,6 +20074,7 @@
             sundayOnlyFilter = false;
             openNowOnly = true;
             sortBy = 'distance';
+            populateTownSelect();
             document.getElementById('townSelect').value = 'all';
             document.getElementById('categorySelect').value = 'all';
             document.getElementById('sortSelect').value = 'distance';
@@ -20045,21 +20161,28 @@
 
         function handleTownChange(val) {
             selectedTown = val;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
+            const url = new URL(window.location.href);
+            if (val && val !== 'all') url.searchParams.set('town', val); else url.searchParams.delete('town');
+            history.replaceState(history.state, '', url.pathname + (url.search ? url.search : '') + url.hash);
             renderStoresList();
         }
 
         function handleCategoryChange(val) {
             selectedCategory = val;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
             renderStoresList();
         }
 
         function handleSortChange(val) {
             sortBy = val;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
             renderStoresList();
         }
 
         function toggleSundayOnly(checked) {
             sundayOnlyFilter = checked;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
             if (checked) openNowOnly = false;
             updateOpenNowToggle();
             renderStoresList();
@@ -20078,6 +20201,11 @@
             renderStoresList();
         }
 
+        function loadMoreResults() {
+            visibleResultLimit += RESULTS_PAGE_SIZE;
+            renderStoresList();
+        }
+
         function resetFilters() {
             searchTerm = '';
             selectedTown = 'all';
@@ -20085,13 +20213,14 @@
             sundayOnlyFilter = false;
             openNowOnly = false;
             sortBy = 'openFirst';
+            visibleResultLimit = RESULTS_PAGE_SIZE;
 
             document.getElementById('searchInput').value = '';
             document.getElementById('townSelect').value = 'all';
             document.getElementById('categorySelect').value = 'all';
             document.getElementById('sortSelect').value = 'openFirst';
             document.getElementById('sundayOnlyToggle').checked = false;
-            history.replaceState(history.state, '', window.location.pathname);
+            history.replaceState(history.state, '', toPublicPath(activeLogicalPath || '/') || window.location.pathname);
             updateOpenNowToggle();
 
             renderStoresList();
@@ -20206,6 +20335,11 @@
         /* INITIALIZATION */
         const DATASET_URL = `${SITE_BASE_PATH}/data/stores.json`;
         const DATASET_REFRESH_MS = 10 * 60 * 1000;
+        const RESULTS_PAGE_SIZE = 60;
+        const MAP_RESULT_LIMIT = 250;
+        let visibleResultLimit = RESULTS_PAGE_SIZE;
+        let MUNICIPALITY_INDEX = [];
+        let MUNICIPALITY_INDEX_LOADED = false;
         let lastDatasetFingerprint = '';
 
         async function refreshDatasetSilently() {
@@ -20219,6 +20353,7 @@
                 STORES_DATA.splice(0, STORES_DATA.length, ...remoteData);
                 normalizeStoresData();
                 DATASET_META.totalRecords = STORES_DATA.length;
+                populateTownSelect();
                 lastDatasetFingerprint = fingerprint;
                 if (!activeStoreSlug) { renderStoresList(); updateRouteSeo(); }
                 return true;
@@ -20236,6 +20371,7 @@
                 STORES_DATA.splice(0, STORES_DATA.length, ...remoteData);
                 normalizeStoresData();
                 DATASET_META.totalRecords = STORES_DATA.length;
+                populateTownSelect();
                 return true;
             } catch (error) {
                 console.warn('Using inline launch snapshot; external dataset could not be loaded.', error);
@@ -20255,6 +20391,7 @@
             const initialQuery = params.get('q') || '';
             if (initialQuery) { searchTerm = initialQuery; document.getElementById('searchInput').value = initialQuery; document.getElementById('clearSearchBtn').classList.remove('hidden'); }
             await loadLaunchDataset();
+            await loadMunicipalityIndex();
             lastDatasetFingerprint = `${STORES_DATA.length}:${STORES_DATA[0]?.updatedAt || STORES_DATA[0]?.lastVerified || ''}:${STORES_DATA.at(-1)?.updatedAt || STORES_DATA.at(-1)?.lastVerified || ''}`;
             validateStoreData();
             const banner = document.getElementById('liveStatusBannerText');
