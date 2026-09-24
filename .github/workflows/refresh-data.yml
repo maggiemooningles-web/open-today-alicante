@@ -8,9 +8,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,17 +25,26 @@ jobs:
         with:
           node-version: 22
 
-      - name: Refresh source health and dataset snapshot
+      - name: Check source health
         run: node scripts/update-data.mjs
+
+      - name: Ingest official open data
+        run: node scripts/ingest-open-data.mjs
+
+      - name: Ingest first-party locators
+        run: node scripts/ingest-first-party.mjs
 
       - name: Regenerate sitemap
         run: node scripts/generate-sitemap.mjs
 
-      - name: Commit report changes
+      - name: Show dataset size
+        run: node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('data/stores.json','utf8'));console.log('Dataset records:',d.length);"
+
+      - name: Commit refreshed dataset
         run: |
           git config user.name "Open Today Alicante Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/update-report.json sitemap.xml
+          git add data/stores.json data/update-report.json sitemap.xml
           git diff --cached --quiet && exit 0
-          git commit -m "chore(data): refresh source health"
+          git commit -m "chore(data): ingest official and first-party sources"
           git push
