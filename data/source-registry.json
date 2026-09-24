@@ -78,5 +78,40 @@
     "type": "official-reference",
     "checkHours": false,
     "notes": "Official municipality index used for labels, aliases and municipality-aware navigation."
+  },
+  {
+    "id": "alicante-business-directory",
+    "name": "Ayuntamiento de Alicante — Directorio de establecimientos",
+    "url": "https://alicante.comercioscomunitatvalenciana.com/es/mapa/index",
+    "type": "official-directory",
+    "scope": "Alicante municipal business directory"
+  },
+  {
+    "id": "hiperber-locator",
+    "name": "Hiperber — Store locator",
+    "url": "https://hiperber.com/supermercados-hiperber/",
+    "type": "official-locator",
+    "scope": "Hiperber supermarkets"
+  },
+  {
+    "id": "dialprix-locator",
+    "name": "Dialprix — Store locator",
+    "url": "https://dialprix.es/supermercados/",
+    "type": "official-locator",
+    "scope": "Dialprix supermarkets"
+  },
+  {
+    "id": "masymas-locator",
+    "name": "masymas — Store locator",
+    "url": "https://www.masymas.com/localizadordetiendas/localizador.php",
+    "type": "official-locator",
+    "scope": "masymas supermarkets"
+  },
+  {
+    "id": "moeve-alicante",
+    "name": "Moeve — Alicante service stations",
+    "url": "https://www.moeve.es/es/cerca-de-ti/gasolineras/alicante/profesionales-moeve-pro-direct-cerca-de-mi",
+    "type": "official-locator",
+    "scope": "Moeve service stations in Alicante province"
   }
 ]
