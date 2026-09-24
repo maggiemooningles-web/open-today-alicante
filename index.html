@@ -208,6 +208,41 @@
     <link id="hreflang-es" rel="alternate" hreflang="es" href="/open-today-alicante/" />
     <link id="hreflang-en" rel="alternate" hreflang="en" href="/open-today-alicante/?lang=en" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
+<style>
+:root { --ota-teal:#0f766e; --ota-cyan:#0891b2; --ota-coral:#f97316; --ota-sun:#f59e0b; --ota-cream:#fffaf2; }
+body { background:var(--ota-cream) !important; }
+.glass-nav { background:rgba(255,253,248,.92) !important; }
+#heroSection.hero-v10 { background:radial-gradient(circle at 92% 10%,rgba(251,191,36,.20),transparent 24%),radial-gradient(circle at 64% 92%,rgba(6,182,212,.16),transparent 28%),linear-gradient(135deg,#fffdf8 0%,#ecfeff 48%,#ecfdf5 100%) !important; border-color:#bae6fd !important; box-shadow:0 24px 70px rgba(15,23,42,.08) !important; }
+.hero-status-v10 { background:#fff !important; border-color:#fed7aa !important; color:#9a3412 !important; }
+.hero-status-dot { background:#f97316 !important; box-shadow:0 0 0 5px rgba(249,115,22,.12) !important; }
+.hero-primary-cta { background:linear-gradient(135deg,#0f766e,#0891b2) !important; border-color:#0f766e !important; }
+.hero-search-v11 { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.65rem; max-width:760px; padding:.45rem; margin:0 0 .35rem; background:#fff; border:1px solid #cbd5e1; border-radius:1.2rem; box-shadow:0 14px 35px rgba(15,23,42,.08); }
+.hero-search-icon { width:48px; height:48px; border-radius:.95rem; display:grid; place-items:center; background:#ecfeff; color:#0f766e; font-size:1.05rem; }
+.hero-search-v11 input { min-width:0; border:0; outline:0; background:transparent; font-size:1rem; color:#0f172a; }
+.hero-search-v11 input::placeholder { color:#94a3b8; }
+.hero-search-v11 button { min-height:48px; border:0; padding:.75rem 1rem; border-radius:1rem; background:#0f172a; color:#fff; font-weight:900; display:inline-flex; gap:.45rem; align-items:center; justify-content:center; }
+.hero-search-hint { display:flex; align-items:center; gap:.45rem; color:#64748b; font-size:.72rem; font-weight:700; margin-bottom:.85rem; }
+.hero-search-hint i { color:#f59e0b; }
+.hero-chip-v10 { background:#fff !important; border-color:#dbeafe !important; color:#0f172a !important; box-shadow:0 4px 12px rgba(15,23,42,.05) !important; }
+.hero-chip-v10:hover { background:#ecfeff !important; border-color:#67e8f9 !important; color:#0f766e !important; }
+.zone-strip-v11 { display:flex; align-items:center; gap:.75rem; padding:.75rem .9rem; background:#fff; border:1px solid #e2e8f0; border-radius:1.1rem; box-shadow:0 8px 22px rgba(15,23,42,.04); overflow:hidden; }
+.zone-strip-title { flex:0 0 auto; display:flex; align-items:center; gap:.4rem; color:#0f766e; font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+.zone-strip-list { display:flex; gap:.45rem; overflow-x:auto; scrollbar-width:none; }
+.zone-strip-list::-webkit-scrollbar { display:none; }
+.zone-chip-v11 { white-space:nowrap; padding:.5rem .72rem; border-radius:999px; background:#f8fafc; border:1px solid #e2e8f0; color:#334155; font-size:.74rem; font-weight:800; text-decoration:none; transition:.16s ease; }
+.zone-chip-v11:hover { background:#ecfeff; border-color:#67e8f9; color:#0e7490; transform:translateY(-1px); }
+#resultsToolbar { background:linear-gradient(90deg,#fff,#fffbeb) !important; border-color:#fed7aa !important; }
+#storeGridView > .store-card { position:relative; overflow:hidden; border-radius:1.35rem !important; }
+#storeGridView > .store-card::before { content:''; position:absolute; inset:0 auto auto 0; width:100%; height:5px; background:linear-gradient(90deg,#0f766e,#22c55e); }
+#storeGridView > .store-card[data-category="bakery"]::before { background:linear-gradient(90deg,#f97316,#f59e0b); }
+#storeGridView > .store-card[data-category="pharmacy"]::before { background:linear-gradient(90deg,#06b6d4,#22c55e); }
+#storeGridView > .store-card[data-category="petrol"]::before { background:linear-gradient(90deg,#0f172a,#475569); }
+#storeGridView > .store-card[data-category="vet"]::before { background:linear-gradient(90deg,#8b5cf6,#ec4899); }
+#storeGridView > .store-card[data-category="hardware"]::before { background:linear-gradient(90deg,#64748b,#0f172a); }
+#storeGridView > .store-card[data-category="garden"]::before { background:linear-gradient(90deg,#16a34a,#84cc16); }
+#storeGridView > .store-card[data-category="electronics"]::before { background:linear-gradient(90deg,#2563eb,#06b6d4); }
+@media (max-width:760px) { #heroSection.hero-v10 { display:block; } .hero-side-v10 { margin-top:1rem; } .hero-search-v11 { grid-template-columns:auto 1fr; } .hero-search-v11 button { grid-column:1 / -1; width:100%; } .zone-strip-v11 { align-items:flex-start; flex-direction:column; gap:.55rem; } }
+</style>
 </head>
 <body class="bg-[#f6f8f6] text-slate-900 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
     <a href="#mainContent" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-emerald-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Saltar al contenido</a>
@@ -256,11 +291,17 @@
                     <span id="liveStatusBannerText">Alicante · Abierto ahora</span>
                 </div>
                 <h1 id="heroTitle" class="text-3xl sm:text-5xl font-black tracking-[-0.03em] mb-3">
-                    ¿Qué está abierto ahora?
+                    ¿Qué necesitas abierto hoy?
                 </h1>
-                <p id="heroSubtitle" class="text-base sm:text-lg leading-relaxed mb-5 max-w-2xl">
-                    Encuentra un supermercado, farmacia, gasolinera, panadería o servicio que esté abierto cerca de ti.
+                <p id="heroSubtitle" class="text-base sm:text-lg leading-relaxed mb-4 max-w-2xl">
+                    Busca un sitio, toca una categoría y descubre qué puedes hacer ahora mismo.
                 </p>
+                <form class="hero-search-v11" onsubmit="submitHeroSearch(event)" role="search">
+                    <div class="hero-search-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <input id="heroSearchInput" type="search" autocomplete="off" placeholder="Buscar tienda, farmacia, gasolinera, calle o municipio…" data-i18n-placeholder="heroSearchPlaceholder" oninput="handleHeroSearchInput(this.value)" aria-label="Buscar en Open Today Alicante">
+                    <button type="submit"><i class="fa-solid fa-arrow-right"></i><span data-i18n="heroSearchButton">Buscar</span></button>
+                </form>
+                <div class="hero-search-hint"><i class="fa-regular fa-lightbulb"></i><span data-i18n="heroSearchHint">Prueba con “Mercadona”, “farmacia”, “Playa San Juan” o una calle.</span></div>
                 <div class="hero-actions-v10">
                     <button onclick="openNearMeNow()" class="hero-primary-cta">
                         <i class="fa-solid fa-location-crosshairs"></i>
@@ -372,6 +413,11 @@
                 <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5"></i>
                 <span id="dataTrustHint">En “Abiertos ahora” solo usamos horarios confirmados. Los lugares descubiertos sin horario confirmado siguen disponibles para buscarlos.</span>
             </div>
+        </div>
+
+        <div id="zoneQuickLinks" class="zone-strip-v11 mb-5" aria-label="Explora por zona">
+            <div class="zone-strip-title"><i class="fa-solid fa-location-dot"></i><span data-i18n="zoneStripTitle">Explora por zona</span></div>
+            <div id="zoneQuickLinksList" class="zone-strip-list"></div>
         </div>
 
         <!-- MAIN CONTENT VIEW (GRID OR MAP OR STORE LANDING) -->
@@ -18589,6 +18635,17 @@
             }
             select.innerHTML = options.join('');
             select.value = options.some(option => option.includes(`value="${selected}"`)) ? selected : 'all';
+            renderZoneQuickLinks();
+        }
+
+        function renderZoneQuickLinks() {
+            const wrap = document.getElementById('zoneQuickLinksList');
+            if (!wrap) return;
+            const entries = getTownEntries().slice(0, 10);
+            wrap.innerHTML = entries.map(town => {
+                const label = currentLang === 'en' ? (town.en || town.es) : (town.es || town.en);
+                return '<a href="' + toPublicPath('/zona/' + town.slug) + '" onclick="event.preventDefault(); navigateTo(\'/zona/' + town.slug + '\')" class="zone-chip-v11">' + escapeHtml(label) + '</a>';
+            }).join('');
         }
 
         function normalizeStoresData() {
@@ -18651,6 +18708,10 @@
                 stat24hDesc: "servicios con horario continuo",
                 statData: "Datos",
                 statDataDesc: "última comprobación registrada",
+                heroSearchPlaceholder: "Busca una tienda, servicio o municipio…",
+                heroSearchButton: "Buscar",
+                heroSearchHint: "Prueba con “Mercadona”, “farmacia”, “Playa San Juan” o una calle.",
+                zoneStripTitle: "Explora por zona",
                 nearMeCta: "📍 ¿Qué está abierto cerca de mí ahora?",
                 nearMeDesc: "Activa GPS, prioriza distancia y muestra solo locales abiertos en este momento.",
                 browseCta: "Buscar por nombre o localidad", heroSupermarkets: "Supermercados", heroPharmacies: "Farmacias", heroFuel: "Gasolineras", heroBakeries: "Panaderías", heroVets: "Veterinarios", heroAll: "Ver todo", heroTrust: "Mostramos la fuente y la fecha de verificación en cada ficha.", fastHelpKicker: "LA FORMA MÁS RÁPIDA", fastHelpTitle: "Busca. Comprueba. Ve.", stepOneTitle: "Activa tu ubicación", stepOneText: "Calculamos qué tienes más cerca.", stepTwoTitle: "Filtra “Abiertos ahora”", stepTwoText: "Quitamos los que no puedes visitar.", stepThreeTitle: "Pulsa “Cómo llegar”", stepThreeText: "Te enviamos a Google Maps.",
@@ -19141,6 +19202,7 @@
             updateLiveClock();
             if (activeStoreSlug) renderStoreLandingPage(activeStoreSlug);
             else {
+                renderZoneQuickLinks();
                 applyRouteCopy(activeLogicalPath);
                 const metaKey = activeLogicalPath;
                 const meta = ROUTE_META[metaKey] || ROUTE_META['/'];
@@ -19687,7 +19749,7 @@
                     const source = sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="hover:underline">${escapeHtml(verificationLabel(store))}</a>` : `<span>${escapeHtml(verificationLabel(store))}</span>`;
                     const reportNote = rawStatus.isConfirmed === false ? (currentLang === 'es' ? 'Horario pendiente de confirmación' : 'Hours awaiting confirmation') : (currentLang === 'es' ? `Comprobado ${verifiedAt}` : `Checked ${verifiedAt}`);
                     return `
-                        <article class="store-card flex flex-col justify-between p-5" aria-label="${escapeHtml(store.name)}">
+                        <article class="store-card flex flex-col justify-between p-5" data-category="${escapeHtml(store.category)}" aria-label="${escapeHtml(store.name)}">
                             <div>
                                 <div class="flex items-center justify-between gap-2 mb-3">
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-black uppercase tracking-wide ${badgeClass}">
@@ -20156,6 +20218,8 @@
            ========================================================================== */
         function handleSearchInput(val) {
             searchTerm = val;
+            const heroInput = document.getElementById('heroSearchInput');
+            if (heroInput && heroInput.value !== val) heroInput.value = val;
             document.getElementById('clearSearchBtn').classList.toggle('hidden', !val);
             const url = new URL(window.location.href);
             if (val) url.searchParams.set('q', val); else url.searchParams.delete('q');
@@ -20165,7 +20229,22 @@
 
         function clearSearch() {
             document.getElementById('searchInput').value = '';
+            const heroInput = document.getElementById('heroSearchInput');
+            if (heroInput) heroInput.value = '';
             handleSearchInput('');
+        }
+
+        function handleHeroSearchInput(val) {
+            const mainInput = document.getElementById('searchInput');
+            if (mainInput) mainInput.value = val;
+            handleSearchInput(val);
+        }
+
+        function submitHeroSearch(event) {
+            event.preventDefault();
+            const input = document.getElementById('heroSearchInput');
+            handleSearchInput(input ? input.value.trim() : '');
+            document.getElementById('controlsToolbar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function handleTownChange(val) {
@@ -20363,6 +20442,7 @@
                 normalizeStoresData();
                 DATASET_META.totalRecords = STORES_DATA.length;
                 populateTownSelect();
+                renderZoneQuickLinks();
                 lastDatasetFingerprint = fingerprint;
                 if (!activeStoreSlug) { renderStoresList(); updateRouteSeo(); }
                 return true;
@@ -20381,6 +20461,7 @@
                 normalizeStoresData();
                 DATASET_META.totalRecords = STORES_DATA.length;
                 populateTownSelect();
+                renderZoneQuickLinks();
                 return true;
             } catch (error) {
                 console.warn('Using inline launch snapshot; external dataset could not be loaded.', error);
@@ -20398,7 +20479,13 @@
                 currentLang = requestedLang === 'en' ? 'en' : 'es';
             }
             const initialQuery = params.get('q') || '';
-            if (initialQuery) { searchTerm = initialQuery; document.getElementById('searchInput').value = initialQuery; document.getElementById('clearSearchBtn').classList.remove('hidden'); }
+            if (initialQuery) {
+                searchTerm = initialQuery;
+                document.getElementById('searchInput').value = initialQuery;
+                const heroInput = document.getElementById('heroSearchInput');
+                if (heroInput) heroInput.value = initialQuery;
+                document.getElementById('clearSearchBtn').classList.remove('hidden');
+            }
             await loadLaunchDataset();
             await loadMunicipalityIndex();
             lastDatasetFingerprint = `${STORES_DATA.length}:${STORES_DATA[0]?.updatedAt || STORES_DATA[0]?.lastVerified || ''}:${STORES_DATA.at(-1)?.updatedAt || STORES_DATA.at(-1)?.lastVerified || ''}`;
@@ -20408,6 +20495,7 @@
             handleRoute();
             applyLanguageUI();
             updateOpenNowToggle();
+            renderZoneQuickLinks();
             if ('serviceWorker' in navigator && window.location.protocol !== 'file:') { navigator.serviceWorker.register(`${SITE_BASE_PATH}/sw.js`).catch(() => {}); }
             updateLiveClock();
             setInterval(() => {
