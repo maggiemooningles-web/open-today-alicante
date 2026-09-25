@@ -19824,11 +19824,27 @@ body { background:var(--ota-cream) !important; }
                     const icon = CATEGORY_ICONS[store.category] || 'fa-store';
                     const gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(store.name + ' ' + store.address);
                     const distance = Number.isFinite(store.distance) ? store.distance.toFixed(1) + ' km' : '';
+                    const todaySchedule = getScheduleForDate(store, routeDate);
                     const statusLabel = rawStatus.isConfirmed === false
-                        ? (currentLang === 'es' ? 'Horario no confirmado' : 'Hours unconfirmed')
-                        : rawStatus.isOpen
-                            ? (rawStatus.is24h ? (currentLang === 'es' ? 'ABIERTO · 24 H' : 'OPEN · 24 H') : rawStatus.badgeText[currentLang])
-                            : rawStatus.badgeText[currentLang];
+                        ? (currentLang === 'es' ? 'HORARIO NO CONFIRMADO' : 'HOURS UNCONFIRMED')
+                        : rawStatus.is24h
+                            ? (currentLang === 'es' ? 'ABIERTO · 24 H' : 'OPEN · 24 H')
+                            : rawStatus.isOpen
+                                ? (activeRouteType === 'default' && todaySchedule.closeHour != null
+                                    ? (currentLang === 'es' ? 'ABIERTO' : 'OPEN')
+                                    : rawStatus.badgeText[currentLang])
+                                : (activeRouteType === 'default' && todaySchedule.openHour != null
+                                    ? (currentLang === 'es' ? 'CERRADO' : 'CLOSED')
+                                    : rawStatus.badgeText[currentLang]);
+                    const timeLine = rawStatus.isConfirmed === false
+                        ? (currentLang === 'es' ? 'El horario todavía no está confirmado.' : 'Opening hours are not yet confirmed.')
+                        : rawStatus.is24h
+                            ? (currentLang === 'es' ? 'Abierto las 24 horas' : 'Open 24 hours')
+                            : activeRouteType === 'default' && (rawStatus.isOpen ? todaySchedule.closeHour != null : todaySchedule.openHour != null)
+                                ? (rawStatus.isOpen
+                                    ? (currentLang === 'es' ? `Cierra a las ${formatTimeHour(todaySchedule.closeHour)}` : `Closes at ${formatTimeHour(todaySchedule.closeHour)}`)
+                                    : (currentLang === 'es' ? `Abre a las ${formatTimeHour(todaySchedule.openHour)}` : `Opens at ${formatTimeHour(todaySchedule.openHour)}`))
+                                : rawStatus.badgeText[currentLang];
                     return `
                         <article class="store-card store-card-v12" data-category="${escapeHtml(store.category)}" aria-label="${escapeHtml(store.name)}">
                             <div class="store-card-topline">
@@ -19842,7 +19858,7 @@ body { background:var(--ota-cream) !important; }
                                     <div class="store-v12-meta">${escapeHtml(store.town)} · ${escapeHtml(categoryLabel(store.category))}</div>
                                 </div>
                             </div>
-                            <div class="store-v12-openline"><span>${rawStatus.isOpen ? '🟢' : '🕒'} ${escapeHtml(rawStatus.badgeText[currentLang])}</span></div>
+                            <div class="store-v12-openline"><span>${rawStatus.isOpen ? '🟢' : rawStatus.isConfirmed === false ? '🟡' : '🕒'} ${escapeHtml(timeLine)}</span></div>
                             <p class="store-v12-address"><i class="fa-solid fa-location-dot"></i><span>${escapeHtml(store.address)}${store.district ? ' · ' + escapeHtml(store.district) : ''}</span></p>
                             <div class="store-v12-actions">
                                 <a href="${gmapsUrl}" target="_blank" rel="noopener noreferrer" class="store-v12-directions"><i class="fa-solid fa-diamond-turn-right"></i><span>${currentLang === 'es' ? 'Direcciones' : 'Directions'}</span></a>
