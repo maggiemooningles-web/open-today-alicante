@@ -1,9 +1,9 @@
 {
-  "version": "12.1.0",
-  "checkedAt": "2026-09-25T06:37:05.693Z",
+  "version": "12.2.0",
+  "checkedAt": "2026-09-25T06:41:07.409Z",
   "status": "combined-refresh-with-review",
-  "automaticMode": "combined-open-data-first-party-osm-refresh",
-  "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
+  "automaticMode": "combined-open-data-first-party-osm-alicante-scope-refresh",
+  "note": "Combined refresh: official/first-party enrichment is merged with a province-scoped OSM discovery dataset. OSM hours remain unverified and are excluded from Open Now until a checkable hours source confirms them.",
   "dataset": {
     "totalRecords": 2970,
     "sourceTypes": {
@@ -11,16 +11,19 @@
       "official-locator": 294,
       "business-directory": 184,
       "osm-discovery": 2466
-    }
+    },
+    "scopeVerified": true
   },
   "sourceHealth": [],
   "discovery": {
-    "before": 4184,
-    "discovered": 6,
-    "after": 4190,
     "source": "OpenStreetMap",
-    "bboxesAttempted": 20,
-    "bboxesFailed": 0
+    "provinceAreaId": 3600349012,
+    "scopeComplete": true,
+    "queriesAttempted": 3,
+    "queriesFailed": 0,
+    "beforeScope": 4210,
+    "afterScope": 2970,
+    "removedOutOfScope": 1240
   },
   "openData": {
     "catalogQueries": 19,
@@ -32,7 +35,8 @@
     "recordsAccepted": 0,
     "added": 0,
     "enriched": 0,
-    "errors": []
+    "errors": [],
+    "note": "Official catalog discovery is active; municipality-level aggregate datasets are not converted into individual listings. A future geospatial commerce dataset can be promoted only when an actual record-level resource is available."
   },
   "firstParty": {
     "sources": [
