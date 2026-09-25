@@ -1,16 +1,16 @@
 {
   "version": "12.1.0",
-  "checkedAt": "2026-09-25T06:09:54.583Z",
+  "checkedAt": "2026-09-25T06:15:56.579Z",
   "status": "combined-refresh-with-review",
   "automaticMode": "combined-open-data-first-party-osm-refresh",
   "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
   "dataset": {
-    "totalRecords": 4190,
+    "totalRecords": 4191,
     "sourceTypes": {
       "configured-source": 26,
       "official-locator": 294,
       "business-directory": 184,
-      "osm-discovery": 3686
+      "osm-discovery": 3687
     }
   },
   "sourceHealth": [],
@@ -96,8 +96,8 @@
     ]
   },
   "dedupe": {
-    "before": 4190,
-    "after": 4190,
+    "before": 4187,
+    "after": 4187,
     "removed": 0,
     "merged": 0,
     "nearMatchKm": 0.04

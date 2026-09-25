@@ -223948,7 +223948,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/13920667450"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-8869515949",
@@ -223996,7 +224000,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/8869515949"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1655927269",
@@ -224183,6 +224191,54 @@
     "verification": {
       "sourceName": "OpenStreetMap",
       "sourceUrl": "https://www.openstreetmap.org/node/12324228525",
+      "sourceType": "osm-discovery",
+      "verifiedAt": null,
+      "status": "discovered",
+      "hoursVerified": false
+    },
+    "weeklyHours": null
+  },
+  {
+    "id": "osm-node-13748532601",
+    "osmId": "osm:node:13748532601",
+    "slug": "santa-rosa-alicante",
+    "name": "Santa Rosa",
+    "chain": "",
+    "town": "Alicante",
+    "townSlug": "alicante",
+    "address": "Carrer de Santa Rosa de Lima 19, 46680",
+    "lat": 39.1931463,
+    "lng": -0.4312598,
+    "category": "other",
+    "weekOpenHour": null,
+    "weekCloseHour": null,
+    "sunOpenHour": null,
+    "sunCloseHour": null,
+    "isSundayOpen": null,
+    "holidayOpenNote": "",
+    "phone": "",
+    "descriptionES": "Local descubierto mediante OpenStreetMap. Horario pendiente de verificación.",
+    "descriptionEN": "Location discovered via OpenStreetMap. Opening hours pending verification.",
+    "sourceType": "osm-discovery",
+    "sourceName": "OpenStreetMap",
+    "sourceUrl": "https://www.openstreetmap.org/node/13748532601",
+    "officialSource": "OpenStreetMap",
+    "lastVerified": null,
+    "hoursVerified": false,
+    "dataScope": "discovery",
+    "discoveryStatus": "unverified",
+    "rawOpeningHours": null,
+    "community": {
+      "seedReports": 0,
+      "openToday": 0,
+      "closedToday": 0,
+      "updatedAt": null
+    },
+    "locationStatus": "mapped",
+    "hoursStatus": "unknown",
+    "verification": {
+      "sourceName": "OpenStreetMap",
+      "sourceUrl": "https://www.openstreetmap.org/node/13748532601",
       "sourceType": "osm-discovery",
       "verifiedAt": null,
       "status": "discovered",
