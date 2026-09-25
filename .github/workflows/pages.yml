@@ -28,6 +28,25 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Validate inline JavaScript
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)]
+            .map(match => match[1])
+            .filter(body => body.includes('const ') || body.includes('function '));
+          for (const [index, body] of scripts.entries()) {
+            try {
+              new Function(body);
+            } catch (error) {
+              console.error(`Inline script ${index} failed: ${error.message}`);
+              process.exit(1);
+            }
+          }
+          console.log(`Validated ${scripts.length} inline scripts.`);
+          NODE
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
