@@ -204,6 +204,25 @@
         @media (max-width: 900px) { #heroSection.hero-v10 { grid-template-columns:1fr; } .hero-side-v10 { display:none; } #controlsToolbar { top:64px; } #resultsToolbar { top:150px; } }
         @media (max-width: 640px) { #heroSection.hero-v10 { padding:1.15rem !important; gap:0; } .hero-actions-v10 { display:grid;grid-template-columns:1fr; } .hero-primary-cta,.hero-secondary-cta { width:100%; } #resultsToolbar { top:140px; } }
 
+<style>
+/* Friendly discovery layer */
+.quick-help-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:-.35rem 0 1rem;padding:.7rem .8rem;background:#fff;border:1px solid #e2e8f0;border-radius:1.1rem;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+.quick-help-title{font-size:.72rem;font-weight:950;color:#0f172a;margin-right:.15rem;white-space:nowrap}
+.quick-help-chip{display:inline-flex;align-items:center;gap:.35rem;padding:.55rem .72rem;border-radius:9999px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;font-size:.74rem;font-weight:850;transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
+.quick-help-chip:hover{transform:translateY(-1px);background:#fff;border-color:#a5f3fc;box-shadow:0 5px 14px rgba(15,23,42,.06)}
+.quick-help-chip.now{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.quick-help-chip.reset{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+#controlsToolbar{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 10px 28px rgba(15,23,42,.055) !important}
+#controlsToolbar input,#controlsToolbar select{background:#f8fafc !important;border-color:#dbe3ea !important;color:#0f172a !important}
+#controlsToolbar input::placeholder{color:#94a3b8}
+#controlsToolbar .text-slate-300,#controlsToolbar .text-slate-400{color:#64748b !important}
+#controlsToolbar .border-slate-700\/60,#controlsToolbar .border-slate-700\/50{border-color:#e2e8f0 !important}
+#controlsToolbar .bg-slate-900{background:#f1f5f9 !important;border-color:#dbe3ea !important}
+#controlsToolbar .text-white{color:#0f172a !important}
+#controlsToolbar .text-slate-400:hover{color:#0f172a !important}
+#resultsToolbar{background:linear-gradient(90deg,#fff,#f8fafc) !important;border-color:#e2e8f0 !important}
+@media (max-width:700px){.quick-help-strip{overflow-x:auto;flex-wrap:nowrap;padding:.65rem}.quick-help-title{position:sticky;left:0;background:#fff;padding-right:.35rem}.quick-help-chip{flex:0 0 auto}.hero-search-hint{font-size:.68rem}}
+</style>
 </style>
     <link id="hreflang-es" rel="alternate" hreflang="es" href="/open-today-alicante/" />
     <link id="hreflang-en" rel="alternate" hreflang="en" href="/open-today-alicante/?lang=en" />
@@ -332,6 +351,17 @@ body { background:var(--ota-cream) !important; }
                 </div>
             </div>
         </div>
+
+<div id="quickHelpStrip" class="quick-help-strip" aria-label="Accesos rápidos">
+  <div class="quick-help-title"><span data-i18n="quickNeedTitle">¿Qué necesitas?</span></div>
+  <button type="button" class="quick-help-chip now" onclick="quickIntent('now')">⚡ <span data-i18n="quickNow">Abierto ahora</span></button>
+  <button type="button" class="quick-help-chip" onclick="quickIntent('supermarket')">🛒 <span data-i18n="quickShop">Compra rápida</span></button>
+  <button type="button" class="quick-help-chip" onclick="quickIntent('pharmacy')">💊 <span data-i18n="quickMeds">Medicinas</span></button>
+  <button type="button" class="quick-help-chip" onclick="quickIntent('petrol')">⛽ <span data-i18n="quickFuel">Gasolina</span></button>
+  <button type="button" class="quick-help-chip" onclick="quickIntent('bakery')">🥐 <span data-i18n="quickBreakfast">Desayuno</span></button>
+  <button type="button" class="quick-help-chip" onclick="quickIntent('vet')">🐾 <span data-i18n="quickPets">Mascotas</span></button>
+  <button type="button" class="quick-help-chip reset" onclick="quickIntent('all')">✨ <span data-i18n="quickAll">Ver todo</span></button>
+</div>
 
         <!-- SEARCH & CONTROLS TOOLBAR -->
         <div id="controlsToolbar" class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 shadow-md backdrop-blur-md">
@@ -18711,6 +18741,7 @@ body { background:var(--ota-cream) !important; }
                 heroSearchPlaceholder: "Busca una tienda, servicio o municipio…",
                 heroSearchButton: "Buscar",
                 heroSearchHint: "Prueba con “Mercadona”, “farmacia”, “Playa San Juan” o una calle.",
+                quickNeedTitle: "¿Qué necesitas?", quickNow: "Abierto ahora", quickShop: "Compra rápida", quickMeds: "Medicinas", quickFuel: "Gasolina", quickBreakfast: "Desayuno", quickPets: "Mascotas", quickAll: "Ver todo",
                 zoneStripTitle: "Explora por zona",
                 nearMeCta: "📍 ¿Qué está abierto cerca de mí ahora?",
                 nearMeDesc: "Activa GPS, prioriza distancia y muestra solo locales abiertos en este momento.",
@@ -18794,6 +18825,8 @@ body { background:var(--ota-cream) !important; }
                 stat24hDesc: "services with continuous hours",
                 statData: "Data",
                 statDataDesc: "latest recorded check",
+                heroSearchHint: "Try “Mercadona”, “pharmacy”, “Playa San Juan” or a street.",
+                quickNeedTitle: "What do you need?", quickNow: "Open now", quickShop: "Quick groceries", quickMeds: "Medicines", quickFuel: "Fuel", quickBreakfast: "Breakfast", quickPets: "Pets", quickAll: "See everything",
                 nearMeCta: "📍 What's open near me right now?",
                 nearMeDesc: "Use GPS, prioritise distance and show only places open right now.",
                 browseCta: "Search by name or town", heroSupermarkets: "Supermarkets", heroPharmacies: "Pharmacies", heroFuel: "Fuel stations", heroBakeries: "Bakeries", heroVets: "Vets", heroAll: "View all", heroTrust: "Every listing shows its source and verification date.", fastHelpKicker: "FASTEST WAY", fastHelpTitle: "Search. Check. Go.", stepOneTitle: "Use your location", stepOneText: "We calculate what's closest.", stepTwoTitle: "Filter “Open now”", stepTwoText: "We remove places you can't visit.", stepThreeTitle: "Tap “Directions”", stepThreeText: "We'll hand you over to Google Maps.",
@@ -20255,6 +20288,27 @@ body { background:var(--ota-cream) !important; }
             if (val && val !== 'all') url.searchParams.set('town', val); else url.searchParams.delete('town');
             history.replaceState(history.state, '', url.pathname + (url.search ? url.search : '') + url.hash);
             renderStoresList();
+        }
+
+        function quickIntent(kind) {
+            selectedTown = 'all';
+            sundayOnlyFilter = false;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
+            if (document.getElementById('townSelect')) document.getElementById('townSelect').value = 'all';
+            if (document.getElementById('sundayOnlyToggle')) document.getElementById('sundayOnlyToggle').checked = false;
+
+            if (kind === 'now') {
+                selectedCategory = 'all';
+                openNowOnly = true;
+                if (document.getElementById('categorySelect')) document.getElementById('categorySelect').value = 'all';
+            } else {
+                selectedCategory = kind;
+                openNowOnly = false;
+                if (document.getElementById('categorySelect')) document.getElementById('categorySelect').value = kind === 'all' ? 'all' : kind;
+            }
+            updateOpenNowToggle();
+            renderStoresList();
+            document.getElementById('resultsToolbar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function handleCategoryChange(val) {
