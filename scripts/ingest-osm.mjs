@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 const DATA_PATH = new URL('../data/stores.json', import.meta.url);
 const REPORT_PATH = new URL('../data/update-report.json', import.meta.url);
 
+const ALICANTE_PROVINCE_AREA_ID = 3600349012;
 const OVERPASS_ENDPOINTS = [
   'https://overpass-api.de/api/interpreter',
   'https://overpass.private.coffee/api/interpreter',
@@ -50,23 +51,21 @@ function point(el) {
   if(el.center&&Number.isFinite(el.center.lat)&&Number.isFinite(el.center.lon)) return [el.center.lat,el.center.lon];
   return [null,null];
 }
-function makeBboxes() {
-  const b=[];
-  for(let lat=37.75; lat<39.2; lat+=0.35){
-    for(let lon=-1.30; lon<0.35; lon+=0.42){
-      b.push([lat,lon,Math.min(lat+0.35,39.2),Math.min(lon+0.42,0.35)].map(n=>n.toFixed(4)).join(','));
-    }
-  }
-  return b;
-}
-function buildQuery(bbox) {
-  const shops=SHOP_TAGS.join('|'), amenities=AMENITY_TAGS.join('|');
-  return `[out:json][timeout:45];
-(
-  nwr["shop"~"^(${shops})$"]["name"](${bbox});
-  nwr["amenity"~"^(${amenities})$"]["name"](${bbox});
-);
-out center tags;`;
+function buildAreaQueries() {
+  const shopChunks = [SHOP_TAGS.slice(0, 9), SHOP_TAGS.slice(9)];
+  const queries = shopChunks.map(tags => {
+    const shopExpr = tags.join('|');
+    return '[out:json][timeout:60];\n' +
+      'area(' + ALICANTE_PROVINCE_AREA_ID + ')->.alicante;\n' +
+      'nwr["shop"~"^(' + shopExpr + ')$"]["name"](area.alicante);\n' +
+      'out center tags;';
+  });
+  const amenityExpr = AMENITY_TAGS.join('|');
+  queries.push('[out:json][timeout:60];\n' +
+    'area(' + ALICANTE_PROVINCE_AREA_ID + ')->.alicante;\n' +
+    'nwr["amenity"~"^(' + amenityExpr + ')$"]["name"](area.alicante);\n' +
+    'out center tags;');
+  return queries;
 }
 async function fetchQuery(query) {
   const errors=[];
@@ -102,19 +101,21 @@ async function main(){
     groupedByName.get(key).push(store);
   }
 
-  const discovered=[], errors=[], bboxes=makeBboxes();
+  const discovered=[], errors=[], provinceElements=new Map();
+  const queries=buildAreaQueries();
 
-  for(const bbox of bboxes){
+  for(const query of queries){
     try{
-      const payload=await fetchQuery(buildQuery(bbox));
+      const payload=await fetchQuery(query);
       const elements=Array.isArray(payload.elements)?payload.elements:[];
+      for(const el of elements) provinceElements.set(`osm:${el.type}:${el.id}`,el);
+
       for(const el of elements){
         const tags=el.tags||{};
         const name=tags.name||tags['name:es']||tags['name:ca']||tags['name:en'];
         if(!name) continue;
         const [lat,lng]=point(el);
         if(!Number.isFinite(lat)||!Number.isFinite(lng)) continue;
-
         const osmId=`osm:${el.type}:${el.id}`;
         if(existingByOsmId.has(osmId)) continue;
 
@@ -160,29 +161,44 @@ async function main(){
         groupedByName.get(normalize(name)).push(store);
       }
     }catch(error){
-      errors.push({bbox,error:String(error)});
+      errors.push({query,error:String(error)});
     }
-    await pause(1800);
+    await pause(1200);
   }
 
-  const merged=current.concat(discovered);
+  const scopeComplete=errors.length===0 && provinceElements.size>0;
+  const currentScoped = scopeComplete
+    ? current.filter(store => store.sourceType!=='osm-discovery' || !store.osmId || provinceElements.has(store.osmId))
+    : current;
+  const removedOutOfScope=current.length-currentScoped.length;
+  const merged=currentScoped.concat(discovered);
   await fs.writeFile(DATA_PATH,JSON.stringify(merged,null,2)+'\n');
 
   const report={
-    version:'11.3.0',
+    version:'12.2.0',
     checkedAt:new Date().toISOString(),
-    automaticMode:'osm-discovery-plus-source-health',
-    dataset:{before:current.length,discovered:discovered.length,after:merged.length,source:'OpenStreetMap',bboxesAttempted:bboxes.length,bboxesFailed:errors.length},
+    automaticMode:'osm-alicante-province-area-discovery-plus-source-health',
+    dataset:{
+      before:current.length,
+      discovered:discovered.length,
+      after:merged.length,
+      source:'OpenStreetMap',
+      provinceAreaId:ALICANTE_PROVINCE_AREA_ID,
+      queriesAttempted:queries.length,
+      queriesFailed:errors.length,
+      scopeComplete,
+      removedOutOfScope
+    },
     errors,
     notes:[
       'OSM records are discovery-only and never treated as hours-verified.',
       'Existing first-party or manually verified records are preserved.',
       'Opening hours must be promoted from a checkable source before a place can appear in Open Now results.',
-      'OSM discovery is sharded into small bounding boxes and uses a fallback public Overpass endpoint.'
+      'Discovery is scoped to the OpenStreetMap administrative area for the Province of Alicante.',
+      'Out-of-scope OSM records are removed only when every province-scope query completes successfully.'
     ]
   };
-  await fs.writeFile(REPORT_PATH,JSON.stringify(report,null,2)+'\n');
-  console.log(JSON.stringify(report));
+  await fs.writeFile(REPORT_PATH,JSON.stringify(report,null,2)+'\n');  console.log(JSON.stringify(report));
 }
 
 main().catch(error=>{ console.error(error); process.exit(1); });

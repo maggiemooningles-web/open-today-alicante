@@ -206,12 +206,21 @@
 
 <style>
 /* Friendly discovery layer */
-.quick-help-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:-.35rem 0 1rem;padding:.7rem .8rem;background:#fff;border:1px solid #e2e8f0;border-radius:1.1rem;box-shadow:0 8px 24px rgba(15,23,42,.05)}
-.quick-help-title{font-size:.72rem;font-weight:950;color:#0f172a;margin-right:.15rem;white-space:nowrap}
-.quick-help-chip{display:inline-flex;align-items:center;gap:.35rem;padding:.55rem .72rem;border-radius:9999px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;font-size:.74rem;font-weight:850;transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
-.quick-help-chip:hover{transform:translateY(-1px);background:#fff;border-color:#a5f3fc;box-shadow:0 5px 14px rgba(15,23,42,.06)}
+.quick-help-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:-.35rem 0 1rem;padding:.75rem .85rem;background:rgba(255,255,255,.94);border:1px solid #e2e8f0;border-radius:1.2rem;box-shadow:0 10px 26px rgba(15,23,42,.05)}
+.quick-help-title{font-size:.72rem;font-weight:950;color:#0f172a;margin-right:.1rem;white-space:nowrap}
+.quick-help-chip{display:inline-flex;align-items:center;gap:.42rem;padding:.5rem .72rem;border-radius:1rem;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;font-size:.74rem;font-weight:900;transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
+.quick-help-chip:hover{transform:translateY(-2px);background:#fff;border-color:#a5f3fc;box-shadow:0 7px 16px rgba(15,23,42,.07)}
+.quick-help-emoji{display:grid;place-items:center;width:26px;height:26px;border-radius:9px;background:#fff;box-shadow:0 2px 8px rgba(15,23,42,.06);font-size:.95rem}
 .quick-help-chip.now{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.quick-help-chip.supermarket{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.quick-help-chip.pharmacy{background:#ecfeff;border-color:#a5f3fc;color:#0e7490}
+.quick-help-chip.petrol{background:#f8fafc;border-color:#cbd5e1;color:#334155}
+.quick-help-chip.bakery{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.quick-help-chip.vet{background:#faf5ff;border-color:#e9d5ff;color:#7e22ce}
 .quick-help-chip.reset{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+.fresh-ribbon{display:flex;gap:.55rem;flex-wrap:wrap;margin:-.35rem 0 1.15rem;padding:.15rem .15rem;color:#64748b}
+.fresh-ribbon-item{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:800;padding:.38rem .58rem;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(226,232,240,.9)}
+.fresh-ribbon-item i{color:#0f766e}
 #controlsToolbar{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 10px 28px rgba(15,23,42,.055) !important}
 #controlsToolbar input,#controlsToolbar select{background:#f8fafc !important;border-color:#dbe3ea !important;color:#0f172a !important}
 #controlsToolbar input::placeholder{color:#94a3b8}
@@ -221,7 +230,7 @@
 #controlsToolbar .text-white{color:#0f172a !important}
 #controlsToolbar .text-slate-400:hover{color:#0f172a !important}
 #resultsToolbar{background:linear-gradient(90deg,#fff,#f8fafc) !important;border-color:#e2e8f0 !important}
-@media (max-width:700px){.quick-help-strip{overflow-x:auto;flex-wrap:nowrap;padding:.65rem}.quick-help-title{position:sticky;left:0;background:#fff;padding-right:.35rem}.quick-help-chip{flex:0 0 auto}.hero-search-hint{font-size:.68rem}}
+@media (max-width:700px){.quick-help-strip{overflow-x:auto;flex-wrap:nowrap;padding:.65rem}.quick-help-title{position:sticky;left:0;background:#fff;padding-right:.35rem}.quick-help-chip{flex:0 0 auto}.hero-search-hint{font-size:.68rem}.fresh-ribbon{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.15rem}.fresh-ribbon-item{flex:0 0 auto}#controlsToolbar,#resultsToolbar{position:relative;top:auto}.hero-side-v10{display:none !important}.hero-actions-v10{margin-bottom:.8rem}}
 </style>
 </style>
     <link id="hreflang-es" rel="alternate" hreflang="es" href="/open-today-alicante/" />
@@ -310,10 +319,10 @@ body { background:var(--ota-cream) !important; }
                     <span id="liveStatusBannerText">Alicante · Abierto ahora</span>
                 </div>
                 <h1 id="heroTitle" class="text-3xl sm:text-5xl font-black tracking-[-0.03em] mb-3">
-                    ¿Qué necesitas abierto hoy?
+                    ¿Qué necesitas encontrar abierto?
                 </h1>
                 <p id="heroSubtitle" class="text-base sm:text-lg leading-relaxed mb-4 max-w-2xl">
-                    Busca un sitio, toca una categoría y descubre qué puedes hacer ahora mismo.
+                    Busca un sitio, toca una categoría y descubre qué puedes resolver ahora mismo.
                 </p>
                 <form class="hero-search-v11" onsubmit="submitHeroSearch(event)" role="search">
                     <div class="hero-search-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
@@ -354,14 +363,20 @@ body { background:var(--ota-cream) !important; }
 
 <div id="quickHelpStrip" class="quick-help-strip" aria-label="Accesos rápidos">
   <div class="quick-help-title"><span data-i18n="quickNeedTitle">¿Qué necesitas?</span></div>
-  <button type="button" class="quick-help-chip now" onclick="quickIntent('now')">⚡ <span data-i18n="quickNow">Abierto ahora</span></button>
-  <button type="button" class="quick-help-chip" onclick="quickIntent('supermarket')">🛒 <span data-i18n="quickShop">Compra rápida</span></button>
-  <button type="button" class="quick-help-chip" onclick="quickIntent('pharmacy')">💊 <span data-i18n="quickMeds">Medicinas</span></button>
-  <button type="button" class="quick-help-chip" onclick="quickIntent('petrol')">⛽ <span data-i18n="quickFuel">Gasolina</span></button>
-  <button type="button" class="quick-help-chip" onclick="quickIntent('bakery')">🥐 <span data-i18n="quickBreakfast">Desayuno</span></button>
-  <button type="button" class="quick-help-chip" onclick="quickIntent('vet')">🐾 <span data-i18n="quickPets">Mascotas</span></button>
-  <button type="button" class="quick-help-chip reset" onclick="quickIntent('all')">✨ <span data-i18n="quickAll">Ver todo</span></button>
+  <button type="button" class="quick-help-chip now" onclick="quickIntent('now')"><span class="quick-help-emoji">⚡</span><span data-i18n="quickNow">Abierto ahora</span></button>
+  <button type="button" class="quick-help-chip supermarket" onclick="quickIntent('supermarket')"><span class="quick-help-emoji">🛒</span><span data-i18n="quickShop">Compra rápida</span></button>
+  <button type="button" class="quick-help-chip pharmacy" onclick="quickIntent('pharmacy')"><span class="quick-help-emoji">💊</span><span data-i18n="quickMeds">Medicinas</span></button>
+  <button type="button" class="quick-help-chip petrol" onclick="quickIntent('petrol')"><span class="quick-help-emoji">⛽</span><span data-i18n="quickFuel">Gasolina</span></button>
+  <button type="button" class="quick-help-chip bakery" onclick="quickIntent('bakery')"><span class="quick-help-emoji">🥐</span><span data-i18n="quickBreakfast">Desayuno</span></button>
+  <button type="button" class="quick-help-chip vet" onclick="quickIntent('vet')"><span class="quick-help-emoji">🐾</span><span data-i18n="quickPets">Mascotas</span></button>
+  <button type="button" class="quick-help-chip reset" onclick="quickIntent('all')"><span class="quick-help-emoji">✨</span><span data-i18n="quickAll">Ver todo</span></button>
 </div>
+
+        <div class="fresh-ribbon" aria-label="Información de los datos">
+            <span class="fresh-ribbon-item"><i class="fa-solid fa-database"></i><span data-i18n="freshDataRibbon">Miles de lugares, una sola búsqueda.</span></span>
+            <span class="fresh-ribbon-item"><i class="fa-solid fa-shield-heart"></i><span data-i18n="freshTrustRibbon">Cada ficha enseña su fuente.</span></span>
+            <span class="fresh-ribbon-item"><i class="fa-solid fa-clock-rotate-left"></i><span data-i18n="freshHoursRibbon">“Abierto ahora” solo usa horarios confirmados.</span></span>
+        </div>
 
         <!-- SEARCH & CONTROLS TOOLBAR -->
         <div id="controlsToolbar" class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 shadow-md backdrop-blur-md">
@@ -18720,6 +18735,9 @@ body { background:var(--ota-cream) !important; }
         const I18N = {
             es: {
                 brandTagline: "QUÉ ESTÁ ABIERTO HOY",
+                freshDataRibbon: "Miles de lugares, una sola búsqueda.",
+                freshTrustRibbon: "Cada ficha enseña su fuente.",
+                freshHoursRibbon: "“Abierto ahora” solo usa horarios confirmados.",
                 searchPlaceholder: "Buscar por tienda, cadena o calle...",
                 townAlicante: "Alicante Centro / Ciudad",
                 townMutxamel: "Mutxamel",
@@ -18807,6 +18825,9 @@ body { background:var(--ota-cream) !important; }
             },
             en: {
                 brandTagline: "WHAT'S OPEN TODAY",
+                freshDataRibbon: "Thousands of places, one search.",
+                freshTrustRibbon: "Every listing shows its source.",
+                freshHoursRibbon: "“Open now” only uses confirmed hours.",
                 searchPlaceholder: "Search by store, chain or street...",
                 townAlicante: "Alicante Centre / City",
                 townMutxamel: "Mutxamel",
@@ -19610,6 +19631,8 @@ body { background:var(--ota-cream) !important; }
                     const matchAddress = store.address.toLowerCase().includes(q);
                     const matchTown = store.town.toLowerCase().includes(q);
                     const matchChain = store.chain.toLowerCase().includes(q);
+                    const locationBits = [store.district, store.suburb, store.neighbourhood, store.quarter].filter(Boolean).join(' ').toLowerCase();
+                    const matchDistrict = locationBits.includes(q);
                     if (!matchName && !matchAddress && !matchTown && !matchDistrict && !matchChain) return false;
                 }
 
