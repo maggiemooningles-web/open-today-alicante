@@ -1,20 +1,173 @@
 {
-  "version": "12.2.0",
-  "checkedAt": "2026-09-25T06:41:07.409Z",
-  "status": "combined-refresh-with-review",
-  "automaticMode": "combined-open-data-first-party-osm-alicante-scope-refresh",
-  "note": "Combined refresh: official/first-party enrichment is merged with a province-scoped OSM discovery dataset. OSM hours remain unverified and are excluded from Open Now until a checkable hours source confirms them.",
+  "version": "12.1.0",
+  "checkedAt": "2026-09-25T09:39:45.902Z",
+  "status": "first-party-complete-with-review",
+  "automaticMode": "combined-open-data-first-party-osm-refresh",
+  "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
   "dataset": {
-    "totalRecords": 2970,
+    "totalRecords": 2972,
     "sourceTypes": {
       "configured-source": 26,
-      "official-locator": 294,
-      "business-directory": 184,
+      "official-locator": 295,
+      "business-directory": 185,
       "osm-discovery": 2466
-    },
-    "scopeVerified": true
+    }
   },
-  "sourceHealth": [],
+  "sourceHealth": [
+    {
+      "id": "alicante-commerce-calendar",
+      "name": "Ayuntamiento de Alicante — Horarios apertura comercial",
+      "url": "https://www.alicante.es/es/contenidos/horarios-apertura-comercial-alicante-2026",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "cofa-guardias",
+      "name": "Colegio Oficial de Farmacéuticos de Alicante — Guardias",
+      "url": "https://cofalicante.com/farmacias-de-guardia/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "consum-alicante",
+      "name": "Consum — Alicante store locator",
+      "url": "https://www.consum.es/supermercados/alicante/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "carrefour-alicante",
+      "name": "Carrefour — Alicante store locator",
+      "url": "https://www.carrefour.es/tiendas-carrefour/comunidad-valenciana/alicante/",
+      "ok": false,
+      "status": 403,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "lidl-locator",
+      "name": "Lidl — Store locator",
+      "url": "https://tiendas.lidl.es/",
+      "ok": false,
+      "status": 502,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "aldi-locator",
+      "name": "ALDI — Store locator",
+      "url": "https://www.aldi.es/supermercados/encuentra-tu-supermercado.html/l/m",
+      "ok": false,
+      "status": 410,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "dia-alicante",
+      "name": "DIA — Alicante store locator",
+      "url": "https://www.dia.es/tiendas/buscador-tiendas/alicante",
+      "ok": false,
+      "status": 403,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "repsol-alicante",
+      "name": "Repsol — Alicante service stations",
+      "url": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "osm-discovery-alicante",
+      "name": "OpenStreetMap discovery (business locations)",
+      "url": "https://www.openstreetmap.org/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "diputacion-open-data",
+      "name": "Datos Abiertos Diputación de Alicante",
+      "url": "https://datosabiertos.diputacionalicante.es/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "diputacion-municipalities",
+      "name": "Diputación de Alicante — Los Municipios",
+      "url": "https://www.diputacionalicante.es/los-municipios/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "alicante-business-directory",
+      "name": "Ayuntamiento de Alicante — Directorio de establecimientos",
+      "url": "https://alicante.comercioscomunitatvalenciana.com/es/mapa/index",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "hiperber-locator",
+      "name": "Hiperber — Store locator",
+      "url": "https://hiperber.com/supermercados-hiperber/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "dialprix-locator",
+      "name": "Dialprix — Store locator",
+      "url": "https://dialprix.es/supermercados/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "masymas-locator",
+      "name": "masymas — Store locator",
+      "url": "https://www.masymas.com/localizadordetiendas/localizador.php",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "moeve-alicante",
+      "name": "Moeve — Alicante service stations",
+      "url": "https://www.moeve.es/es/cerca-de-ti/gasolineras/alicante/profesionales-moeve-pro-direct-cerca-de-mi",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "unide-locator",
+      "name": "UNIDE — Localizador de tiendas",
+      "url": "https://tu.unidesupermercados.es/establecimientos/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "gva-open-data",
+      "name": "Generalitat Valenciana — Dades Obertes",
+      "url": "https://dadesobertes.gva.es/",
+      "ok": true,
+      "status": 200,
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    },
+    {
+      "id": "alicante-open-data",
+      "name": "Ayuntamiento de Alicante — Datos Abiertos",
+      "url": "https://datosabiertos.alicante.es/",
+      "ok": false,
+      "status": null,
+      "error": "TypeError: fetch failed",
+      "checkedAt": "2026-09-25T09:37:06.364Z"
+    }
+  ],
   "discovery": {
     "source": "OpenStreetMap",
     "provinceAreaId": 3600349012,
@@ -35,8 +188,7 @@
     "recordsAccepted": 0,
     "added": 0,
     "enriched": 0,
-    "errors": [],
-    "note": "Official catalog discovery is active; municipality-level aggregate datasets are not converted into individual listings. A future geospatial commerce dataset can be promoted only when an actual record-level resource is available."
+    "errors": []
   },
   "firstParty": {
     "sources": [
@@ -86,30 +238,45 @@
         "ok": true,
         "records": 0,
         "detailLinks": 0
+      },
+      {
+        "id": "lidl",
+        "ok": true,
+        "records": 0,
+        "detailLinks": 0
+      },
+      {
+        "id": "aldi",
+        "ok": false,
+        "error": "Error: HTTP 410"
+      },
+      {
+        "id": "unide",
+        "ok": true,
+        "records": 0,
+        "detailLinks": 0
       }
     ],
     "structuredRecords": 247,
     "detailLinks": 264,
-    "added": 0,
+    "added": 2,
     "enriched": 0,
     "errors": [
       {
         "source": "carrefour",
         "error": "Error: HTTP 403"
+      },
+      {
+        "source": "aldi",
+        "error": "Error: HTTP 410"
       }
     ]
   },
   "dedupe": {
-    "before": 2970,
-    "after": 2970,
+    "before": 2972,
+    "after": 2972,
     "removed": 0,
     "merged": 0,
     "nearMatchKm": 0.04
-  },
-  "scopeCleanup": {
-    "scope": "OpenStreetMap Province of Alicante area",
-    "before": 4210,
-    "after": 2970,
-    "removedOutOfScope": 1240
   }
 }
