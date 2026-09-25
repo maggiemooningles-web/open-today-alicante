@@ -20500,7 +20500,7 @@ body { background:var(--ota-cream) !important; }
             }
 
             setGpsUiState('locating');
-            const options = { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 };
+            const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 };
             const onSuccess = (pos) => {
                 applyUserLocation(pos);
                 if (typeof afterSuccess === 'function') afterSuccess();
@@ -20530,8 +20530,14 @@ body { background:var(--ota-cream) !important; }
             };
 
             navigator.geolocation.getCurrentPosition(onSuccess, (err) => {
-                if (err && err.code === 2) {
-                    navigator.geolocation.getCurrentPosition(onSuccess, finishError, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+                if (err && (err.code === 2 || err.code === 3)) {
+                    // Retry with a lower-power request so older phones and indoor
+                    // browsers can still return a coarse but useful position.
+                    navigator.geolocation.getCurrentPosition(
+                        onSuccess,
+                        finishError,
+                        { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 }
+                    );
                 } else {
                     finishError(err);
                 }
