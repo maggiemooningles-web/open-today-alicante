@@ -52,29 +52,7 @@ jobs:
           git show origin/main:data/update-report.json > /tmp/remote-update-report.json || echo '{}' > /tmp/remote-update-report.json
           node scripts/merge-generated-data.mjs /tmp/generated-stores.json /tmp/remote-stores.json
           node scripts/merge-reports.mjs /tmp/generated-update-report.json /tmp/remote-update-report.json
-          - name: Remove OSM records outside Alicante province
-        run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const generated = JSON.parse(fs.readFileSync('/tmp/generated-stores.json', 'utf8'));
-          const allowedOsmIds = new Set(generated.filter(s => s.sourceType === 'osm-discovery' && s.osmId).map(s => s.osmId));
-          const path = 'data/stores.json';
-          const stores = JSON.parse(fs.readFileSync(path, 'utf8'));
-          const before = stores.length;
-          const cleaned = stores.filter(s => s.sourceType !== 'osm-discovery' || !s.osmId || allowedOsmIds.has(s.osmId));
-          fs.writeFileSync(path, JSON.stringify(cleaned, null, 2) + '\n');
-          const reportPath = 'data/update-report.json';
-          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-          const sourceTypes = cleaned.reduce((acc, s) => {
-            const key = s.sourceType || 'unknown';
-            acc[key] = (acc[key] || 0) + 1;
-            return acc;
-          }, {});
-          report.dataset = { ...(report.dataset || {}), totalRecords: cleaned.length, sourceTypes };
-          report.scopeCleanup = { scope: 'OpenStreetMap Province of Alicante area', before, after: cleaned.length, removedOutOfScope: before - cleaned.length };
-          fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
-          console.log(JSON.stringify({ before, after: cleaned.length, removedOutOfScope: before - cleaned.length }));
-          NODE
+          node -e 'const fs=require("fs");const g=JSON.parse(fs.readFileSync("/tmp/generated-stores.json","utf8"));const ids=new Set(g.filter(s=>s.sourceType==="osm-discovery"&&s.osmId).map(s=>s.osmId));const p="data/stores.json";const d=JSON.parse(fs.readFileSync(p,"utf8"));const before=d.length;const cleaned=d.filter(s=>s.sourceType!=="osm-discovery"||!s.osmId||ids.has(s.osmId));fs.writeFileSync(p,JSON.stringify(cleaned,null,2)+"\n");const rp="data/update-report.json";const report=JSON.parse(fs.readFileSync(rp,"utf8"));const sourceTypes=cleaned.reduce((a,s)=>(a[s.sourceType||"unknown"]=(a[s.sourceType||"unknown"]||0)+1,a),{});report.dataset={...(report.dataset||{}),totalRecords:cleaned.length,sourceTypes};report.scopeCleanup={scope:"OpenStreetMap Province of Alicante area",before,after:cleaned.length,removedOutOfScope:before-cleaned.length};fs.writeFileSync(rp,JSON.stringify(report,null,2)+"\n");console.log(JSON.stringify({before,after:cleaned.length,removedOutOfScope:before-cleaned.length}));'
           node scripts/generate-sitemap.mjs
 
       - name: Show dataset size
@@ -91,29 +69,7 @@ jobs:
             git reset --hard origin/main
             node scripts/merge-generated-data.mjs /tmp/generated-stores.json /tmp/remote-stores.json
             node scripts/merge-reports.mjs /tmp/generated-update-report.json /tmp/remote-update-report.json
-            - name: Remove OSM records outside Alicante province
-        run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const generated = JSON.parse(fs.readFileSync('/tmp/generated-stores.json', 'utf8'));
-          const allowedOsmIds = new Set(generated.filter(s => s.sourceType === 'osm-discovery' && s.osmId).map(s => s.osmId));
-          const path = 'data/stores.json';
-          const stores = JSON.parse(fs.readFileSync(path, 'utf8'));
-          const before = stores.length;
-          const cleaned = stores.filter(s => s.sourceType !== 'osm-discovery' || !s.osmId || allowedOsmIds.has(s.osmId));
-          fs.writeFileSync(path, JSON.stringify(cleaned, null, 2) + '\n');
-          const reportPath = 'data/update-report.json';
-          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-          const sourceTypes = cleaned.reduce((acc, s) => {
-            const key = s.sourceType || 'unknown';
-            acc[key] = (acc[key] || 0) + 1;
-            return acc;
-          }, {});
-          report.dataset = { ...(report.dataset || {}), totalRecords: cleaned.length, sourceTypes };
-          report.scopeCleanup = { scope: 'OpenStreetMap Province of Alicante area', before, after: cleaned.length, removedOutOfScope: before - cleaned.length };
-          fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
-          console.log(JSON.stringify({ before, after: cleaned.length, removedOutOfScope: before - cleaned.length }));
-          NODE
+            node -e 'const fs=require("fs");const g=JSON.parse(fs.readFileSync("/tmp/generated-stores.json","utf8"));const ids=new Set(g.filter(s=>s.sourceType==="osm-discovery"&&s.osmId).map(s=>s.osmId));const p="data/stores.json";const d=JSON.parse(fs.readFileSync(p,"utf8"));const before=d.length;const cleaned=d.filter(s=>s.sourceType!=="osm-discovery"||!s.osmId||ids.has(s.osmId));fs.writeFileSync(p,JSON.stringify(cleaned,null,2)+"\n");const rp="data/update-report.json";const report=JSON.parse(fs.readFileSync(rp,"utf8"));const sourceTypes=cleaned.reduce((a,s)=>(a[s.sourceType||"unknown"]=(a[s.sourceType||"unknown"]||0)+1,a),{});report.dataset={...(report.dataset||{}),totalRecords:cleaned.length,sourceTypes};report.scopeCleanup={scope:"OpenStreetMap Province of Alicante area",before,after:cleaned.length,removedOutOfScope:before-cleaned.length};fs.writeFileSync(rp,JSON.stringify(report,null,2)+"\n");'
             node scripts/generate-sitemap.mjs
             git add data/stores.json data/update-report.json sitemap.xml
             git diff --cached --quiet && exit 0
@@ -134,4 +90,3 @@ jobs:
 
       - name: Deploy updated site
         uses: actions/deploy-pages@v4
-
