@@ -1,6 +1,12 @@
 name: Refresh store data
 
 on:
+  push:
+    paths:
+      - 'scripts/**'
+      - 'data/source-registry.json'
+      - 'package.json'
+      - '.github/workflows/refresh-data.yml'
   schedule:
     - cron: '17 */6 * * *'
   workflow_dispatch:
@@ -50,4 +56,5 @@ jobs:
           git add data/stores.json data/update-report.json sitemap.xml
           git diff --cached --quiet && exit 0
           git commit -m "chore(data): refresh official and first-party sources"
+          git pull --rebase origin main
           git push
