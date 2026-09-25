@@ -1,16 +1,27 @@
 {
-  "version": "11.0.0",
-  "checkedAt": "2026-09-24T13:41:54.819Z",
+  "version": "11.3.0",
+  "checkedAt": "2026-09-25T05:49:46.814Z",
   "automaticMode": "osm-discovery-plus-source-health",
   "dataset": {
     "before": 255,
-    "discovered": 0,
-    "after": 255,
-    "source": "OpenStreetMap"
+    "discovered": 3659,
+    "after": 3914,
+    "source": "OpenStreetMap",
+    "bboxesAttempted": 20,
+    "bboxesFailed": 0
   },
+  "errors": [],
   "notes": [
     "OSM records are discovery-only and never treated as hours-verified.",
     "Existing first-party or manually verified records are preserved.",
-    "Opening hours must be promoted from a checkable source before a place can appear in Open Now results."
-  ]
+    "Opening hours must be promoted from a checkable source before a place can appear in Open Now results.",
+    "OSM discovery is sharded into small bounding boxes and uses a fallback public Overpass endpoint."
+  ],
+  "dedupe": {
+    "before": 3914,
+    "after": 3914,
+    "removed": 0,
+    "merged": 0,
+    "nearMatchKm": 0.04
+  }
 }
