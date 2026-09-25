@@ -160812,7 +160812,10 @@
       "status": "current-listing",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.foodretail.es/retailers/unide-inaugura-cuatro-supermercados-en-una-semana-y-suma-siete-en-lo-que-va-de-2026.html"
+    ]
   },
   {
     "id": "udaco-alimentacion-el-campello-xorrutella-1",
@@ -160852,6 +160855,9 @@
       "status": "current-listing",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://tu.unidesupermercados.es/nueva-apertura-en-el-campello/"
+    ]
   }
 ]
