@@ -1,5 +1,6 @@
 name: Discover more locations
 # Alicante-province scoped discovery keeps the directory geographically correct.
+# OSM pruning keeps only Alicante-province discovery records in the published dataset.
 
 on:
   push:
@@ -51,6 +52,29 @@ jobs:
           git show origin/main:data/update-report.json > /tmp/remote-update-report.json || echo '{}' > /tmp/remote-update-report.json
           node scripts/merge-generated-data.mjs /tmp/generated-stores.json /tmp/remote-stores.json
           node scripts/merge-reports.mjs /tmp/generated-update-report.json /tmp/remote-update-report.json
+          - name: Remove OSM records outside Alicante province
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('/tmp/generated-stores.json', 'utf8'));
+          const allowedOsmIds = new Set(generated.filter(s => s.sourceType === 'osm-discovery' && s.osmId).map(s => s.osmId));
+          const path = 'data/stores.json';
+          const stores = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const before = stores.length;
+          const cleaned = stores.filter(s => s.sourceType !== 'osm-discovery' || !s.osmId || allowedOsmIds.has(s.osmId));
+          fs.writeFileSync(path, JSON.stringify(cleaned, null, 2) + '\n');
+          const reportPath = 'data/update-report.json';
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          const sourceTypes = cleaned.reduce((acc, s) => {
+            const key = s.sourceType || 'unknown';
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+          }, {});
+          report.dataset = { ...(report.dataset || {}), totalRecords: cleaned.length, sourceTypes };
+          report.scopeCleanup = { scope: 'OpenStreetMap Province of Alicante area', before, after: cleaned.length, removedOutOfScope: before - cleaned.length };
+          fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+          console.log(JSON.stringify({ before, after: cleaned.length, removedOutOfScope: before - cleaned.length }));
+          NODE
           node scripts/generate-sitemap.mjs
 
       - name: Show dataset size
@@ -67,6 +91,29 @@ jobs:
             git reset --hard origin/main
             node scripts/merge-generated-data.mjs /tmp/generated-stores.json /tmp/remote-stores.json
             node scripts/merge-reports.mjs /tmp/generated-update-report.json /tmp/remote-update-report.json
+            - name: Remove OSM records outside Alicante province
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('/tmp/generated-stores.json', 'utf8'));
+          const allowedOsmIds = new Set(generated.filter(s => s.sourceType === 'osm-discovery' && s.osmId).map(s => s.osmId));
+          const path = 'data/stores.json';
+          const stores = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const before = stores.length;
+          const cleaned = stores.filter(s => s.sourceType !== 'osm-discovery' || !s.osmId || allowedOsmIds.has(s.osmId));
+          fs.writeFileSync(path, JSON.stringify(cleaned, null, 2) + '\n');
+          const reportPath = 'data/update-report.json';
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          const sourceTypes = cleaned.reduce((acc, s) => {
+            const key = s.sourceType || 'unknown';
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+          }, {});
+          report.dataset = { ...(report.dataset || {}), totalRecords: cleaned.length, sourceTypes };
+          report.scopeCleanup = { scope: 'OpenStreetMap Province of Alicante area', before, after: cleaned.length, removedOutOfScope: before - cleaned.length };
+          fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+          console.log(JSON.stringify({ before, after: cleaned.length, removedOutOfScope: before - cleaned.length }));
+          NODE
             node scripts/generate-sitemap.mjs
             git add data/stores.json data/update-report.json sitemap.xml
             git diff --cached --quiet && exit 0
