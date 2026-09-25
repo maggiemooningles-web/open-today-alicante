@@ -557,6 +557,9 @@ body { background:var(--ota-cream) !important; }
             </div>
             <h3 class="text-lg font-bold text-slate-200 mb-1" data-i18n="noResultsTitle">No se encontraron tiendas</h3>
             <p class="text-sm text-slate-400 max-w-md mx-auto mb-4" data-i18n="noResultsText">Prueba ajustando los filtros de búsqueda o seleccionando otro municipio cercano. También puedes desactivar “Abiertos ahora” para ver horarios pendientes de confirmar.</p>
+            <button id="townBrowseAllBtn" onclick="showTownAllResults()" class="hidden px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs transition">
+                <i class="fa-solid fa-city mr-1.5"></i> Ver todos los locales de esta zona
+            </button>
             <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs transition">
                 <i class="fa-solid fa-rotate-left mr-1.5"></i> <span data-i18n="btnResetFilters">Restablecer filtros</span>
             </button>
@@ -18686,6 +18689,41 @@ body { background:var(--ota-cream) !important; }
                 .replace(/^-+|-+$/g, '');
         }
 
+        function townAliasesForSlug(slug) {
+            const target = normalizeTownKey(slug);
+            const entry = Array.isArray(MUNICIPALITY_INDEX)
+                ? MUNICIPALITY_INDEX.find(item => normalizeTownKey(item?.slug || '') === target)
+                : null;
+            const values = [
+                target,
+                entry?.slug,
+                entry?.es,
+                entry?.en,
+                ...(Array.isArray(entry?.aliases) ? entry.aliases : [])
+            ].filter(Boolean).map(normalizeTownKey);
+            return [...new Set(values)];
+        }
+
+        function storeMatchesTown(store, slug) {
+            const aliases = townAliasesForSlug(slug);
+            const values = [
+                store?.town,
+                store?.townSlug,
+                store?.suburb,
+                store?.neighbourhood,
+                store?.quarter
+            ].filter(Boolean).map(normalizeTownKey);
+            return values.some(value => aliases.includes(value));
+        }
+
+        function selectedTownLabel(slug) {
+            const target = normalizeTownKey(slug);
+            const entry = Array.isArray(MUNICIPALITY_INDEX)
+                ? MUNICIPALITY_INDEX.find(item => normalizeTownKey(item?.slug || '') === target)
+                : null;
+            return entry?.es || entry?.en || (slug || '').replace(/-/g, ' ');
+        }
+
         async function loadMunicipalityIndex() {
             if (MUNICIPALITY_INDEX_LOADED) return;
             MUNICIPALITY_INDEX_LOADED = true;
@@ -19435,7 +19473,8 @@ body { background:var(--ota-cream) !important; }
         }
 
         function navigateTo(path, push = true, options = {}) {
-            const scrollMode = options.scroll || 'top';
+            const isStoreRoute = String(path || '').startsWith('/tienda/');
+            const scrollMode = options.scroll || (isStoreRoute ? 'none' : 'top');
             if (push) {
                 history.pushState({ path }, '', toPublicPath(path));
             }
@@ -19449,6 +19488,8 @@ body { background:var(--ota-cream) !important; }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
+
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
         let storeReturnPath = '/';
         let storeReturnScrollY = 0;
@@ -19472,8 +19513,10 @@ body { background:var(--ota-cream) !important; }
             }
             activeLogicalPath = path;
             document.body.classList.toggle('home-mode', path === '/');
-            document.body.classList.remove('store-modal-open');
-            document.getElementById('storeLandingView')?.classList.remove('store-detail-overlay');
+            if (!path.startsWith('/tienda/')) {
+                document.body.classList.remove('store-modal-open');
+                document.getElementById('storeLandingView')?.classList.remove('store-detail-overlay');
+            }
 
             selectedTown = 'all';
             selectedCategory = 'all';
@@ -19726,8 +19769,9 @@ body { background:var(--ota-cream) !important; }
                     if (!matchName && !matchAddress && !matchTown && !matchDistrict && !matchChain) return false;
                 }
 
-                // Town filter
-                if (selectedTown !== 'all' && store.townSlug !== selectedTown) {
+                // Town filter: resolve municipality aliases consistently so
+                // "El Campello", "Campello" and "Muchavista" group together.
+                if (selectedTown !== 'all' && !storeMatchesTown(store, selectedTown)) {
                     return false;
                 }
 
@@ -19779,38 +19823,32 @@ body { background:var(--ota-cream) !important; }
         }
         // Use genuine repository vector marks where available. For the remaining
         // chains, use a clean wordmark instead of a made-up initial "logo".
-        const CHAIN_LOGOS = {
-            Lidl: '/open-today-alicante/logos/lidl.svg',
-            Aldi: '/open-today-alicante/logos/aldisud.svg',
-            Carrefour: '/open-today-alicante/logos/carrefour.svg',
-            'Carrefour Express': '/open-today-alicante/logos/carrefour.svg',
-            'Leroy Merlin': '/open-today-alicante/logos/leroymerlin.svg'
-        };
+        // Consistent brand wordmarks are more legible than tiny monochrome SVG marks.
+        // They also avoid stretched or visually misleading "logo" boxes on mobile.
+        const CHAIN_LOGOS = {};
         const CHAIN_WORDMARKS = {
             Mercadona: ['Mercadona', '#087a3b', '#f0fdf4'],
+            Lidl: ['Lidl', '#003a8c', '#eff6ff'],
+            Aldi: ['ALDI', '#0050aa', '#eff6ff'],
             Consum: ['Consum', '#0f766e', '#ecfdf5'],
             Charter: ['Charter', '#1d4ed8', '#eff6ff'],
+            Carrefour: ['Carrefour', '#005baa', '#eff6ff'],
+            'Carrefour Express': ['Carrefour Express', '#005baa', '#eff6ff'],
             Repsol: ['Repsol', '#d61f3a', '#fff1f2'],
             Cepsa: ['Cepsa', '#c81e1e', '#fef2f2'],
             Moeve: ['Moeve', '#0f766e', '#ecfeff'],
             bp: ['bp', '#15803d', '#f0fdf4'],
+            'Leroy Merlin': ['Leroy Merlin', '#007a44', '#ecfdf5'],
             MediaMarkt: ['MediaMarkt', '#b91c1c', '#fef2f2'],
             Supercor: ['Supercor', '#6d28d9', '#f5f3ff'],
             Dia: ['DIA', '#c81e1e', '#fef2f2'],
             DIA: ['DIA', '#c81e1e', '#fef2f2'],
             Hiperber: ['Hiperber', '#1d4ed8', '#eff6ff'],
-            Dialprix: ['Dialprix', '#c2410c', '#fff7ed']
+            Dialprix: ['Dialprix', '#c2410c', '#fff7ed'],
+            Unide: ['UNIDE', '#006b3f', '#ecfdf5'],
+            Udaco: ['UDACO', '#006b3f', '#ecfdf5']
         };
-        function getChainLogoUrl(store) {
-            const raw = String(store.chain || '').trim();
-            if (CHAIN_LOGOS[raw]) return CHAIN_LOGOS[raw];
-            const key = raw.toLowerCase();
-            if (key.includes('carrefour')) return CHAIN_LOGOS.Carrefour;
-            if (key.includes('lidl')) return CHAIN_LOGOS.Lidl;
-            if (key.includes('aldi')) return CHAIN_LOGOS.Aldi;
-            if (key.includes('leroy')) return CHAIN_LOGOS['Leroy Merlin'];
-            return '';
-        }
+        function getChainLogoUrl(store) { return ''; }
         function getChainWordmark(store) {
             const raw = String(store.chain || '').trim();
             if (CHAIN_WORDMARKS[raw]) return CHAIN_WORDMARKS[raw];
@@ -19940,10 +19978,23 @@ body { background:var(--ota-cream) !important; }
             if (stores.length === 0) {
                 gridContainer.innerHTML = '';
                 noResults.classList.remove('hidden');
+                const townBrowseAll = document.getElementById('townBrowseAllBtn');
+                if (townBrowseAll) {
+                    const showBrowseAll = selectedTown !== 'all' && openNowOnly;
+                    townBrowseAll.classList.toggle('hidden', !showBrowseAll);
+                    if (showBrowseAll) {
+                        const townLabel = selectedTownLabel(selectedTown);
+                        townBrowseAll.textContent = currentLang === 'es'
+                            ? `Ver todos los locales de ${townLabel}`
+                            : `See all places in ${townLabel}`;
+                    }
+                }
                 if (viewMode === 'map') initLeafletMap([]);
                 return;
             }
             noResults.classList.add('hidden');
+            const townBrowseAll = document.getElementById('townBrowseAllBtn');
+            if (townBrowseAll) townBrowseAll.classList.add('hidden');
 
             if (viewMode === 'grid') {
                 document.getElementById('storeGridView').classList.remove('hidden');
@@ -20533,9 +20584,23 @@ body { background:var(--ota-cream) !important; }
             document.getElementById('controlsToolbar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        function showTownAllResults() {
+            openNowOnly = false;
+            sundayOnlyFilter = false;
+            visibleResultLimit = RESULTS_PAGE_SIZE;
+            const sundayToggle = document.getElementById('sundayOnlyToggle');
+            if (sundayToggle) sundayToggle.checked = false;
+            updateOpenNowToggle();
+            renderStoresList();
+            document.getElementById('resultsToolbar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function handleTownChange(val) {
             selectedTown = val;
             visibleResultLimit = RESULTS_PAGE_SIZE;
+            // Selecting an area is a browse action; "Open now" can be turned on explicitly.
+            if (val && val !== 'all') openNowOnly = false;
+            updateOpenNowToggle();
             const url = new URL(window.location.href);
             if (val && val !== 'all') url.searchParams.set('town', val); else url.searchParams.delete('town');
             history.replaceState(history.state, '', url.pathname + (url.search ? url.search : '') + url.hash);
