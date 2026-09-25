@@ -14,7 +14,10 @@ const SOURCES = [
   { id:'dialprix', name:'Dialprix · Centros', url:'https://dialprix.es/supermercados/', category:'supermarket', listing:'jsonld' },
   { id:'masymas', name:'masymas · Localizador', url:'https://www.masymas.com/localizadordetiendas/localizador.php', category:'supermarket', listing:'jsonld' },
   { id:'hiperber', name:'Hiperber · Centros', url:'https://hiperber.com/supermercados-hiperber/', category:'supermarket', listing:'jsonld' },
-  { id:'moeve', name:'Moeve · Gasolineras Alicante', url:'https://www.moeve.es/es/cerca-de-ti/gasolineras/alicante/profesionales-moeve-pro-direct-cerca-de-mi', category:'petrol', listing:'jsonld' }
+  { id:'moeve', name:'Moeve · Gasolineras Alicante', url:'https://www.moeve.es/es/cerca-de-ti/gasolineras/alicante/profesionales-moeve-pro-direct-cerca-de-mi', category:'petrol', listing:'jsonld' },
+  { id:'lidl', name:'Lidl · Tiendas Alicante', url:'https://www.lidl.es/s/es-ES/tiendas/', category:'supermarket', listing:'jsonld' },
+  { id:'aldi', name:'ALDI · Tiendas', url:'https://www.aldi.es/supermercados/encuentra-tu-supermercado.html/l/m', category:'supermarket', listing:'jsonld' },
+  { id:'unide', name:'UNIDE · Localizador de tiendas', url:'https://tu.unidesupermercados.es/establecimientos/', category:'supermarket', listing:'jsonld' }
 ];
 
 function clean(v='') { return String(v ?? '').replace(/\s+/g, ' ').trim(); }
@@ -220,8 +223,82 @@ async function mapLimit(items, limit, worker) {
   return out;
 }
 
+function makeManualRecord(x){
+  const now=new Date().toISOString().slice(0,10);
+  return {
+    id:x.id,
+    slug:x.id,
+    name:x.name,
+    chain:x.chain,
+    town:x.town,
+    townSlug:slug(x.town),
+    address:x.address,
+    lat:null,lng:null,
+    category:'supermarket',
+    weekOpenHour:0,weekCloseHour:0,sunOpenHour:null,sunCloseHour:null,isSundayOpen:false,
+    holidayOpenNote:'Horario festivo específico no confirmado.',
+    officialSource:x.sourceName,
+    sourceType:x.sourceType,
+    sourceUrl:x.sourceUrl,
+    lastVerified:now,
+    confirmations:0,
+    phone:null,
+    website:x.website||null,
+    descriptionES:x.descriptionES,
+    descriptionEN:x.descriptionEN,
+    dataScope:'manual-current',
+    locationStatus:'pending',
+    hoursStatus:'unconfirmed',
+    hoursVerified:false,
+    verification:{
+      sourceName:x.sourceName,
+      sourceUrl:x.sourceUrl,
+      sourceType:x.sourceType,
+      verifiedAt:now,
+      status:'current-listing',
+      hoursVerified:false
+    },
+    weeklyHours:null
+  };
+}
+
+const MANUAL_RECORDS = [
+  {
+    id:'unide-alimentacion-el-campello-muro-1',
+    name:'Unide Alimentación El Campello',
+    chain:'Unide',
+    town:'El Campello',
+    address:'C/ Muro, 1, 03560 El Campello, Alicante',
+    sourceName:'Food Retail & Service — UNIDE opening report',
+    sourceType:'business-directory',
+    sourceUrl:'https://www.foodretail.es/retailers/unide-inaugura-cuatro-supermercados-en-una-semana-y-suma-siete-en-lo-que-va-de-2026.html',
+    website:'https://tu.unidesupermercados.es/establecimientos/',
+    descriptionES:'Supermercado Unide Alimentación en El Campello. La dirección está respaldada por una publicación sectorial reciente; horario pendiente de confirmación.',
+    descriptionEN:'Unide Alimentación supermarket in El Campello. The address is supported by a recent sector publication; opening hours are still unconfirmed.'
+  },
+  {
+    id:'udaco-alimentacion-el-campello-xorrutella-1',
+    name:'Udaco Alimentación El Campello',
+    chain:'Udaco',
+    town:'El Campello',
+    address:'C/ De la Xorrutella, 1, Local 4, 03560 El Campello, Alicante',
+    sourceName:'UNIDE — Nueva apertura en El Campello',
+    sourceType:'official-locator',
+    sourceUrl:'https://tu.unidesupermercados.es/nueva-apertura-en-el-campello/',
+    website:'https://tu.unidesupermercados.es/establecimientos/',
+    descriptionES:'Supermercado Udaco Alimentación anunciado por UNIDE en El Campello. Horario pendiente de confirmación.',
+    descriptionEN:'Udaco Alimentación supermarket announced by UNIDE in El Campello. Opening hours are still unconfirmed.'
+  }
+];
+
 const stores=JSON.parse(await fs.readFile(DATA_PATH,'utf8'));
 const stats={sources:[],structuredRecords:0,detailLinks:0,added:0,enriched:0,errors:[]};
+
+for (const r of MANUAL_RECORDS.map(makeManualRecord)) {
+  const m=match(stores,r);
+  if (!m) { stores.push(r); stats.added++; }
+  else if (!m.sourceUrl) { m.sourceUrl=r.sourceUrl; m.officialSource=r.sourceName; m.verification=Object.assign({},m.verification,{sourceUrl:r.sourceUrl,sourceName:r.sourceName}); stats.enriched++; }
+}
 
 for (const src of SOURCES) {
   try {
