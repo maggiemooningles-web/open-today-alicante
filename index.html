@@ -137,6 +137,18 @@
         }
 
     
+        /* Store overlay + cleaner brand presentation */
+        body.store-modal-open { overflow:hidden; }
+        #storeLandingView.store-detail-overlay { position:fixed; inset:0; z-index:1000; display:block; padding:5.5rem .75rem 1.25rem; overflow:auto; background:rgba(15,23,42,.52); backdrop-filter:blur(7px); }
+        #storeLandingView.store-detail-overlay > .space-y-6 { width:min(980px,100%); margin:0 auto; padding:1rem; background:#fff; border:1px solid #e2e8f0; border-radius:1.5rem; box-shadow:0 24px 80px rgba(15,23,42,.24); }
+        .store-v12-logo-wordmark { padding:.35rem; text-align:center; color:var(--brand-accent); background:var(--brand-soft); border-color:color-mix(in srgb, var(--brand-accent) 18%, #e2e8f0); }
+        .store-v12-logo-wordmark span { font-size:.6rem; line-height:1.05; font-weight:950; max-width:100%; word-break:break-word; }
+        .store-v12-logo-image img { background:#fff; border-radius:10px; }
+        @media (max-width:640px){
+            #storeLandingView.store-detail-overlay { padding:4.7rem .45rem .65rem; }
+            #storeLandingView.store-detail-overlay > .space-y-6 { padding:.65rem; }
+        }
+
         /* V9 consumer-first interface */
         #heroSection { max-width: 100%; }
         #heroSection .hero-intents { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; margin-top:.5rem; }
@@ -19422,12 +19434,31 @@ body { background:var(--ota-cream) !important; }
             return activeRouteDate instanceof Date ? new Date(activeRouteDate) : new Date();
         }
 
-        function navigateTo(path, push = true) {
+        function navigateTo(path, push = true, options = {}) {
+            const scrollMode = options.scroll || 'top';
             if (push) {
                 history.pushState({ path }, '', toPublicPath(path));
             }
             handleRoute();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            requestAnimationFrame(() => {
+                if (scrollMode === 'preserve' || scrollMode === 'none') return;
+                if (scrollMode === 'restore') {
+                    window.scrollTo({ top: Number(options.y || 0), behavior: 'instant' });
+                    return;
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        let storeReturnPath = '/';
+        let storeReturnScrollY = 0;
+        function openStoreFromCard(slug) {
+            storeReturnPath = activeLogicalPath || '/';
+            storeReturnScrollY = window.scrollY || 0;
+            navigateTo('/tienda/' + slug, true, { scroll: 'none' });
+        }
+        function closeStoreOverlay() {
+            navigateTo(storeReturnPath || '/', true, { scroll: 'restore', y: storeReturnScrollY });
         }
 
         function handleRoute() {
@@ -19441,6 +19472,8 @@ body { background:var(--ota-cream) !important; }
             }
             activeLogicalPath = path;
             document.body.classList.toggle('home-mode', path === '/');
+            document.body.classList.remove('store-modal-open');
+            document.getElementById('storeLandingView')?.classList.remove('store-detail-overlay');
 
             selectedTown = 'all';
             selectedCategory = 'all';
@@ -19744,6 +19777,8 @@ body { background:var(--ota-cream) !important; }
             const key = 'opt' + String(category).charAt(0).toUpperCase() + String(category).slice(1);
             return I18N[currentLang][key] || category;
         }
+        // Use genuine repository vector marks where available. For the remaining
+        // chains, use a clean wordmark instead of a made-up initial "logo".
         const CHAIN_LOGOS = {
             Lidl: '/open-today-alicante/logos/lidl.svg',
             Aldi: '/open-today-alicante/logos/aldisud.svg',
@@ -19751,20 +19786,20 @@ body { background:var(--ota-cream) !important; }
             'Carrefour Express': '/open-today-alicante/logos/carrefour.svg',
             'Leroy Merlin': '/open-today-alicante/logos/leroymerlin.svg'
         };
-        const CHAIN_BADGES = {
-            Mercadona: ['M', '#16a34a', '#f0fdf4'],
-            Consum: ['C', '#0f766e', '#ecfdf5'],
-            Charter: ['C', '#2563eb', '#eff6ff'],
-            Repsol: ['R', '#e11d48', '#fff1f2'],
-            Cepsa: ['C', '#dc2626', '#fef2f2'],
-            Moeve: ['M', '#0f766e', '#ecfeff'],
+        const CHAIN_WORDMARKS = {
+            Mercadona: ['Mercadona', '#087a3b', '#f0fdf4'],
+            Consum: ['Consum', '#0f766e', '#ecfdf5'],
+            Charter: ['Charter', '#1d4ed8', '#eff6ff'],
+            Repsol: ['Repsol', '#d61f3a', '#fff1f2'],
+            Cepsa: ['Cepsa', '#c81e1e', '#fef2f2'],
+            Moeve: ['Moeve', '#0f766e', '#ecfeff'],
             bp: ['bp', '#15803d', '#f0fdf4'],
-            MediaMarkt: ['MM', '#dc2626', '#fef2f2'],
-            Supercor: ['S', '#7c3aed', '#f5f3ff'],
-            Dia: ['D', '#dc2626', '#fef2f2'],
-            DIA: ['D', '#dc2626', '#fef2f2'],
-            Hiperber: ['H', '#2563eb', '#eff6ff'],
-            Dialprix: ['D', '#ea580c', '#fff7ed']
+            MediaMarkt: ['MediaMarkt', '#b91c1c', '#fef2f2'],
+            Supercor: ['Supercor', '#6d28d9', '#f5f3ff'],
+            Dia: ['DIA', '#c81e1e', '#fef2f2'],
+            DIA: ['DIA', '#c81e1e', '#fef2f2'],
+            Hiperber: ['Hiperber', '#1d4ed8', '#eff6ff'],
+            Dialprix: ['Dialprix', '#c2410c', '#fff7ed']
         };
         function getChainLogoUrl(store) {
             const raw = String(store.chain || '').trim();
@@ -19776,21 +19811,13 @@ body { background:var(--ota-cream) !important; }
             if (key.includes('leroy')) return CHAIN_LOGOS['Leroy Merlin'];
             return '';
         }
-        function getChainBadge(store) {
+        function getChainWordmark(store) {
             const raw = String(store.chain || '').trim();
-            if (CHAIN_BADGES[raw]) return CHAIN_BADGES[raw];
+            if (CHAIN_WORDMARKS[raw]) return CHAIN_WORDMARKS[raw];
             const key = raw.toLowerCase();
-            if (key.includes('mercadona')) return ['M', '#16a34a', '#f0fdf4'];
-            if (key.includes('consum') || key.includes('charter')) return ['C', '#0f766e', '#ecfdf5'];
-            if (key.includes('repsol')) return ['R', '#e11d48', '#fff1f2'];
-            if (key.includes('moeve')) return ['M', '#0f766e', '#ecfeff'];
-            if (key.includes('cepsa')) return ['C', '#dc2626', '#fef2f2'];
-            if (key.includes('bp')) return ['bp', '#15803d', '#f0fdf4'];
-            if (key.includes('media')) return ['MM', '#dc2626', '#fef2f2'];
-            if (key.includes('supercor')) return ['S', '#7c3aed', '#f5f3ff'];
-            if (key.includes('dia')) return ['D', '#dc2626', '#fef2f2'];
-            if (key.includes('hiperber')) return ['H', '#2563eb', '#eff6ff'];
-            if (key.includes('dialprix')) return ['D', '#ea580c', '#fff7ed'];
+            for (const [name, value] of Object.entries(CHAIN_WORDMARKS)) {
+                if (key.includes(name.toLowerCase())) return value;
+            }
             return null;
         }
         function chainLogoMarkup(store) {
@@ -19799,9 +19826,9 @@ body { background:var(--ota-cream) !important; }
             if (logoUrl) {
                 return '<div class="store-v12-logo store-v12-logo-image"><img src="' + logoUrl + '" alt="' + alt + '" loading="lazy" width="44" height="44" onerror="this.closest(\'.store-v12-logo\')?.classList.add(\'store-v12-logo-broken\');this.remove();"></div>';
             }
-            const badge = getChainBadge(store);
-            if (badge) {
-                return '<div class="store-v12-logo store-v12-logo-badge" style="--brand-accent:' + badge[1] + ';--brand-soft:' + badge[2] + '" aria-label="' + alt + '"><span>' + escapeHtml(badge[0]) + '</span></div>';
+            const wordmark = getChainWordmark(store);
+            if (wordmark) {
+                return '<div class="store-v12-logo store-v12-logo-wordmark" style="--brand-accent:' + wordmark[1] + ';--brand-soft:' + wordmark[2] + '" aria-label="' + alt + '"><span>' + escapeHtml(wordmark[0]) + '</span></div>';
             }
             const fallbackIcon = CATEGORY_ICONS[store.category] || 'fa-store';
             return '<div class="store-v12-logo store-v12-logo-fallback" aria-hidden="true"><i class="fa-solid ' + fallbackIcon + '"></i></div>';
@@ -19957,7 +19984,7 @@ body { background:var(--ota-cream) !important; }
                             <div class="store-card-main">
                                 ${chainLogoMarkup(store)}
                                 <div class="min-w-0">
-                                    <a href="/open-today-alicante/tienda/${encodeURIComponent(store.slug)}" onclick="event.preventDefault(); navigateTo('/tienda/${store.slug}')" class="store-v12-title">${escapeHtml(store.name)}</a>
+                                    <a href="/open-today-alicante/tienda/${encodeURIComponent(store.slug)}" onclick="event.preventDefault(); openStoreFromCard('${store.slug}')" class="store-v12-title">${escapeHtml(store.name)}</a>
                                     <div class="store-v12-card-kicker">${store.chain ? escapeHtml(store.chain) + ' · ' : ''}${escapeHtml(store.district || store.town)}</div>
                                 </div>
                             </div>
@@ -19970,7 +19997,7 @@ body { background:var(--ota-cream) !important; }
                                     <i class="fa-solid fa-diamond-turn-right"></i>
                                     <span>${currentLang === 'es' ? 'Cómo llegar' : 'Directions'}</span>
                                 </a>
-                                <a class="store-v12-details" href="/open-today-alicante/tienda/${encodeURIComponent(store.slug)}" onclick="event.preventDefault(); navigateTo('/tienda/${store.slug}')">
+                                <a class="store-v12-details" href="/open-today-alicante/tienda/${encodeURIComponent(store.slug)}" onclick="event.preventDefault(); openStoreFromCard('${store.slug}')">
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a>
                             </div>
@@ -20003,32 +20030,26 @@ body { background:var(--ota-cream) !important; }
             const verificationAgeDays = store.verification?.verifiedAt ? Math.floor((Date.now() - new Date(store.verification.verifiedAt + 'T00:00:00').getTime()) / 86400000) : null;
             const isVerificationStale = Number.isFinite(verificationAgeDays) && verificationAgeDays > 30;
 
-            // Hide catalog UI elements
-            document.getElementById('heroSection').classList.add('hidden');
-            document.getElementById('controlsToolbar').classList.add('hidden');
-            document.getElementById('storeGridView').classList.add('hidden');
-            document.getElementById('mapViewContainer').classList.add('hidden');
-            document.getElementById('faqSection').classList.add('hidden');
-            const resultsToolbarEl = document.getElementById('resultsToolbar');
-            if (resultsToolbarEl) resultsToolbarEl.classList.add('hidden');
-            const routeDateNotice = document.getElementById('routeDateNotice');
-            if (routeDateNotice) routeDateNotice.classList.add('hidden');
-
+            // Keep the list exactly where the user clicked and place the store
+            // details above it as a focused modal-style overlay.
             const landingContainer = document.getElementById('storeLandingView');
             landingContainer.classList.remove('hidden');
+            landingContainer.classList.add('store-detail-overlay');
+            document.body.classList.add('store-modal-open');
 
             const gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(store.name + ' ' + store.address);
 
             landingContainer.innerHTML = `
                 <div class="space-y-6">
                     <!-- Top Navigation Bar -->
-                    <div class="flex items-center justify-between">
-                        <button onclick="navigateTo('/')" class="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl border border-slate-700 transition">
+                    <div class="flex items-center justify-between gap-3">
+                        <button type="button" onclick="closeStoreOverlay()" class="inline-flex items-center gap-2 text-xs font-black text-slate-700 hover:text-emerald-700 bg-white hover:bg-emerald-50 px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm transition">
+                            <i class="fa-solid fa-arrow-left"></i>
                             <span>${I18N[currentLang].backToList}</span>
                         </button>
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-                            ID: ${escapeHtml(store.id)}
-                        </span>
+                        <button type="button" onclick="closeStoreOverlay()" aria-label="Close store" class="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 shadow-sm transition">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                     </div>
 
                     <!-- Store Main Hero Card -->
@@ -20347,15 +20368,24 @@ body { background:var(--ota-cream) !important; }
             openNowOnly = true;
             sortBy = 'distance';
             populateTownSelect();
-            document.getElementById('townSelect').value = 'all';
-            document.getElementById('categorySelect').value = 'all';
-            document.getElementById('sortSelect').value = 'distance';
-            document.getElementById('sundayOnlyToggle').checked = false;
+            const townSelect = document.getElementById('townSelect');
+            const categorySelect = document.getElementById('categorySelect');
+            const sortSelect = document.getElementById('sortSelect');
+            const sundayToggle = document.getElementById('sundayOnlyToggle');
+            if (townSelect) townSelect.value = 'all';
+            if (categorySelect) categorySelect.value = 'all';
+            if (sortSelect) sortSelect.value = 'distance';
+            if (sundayToggle) sundayToggle.checked = false;
 
-            if (window.location.pathname.replace(/\/+$/, '') !== toPublicPath('/abierto-hoy-alicante')) {
-                navigateTo('/abierto-hoy-alicante');
-            }
-            requestGpsLocation();
+            requestGpsLocation(() => {
+                const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+                if (currentPath !== toPublicPath('/abierto-hoy-alicante')) {
+                    navigateTo('/abierto-hoy-alicante', true, { scroll: 'preserve' });
+                } else {
+                    renderStoresList();
+                }
+                document.getElementById('resultsHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
         }
 
         function setGpsUiState(state, detail='') {
@@ -20406,7 +20436,7 @@ body { background:var(--ota-cream) !important; }
             renderStoresList();
         }
 
-        function requestGpsLocation() {
+        function requestGpsLocation(afterSuccess = null) {
             if (!navigator.geolocation) {
                 setGpsUiState('unavailable', currentLang === 'es' ? 'Este navegador no ofrece geolocalización.' : 'This browser does not provide geolocation.');
                 showToast(currentLang === 'es' ? 'Tu navegador no ofrece geolocalización.' : 'Your browser does not provide location services.');
@@ -20420,7 +20450,10 @@ body { background:var(--ota-cream) !important; }
 
             setGpsUiState('locating');
             const options = { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 };
-            const onSuccess = (pos) => applyUserLocation(pos);
+            const onSuccess = (pos) => {
+                applyUserLocation(pos);
+                if (typeof afterSuccess === 'function') afterSuccess();
+            };
 
             const finishError = (err) => {
                 if (err && err.code === 1) {
