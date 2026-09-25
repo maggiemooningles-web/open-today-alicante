@@ -113,5 +113,21 @@
     "url": "https://www.moeve.es/es/cerca-de-ti/gasolineras/alicante/profesionales-moeve-pro-direct-cerca-de-mi",
     "type": "official-locator",
     "scope": "Moeve service stations in Alicante province"
+  },
+  {
+    "id": "gva-open-data",
+    "name": "Generalitat Valenciana — Dades Obertes",
+    "url": "https://dadesobertes.gva.es/",
+    "type": "official-open-data",
+    "checkHours": false,
+    "notes": "CKAN catalogue searched for location-oriented Alicante datasets."
+  },
+  {
+    "id": "alicante-open-data",
+    "name": "Ayuntamiento de Alicante — Datos Abiertos",
+    "url": "https://datosabiertos.alicante.es/",
+    "type": "official-open-data",
+    "checkHours": false,
+    "notes": "CKAN-style catalogue searched for commerce, premises, licences and market datasets."
   }
 ]
