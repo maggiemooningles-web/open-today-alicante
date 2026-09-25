@@ -1,12 +1,6 @@
 name: Refresh store data
 
 on:
-  push:
-    paths:
-      - 'scripts/**'
-      - 'data/source-registry.json'
-      - 'package.json'
-      - '.github/workflows/refresh-data.yml'
   schedule:
     - cron: '17 */6 * * *'
   workflow_dispatch:
@@ -21,7 +15,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,11 +34,14 @@ jobs:
       - name: Ingest first-party locators
         run: node scripts/ingest-first-party.mjs
 
+      - name: Deduplicate and merge records
+        run: node scripts/dedupe-data.mjs
+
       - name: Regenerate sitemap
         run: node scripts/generate-sitemap.mjs
 
       - name: Show dataset size
-        run: node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('data/stores.json','utf8'));console.log('Dataset records:',d.length);"
+        run: node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('data/stores.json','utf8'));console.log('Dataset records:',d.length);const k=d.reduce((a,x)=>(a[x.sourceType]=(a[x.sourceType]||0)+1,a),{});console.log(k);"
 
       - name: Commit refreshed dataset
         run: |
@@ -52,5 +49,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/stores.json data/update-report.json sitemap.xml
           git diff --cached --quiet && exit 0
-          git commit -m "chore(data): ingest official and first-party sources"
+          git commit -m "chore(data): refresh official and first-party sources"
           git push
