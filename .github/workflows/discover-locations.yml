@@ -1,4 +1,5 @@
 name: Discover more locations
+# Alicante-province scoped discovery keeps the directory geographically correct.
 
 on:
   push:
