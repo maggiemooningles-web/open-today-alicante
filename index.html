@@ -301,8 +301,13 @@ body { background:var(--ota-cream) !important; }
 .store-v12-status.status-unconfirmed{background:#fffbeb!important;color:#a16207!important}
 .store-v12-status-dot{width:7px;height:7px;border-radius:999px;background:currentColor;display:inline-block;flex:0 0 auto}
 .store-v12-status.status-open .store-v12-status-dot{animation:pulse-ring 1.8s infinite cubic-bezier(.66,0,0,1)}
-.store-v12-logo{width:58px!important;height:58px!important;border-radius:16px!important}
-.store-v12-logo img{width:46px!important;height:46px!important}
+.store-v12-logo{width:58px!important;height:58px!important;border-radius:16px!important;display:grid;place-items:center;background:#fff!important;border:1px solid #e2e8f0;box-shadow:0 6px 16px rgba(15,23,42,.05);overflow:hidden}
+.store-v12-logo-image{padding:9px}
+.store-v12-logo-image img{display:block;width:auto!important;height:auto!important;max-width:42px!important;max-height:42px!important;object-fit:contain}
+.store-v12-logo-badge{background:var(--brand-soft)!important;border-color:color-mix(in srgb,var(--brand-accent) 18%,#fff)!important;color:var(--brand-accent);font-size:.95rem;font-weight:950;letter-spacing:-.03em}
+.store-v12-logo-badge span{display:grid;place-items:center;min-width:34px;height:34px;padding:0 .35rem;border-radius:11px;background:#fff;border:1px solid color-mix(in srgb,var(--brand-accent) 22%,#fff)}
+.store-v12-logo-fallback{background:#f8fafc!important;color:#64748b}
+.store-v12-logo-broken{background:#f8fafc!important}
 .store-v12-title{font-size:1.06rem!important}
 .store-v12-openline{margin-top:.8rem!important;font-size:.88rem!important}
 .store-v12-openline.is-open strong{color:#047857}
@@ -370,8 +375,8 @@ body { background:var(--ota-cream) !important; }
                 <button type="button" onclick="openNearMeNow()" class="hero-v12-location">
                     <span class="hero-v12-location-icon"><i class="fa-solid fa-location-crosshairs"></i></span>
                     <span>
-                        <strong data-i18n="nearMeCtaPrimary">📍 Muéstrame qué está abierto cerca de mí</strong>
-                        <small data-i18n="nearMeCtaHint">Activa tu ubicación y ordenamos lo más cercano primero.</small>
+                        <strong id="gpsBtnText" data-i18n="nearMeCtaPrimary">📍 Muéstrame qué está abierto cerca de mí</strong>
+                        <small id="gpsBtnHint" data-i18n="nearMeCtaHint">Activa tu ubicación y ordenamos lo más cercano primero.</small>
                     </span>
                     <i class="fa-solid fa-arrow-right hero-v12-arrow"></i>
                 </button>
@@ -19740,53 +19745,66 @@ body { background:var(--ota-cream) !important; }
             return I18N[currentLang][key] || category;
         }
         const CHAIN_LOGOS = {
-            Mercadona: '/open-today-alicante/logos/mercadona.svg',
             Lidl: '/open-today-alicante/logos/lidl.svg',
             Aldi: '/open-today-alicante/logos/aldisud.svg',
-            Consum: '/open-today-alicante/logos/consum.svg',
-            Charter: '/open-today-alicante/logos/charter.svg',
             Carrefour: '/open-today-alicante/logos/carrefour.svg',
             'Carrefour Express': '/open-today-alicante/logos/carrefour.svg',
-            Repsol: '/open-today-alicante/logos/repsol.svg',
-            Cepsa: '/open-today-alicante/logos/cepsa.svg',
-            Moeve: '/open-today-alicante/logos/moeve.svg',
-            bp: '/open-today-alicante/logos/bp.svg',
-            'Leroy Merlin': '/open-today-alicante/logos/leroymerlin.svg',
-            MediaMarkt: '/open-today-alicante/logos/mediamarkt.svg',
-            Supercor: '/open-today-alicante/logos/default.svg',
-            Dia: '/open-today-alicante/logos/dia.svg',
-            DIA: '/open-today-alicante/logos/dia.svg',
-            Hiperber: '/open-today-alicante/logos/hiperber.svg',
-            Dialprix: '/open-today-alicante/logos/dialprix.svg'
+            'Leroy Merlin': '/open-today-alicante/logos/leroymerlin.svg'
+        };
+        const CHAIN_BADGES = {
+            Mercadona: ['M', '#16a34a', '#f0fdf4'],
+            Consum: ['C', '#0f766e', '#ecfdf5'],
+            Charter: ['C', '#2563eb', '#eff6ff'],
+            Repsol: ['R', '#e11d48', '#fff1f2'],
+            Cepsa: ['C', '#dc2626', '#fef2f2'],
+            Moeve: ['M', '#0f766e', '#ecfeff'],
+            bp: ['bp', '#15803d', '#f0fdf4'],
+            MediaMarkt: ['MM', '#dc2626', '#fef2f2'],
+            Supercor: ['S', '#7c3aed', '#f5f3ff'],
+            Dia: ['D', '#dc2626', '#fef2f2'],
+            DIA: ['D', '#dc2626', '#fef2f2'],
+            Hiperber: ['H', '#2563eb', '#eff6ff'],
+            Dialprix: ['D', '#ea580c', '#fff7ed']
         };
         function getChainLogoUrl(store) {
             const raw = String(store.chain || '').trim();
             if (CHAIN_LOGOS[raw]) return CHAIN_LOGOS[raw];
             const key = raw.toLowerCase();
             if (key.includes('carrefour')) return CHAIN_LOGOS.Carrefour;
-            if (key.includes('mercadona')) return CHAIN_LOGOS.Mercadona;
-            if (key.includes('consum') || key.includes('charter')) return CHAIN_LOGOS.Consum;
-            if (key.includes('repsol')) return CHAIN_LOGOS.Repsol;
             if (key.includes('lidl')) return CHAIN_LOGOS.Lidl;
             if (key.includes('aldi')) return CHAIN_LOGOS.Aldi;
-            if (key.includes('media')) return CHAIN_LOGOS.MediaMarkt;
             if (key.includes('leroy')) return CHAIN_LOGOS['Leroy Merlin'];
-            if (key.includes('moeve') || key.includes('cepsa')) return CHAIN_LOGOS.Moeve;
-            if (key.includes('hiperber')) return CHAIN_LOGOS.Hiperber;
-            if (key.includes('dialprix')) return CHAIN_LOGOS.Dialprix;
-            if (key.includes('dia')) return CHAIN_LOGOS.DIA;
-            if (key.includes('supercor')) return CHAIN_LOGOS.Supercor;
             return '';
+        }
+        function getChainBadge(store) {
+            const raw = String(store.chain || '').trim();
+            if (CHAIN_BADGES[raw]) return CHAIN_BADGES[raw];
+            const key = raw.toLowerCase();
+            if (key.includes('mercadona')) return ['M', '#16a34a', '#f0fdf4'];
+            if (key.includes('consum') || key.includes('charter')) return ['C', '#0f766e', '#ecfdf5'];
+            if (key.includes('repsol')) return ['R', '#e11d48', '#fff1f2'];
+            if (key.includes('moeve')) return ['M', '#0f766e', '#ecfeff'];
+            if (key.includes('cepsa')) return ['C', '#dc2626', '#fef2f2'];
+            if (key.includes('bp')) return ['bp', '#15803d', '#f0fdf4'];
+            if (key.includes('media')) return ['MM', '#dc2626', '#fef2f2'];
+            if (key.includes('supercor')) return ['S', '#7c3aed', '#f5f3ff'];
+            if (key.includes('dia')) return ['D', '#dc2626', '#fef2f2'];
+            if (key.includes('hiperber')) return ['H', '#2563eb', '#eff6ff'];
+            if (key.includes('dialprix')) return ['D', '#ea580c', '#fff7ed'];
+            return null;
         }
         function chainLogoMarkup(store) {
             const logoUrl = getChainLogoUrl(store);
-            const fallbackText = String(store.chain || store.name || 'T').trim().slice(0,1).toUpperCase();
-            const fallbackIcon = CATEGORY_ICONS[store.category] || 'fa-store';
-            if (!logoUrl) {
-                return '<div class="store-v12-logo store-v12-logo-fallback" aria-hidden="true"><span class="font-black">' + escapeHtml(fallbackText) + '</span></div>';
+            const alt = escapeHtml(store.chain || store.name || 'Brand');
+            if (logoUrl) {
+                return '<div class="store-v12-logo store-v12-logo-image"><img src="' + logoUrl + '" alt="' + alt + '" loading="lazy" width="44" height="44" onerror="this.closest(\'.store-v12-logo\')?.classList.add(\'store-v12-logo-broken\');this.remove();"></div>';
             }
-            const alt = escapeHtml(store.chain || store.name || 'Logo');
-            return '<div class="store-v12-logo"><img src="' + logoUrl + '" alt="' + alt + '" loading="lazy" width="42" height="42" onerror="this.remove();this.parentElement.classList.add(\'store-v12-logo-fallback\');this.parentElement.innerHTML=\'<i class="fa-solid \' + fallbackIcon + \'"></i>\';"></div>';
+            const badge = getChainBadge(store);
+            if (badge) {
+                return '<div class="store-v12-logo store-v12-logo-badge" style="--brand-accent:' + badge[1] + ';--brand-soft:' + badge[2] + '" aria-label="' + alt + '"><span>' + escapeHtml(badge[0]) + '</span></div>';
+            }
+            const fallbackIcon = CATEGORY_ICONS[store.category] || 'fa-store';
+            return '<div class="store-v12-logo store-v12-logo-fallback" aria-hidden="true"><i class="fa-solid ' + fallbackIcon + '"></i></div>';
         }
         function verificationLabel(store) {
             const type = store.verification?.sourceType || store.sourceType;
@@ -20340,48 +20358,100 @@ body { background:var(--ota-cream) !important; }
             requestGpsLocation();
         }
 
-        function requestGpsLocation() {
+        function setGpsUiState(state, detail='') {
+            const btn = document.querySelector('.hero-v12-location');
             const btnText = document.getElementById('gpsBtnText');
+            const btnHint = document.getElementById('gpsBtnHint');
+            const gpsState = document.getElementById('gpsStateText');
+            const labels = {
+                idle: currentLang === 'es' ? '📍 Muéstrame qué está abierto cerca de mí' : '📍 Show me what is open near me',
+                locating: currentLang === 'es' ? '📍 Buscando tu ubicación…' : '📍 Finding your location…',
+                active: currentLang === 'es' ? '✅ Ubicación activada · ver lo más cercano' : '✅ Location active · show nearest first',
+                blocked: currentLang === 'es' ? '📍 Permitir ubicación para ver lo más cercano' : '📍 Allow location to see what is nearest',
+                unavailable: currentLang === 'es' ? '📍 No se encontró la ubicación · intentar de nuevo' : '📍 Location unavailable · try again'
+            };
+            const hints = {
+                idle: currentLang === 'es' ? 'Activa tu ubicación y ordenamos lo más cercano primero.' : 'Use your location and we’ll put the closest first.',
+                locating: currentLang === 'es' ? 'Esto normalmente tarda unos segundos.' : 'This usually takes a few seconds.',
+                active: currentLang === 'es' ? 'Distancias calculadas desde tu posición.' : 'Distances calculated from your position.',
+                blocked: currentLang === 'es' ? 'Revisa el permiso de ubicación de tu navegador para este sitio.' : 'Check your browser location permission for this site.',
+                unavailable: currentLang === 'es' ? 'Comprueba que la ubicación del dispositivo esté activada.' : 'Check that location is enabled on your device.'
+            };
+            if (btnText) btnText.textContent = labels[state] || labels.idle;
+            if (btnHint) btnHint.textContent = detail || hints[state] || hints.idle;
+            if (gpsState) gpsState.textContent = state === 'active'
+                ? (currentLang === 'es' ? 'GPS activo · ordenado por distancia' : 'Location active · sorted by distance')
+                : state === 'locating'
+                    ? (currentLang === 'es' ? 'Buscando ubicación…' : 'Finding location…')
+                    : state === 'blocked'
+                        ? (currentLang === 'es' ? 'Permiso de ubicación bloqueado' : 'Location permission blocked')
+                        : state === 'unavailable'
+                            ? (currentLang === 'es' ? 'Ubicación no disponible' : 'Location unavailable')
+                            : (currentLang === 'es' ? 'GPS no activado' : 'Location not active');
+            if (btn) btn.setAttribute('aria-busy', state === 'locating' ? 'true' : 'false');
+        }
+
+        function applyUserLocation(pos) {
+            userGeo = { lat: Number(pos.coords.latitude), lng: Number(pos.coords.longitude) };
+            STORES_DATA.forEach(s => {
+                s.distance = Number.isFinite(s.lat) && Number.isFinite(s.lng)
+                    ? calculateDistance(userGeo.lat, userGeo.lng, s.lat, s.lng)
+                    : undefined;
+            });
+            sortBy = 'distance';
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) sortSelect.value = 'distance';
+            setGpsUiState('active');
+            showToast(currentLang === 'es' ? 'Ubicación obtenida. Mostrando lo más cercano.' : 'Location found. Showing the nearest places.');
+            renderStoresList();
+        }
+
+        function requestGpsLocation() {
             if (!navigator.geolocation) {
-                showToast(currentLang === 'es' ? "GPS no soportado en tu navegador." : "GPS not supported.");
+                setGpsUiState('unavailable', currentLang === 'es' ? 'Este navegador no ofrece geolocalización.' : 'This browser does not provide geolocation.');
+                showToast(currentLang === 'es' ? 'Tu navegador no ofrece geolocalización.' : 'Your browser does not provide location services.');
+                return;
+            }
+            if (!window.isSecureContext && location.hostname !== 'localhost') {
+                setGpsUiState('unavailable', currentLang === 'es' ? 'La ubicación necesita una conexión segura (HTTPS).' : 'Location requires a secure HTTPS connection.');
+                showToast(currentLang === 'es' ? 'Abre el sitio con HTTPS para usar tu ubicación.' : 'Open the site over HTTPS to use your location.');
                 return;
             }
 
-            btnText.innerText = currentLang === 'es' ? "Localizando..." : "Locating...";
+            setGpsUiState('locating');
+            const options = { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 };
+            const onSuccess = (pos) => applyUserLocation(pos);
 
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    userGeo = {
-                        lat: pos.coords.latitude,
-                        lng: pos.coords.longitude
-                    };
-
-                    // Calculate distance for all stores
-                    STORES_DATA.forEach(s => {
-                        s.distance = (Number.isFinite(s.lat) && Number.isFinite(s.lng))
-                            ? calculateDistance(userGeo.lat, userGeo.lng, s.lat, s.lng)
-                            : undefined;
-                    });
-
-                    sortBy = 'distance';
-                    document.getElementById('sortSelect').value = 'distance';
-                    btnText.innerText = currentLang === 'es' ? "GPS Activo" : "GPS Active";
-                    const gpsState = document.getElementById('gpsStateText');
-                    if (gpsState) gpsState.textContent = currentLang === 'es' ? 'GPS activo · distancia disponible donde hay coordenadas' : 'GPS active · distance available where coordinates exist';
-
-                    showToast(currentLang === 'es' ? "Ubicación obtenida. Ordenando por distancia." : "Location acquired. Sorting by distance.");
-                    renderStoresList();
-                },
-                (err) => {
-                    btnText.innerText = I18N[currentLang].btnGps;
-                    if (openNowOnly) sortBy = 'openFirst';
-                    document.getElementById('sortSelect').value = 'openFirst';
-                    const gpsState = document.getElementById('gpsStateText');
-                    if (gpsState) gpsState.textContent = currentLang === 'es' ? 'GPS no disponible · mostrando abiertos ahora' : 'GPS unavailable · showing open places';
-                    showToast(currentLang === 'es' ? 'No se pudo acceder al GPS. Mostrando abiertos ahora, sin distancia.' : 'GPS was unavailable. Showing open places without distance.');
-                    renderStoresList();
+            const finishError = (err) => {
+                if (err && err.code === 1) {
+                    setGpsUiState('blocked');
+                    showToast(currentLang === 'es'
+                        ? 'Ubicación bloqueada. En los permisos del navegador, permite la ubicación para Open Today Alicante y pulsa el botón otra vez.'
+                        : 'Location permission is blocked. In your browser permissions, allow location for Open Today Alicante and press the button again.');
+                } else if (err && err.code === 3) {
+                    setGpsUiState('unavailable', currentLang === 'es'
+                        ? 'No recibimos una posición a tiempo. Vuelve a intentarlo.'
+                        : 'We did not receive a position in time. Please try again.');
+                    showToast(currentLang === 'es' ? 'La ubicación tardó demasiado. Inténtalo de nuevo.' : 'Location timed out. Please try again.');
+                } else {
+                    setGpsUiState('unavailable');
+                    showToast(currentLang === 'es'
+                        ? 'No se pudo obtener tu ubicación. Comprueba el GPS/ubicación del dispositivo y vuelve a intentarlo.'
+                        : 'We could not get your location. Check device location services and try again.');
                 }
-            );
+                if (openNowOnly) sortBy = 'openFirst';
+                const sortSelect = document.getElementById('sortSelect');
+                if (sortSelect) sortSelect.value = 'openFirst';
+                renderStoresList();
+            };
+
+            navigator.geolocation.getCurrentPosition(onSuccess, (err) => {
+                if (err && err.code === 2) {
+                    navigator.geolocation.getCurrentPosition(onSuccess, finishError, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+                } else {
+                    finishError(err);
+                }
+            }, options);
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
