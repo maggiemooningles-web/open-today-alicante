@@ -225196,7 +225196,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/839487155"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1965459220",
@@ -225244,6 +225248,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1965459220"
+    ],
+    "confirmations": 0
   }
 ]
