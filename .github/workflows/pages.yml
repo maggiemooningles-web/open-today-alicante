@@ -33,10 +33,20 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script[^>]*>([\\s\\S]*?)<\\/script>/gi)]
-            .map(match => match[1])
-            .filter(body => body.includes('const ') || body.includes('function '));
-          for (const [index, body] of scripts.entries()) {
+          const scripts = [];
+          let cursor = 0;
+          while (true) {
+            const open = html.indexOf('<script', cursor);
+            if (open < 0) break;
+            const openEnd = html.indexOf('>', open);
+            if (openEnd < 0) break;
+            const close = html.indexOf('</script>', openEnd + 1);
+            if (close < 0) break;
+            scripts.push(html.slice(openEnd + 1, close));
+            cursor = close + 9;
+          }
+          const javascript = scripts.filter(body => body.includes('const ') || body.includes('function '));
+          for (const [index, body] of javascript.entries()) {
             try {
               new Function(body);
             } catch (error) {
@@ -44,7 +54,7 @@ jobs:
               process.exit(1);
             }
           }
-          console.log(`Validated ${scripts.length} inline scripts.`);
+          console.log(`Validated ${javascript.length} inline scripts.`);
           NODE
 
       - name: Upload site artifact
