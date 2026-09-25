@@ -115,6 +115,13 @@
     "scope": "Moeve service stations in Alicante province"
   },
   {
+    "id": "unide-locator",
+    "name": "UNIDE — Localizador de tiendas",
+    "url": "https://tu.unidesupermercados.es/establecimientos/",
+    "type": "official-locator",
+    "scope": "UNIDE / UDACO supermarkets"
+  },
+  {
     "id": "gva-open-data",
     "name": "Generalitat Valenciana — Dades Obertes",
     "url": "https://dadesobertes.gva.es/",
