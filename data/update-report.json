@@ -1,10 +1,19 @@
 {
-  "version": "12.0.0",
-  "checkedAt": "2026-09-25T05:58:18.517Z",
-  "status": "first-party-complete-with-review",
-  "automaticMode": "first-party-ingestion-v2",
-  "note": "First-party locators are used for discoverable locations and structured opening hours. Hours are promoted only when the official locator publishes structured hours.",
-  "sources": [
+  "version": "12.1.0",
+  "checkedAt": "2026-09-25T06:00:45.724Z",
+  "status": "combined-refresh-with-review",
+  "automaticMode": "combined-open-data-first-party-osm-refresh",
+  "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
+  "dataset": {
+    "totalRecords": 4184,
+    "sourceTypes": {
+      "configured-source": 26,
+      "official-locator": 294,
+      "business-directory": 184,
+      "osm-discovery": 3680
+    }
+  },
+  "sourceHealth": [
     {
       "id": "alicante-commerce-calendar",
       "name": "Ayuntamiento de Alicante — Horarios apertura comercial",
@@ -151,82 +160,12 @@
       "checkedAt": "2026-09-25T05:56:23.417Z"
     }
   ],
-  "openData": {
-    "catalogQueries": 19,
-    "discoveredDatasets": 119,
-    "candidateDatasets": 37,
-    "distributionsChecked": 4,
-    "distributionsLoaded": 0,
-    "recordsRead": 0,
-    "recordsAccepted": 0,
-    "added": 0,
-    "enriched": 0,
-    "errors": []
-  },
-  "firstParty": {
-    "sources": [
-      {
-        "id": "consum",
-        "ok": true,
-        "records": 20,
-        "detailLinks": 20
-      },
-      {
-        "id": "carrefour",
-        "ok": false,
-        "error": "Error: HTTP 403"
-      },
-      {
-        "id": "dia",
-        "ok": true,
-        "records": 0,
-        "detailLinks": 0
-      },
-      {
-        "id": "repsol",
-        "ok": true,
-        "records": 227,
-        "detailLinks": 227
-      },
-      {
-        "id": "dialprix",
-        "ok": true,
-        "records": 0,
-        "detailLinks": 0
-      },
-      {
-        "id": "masymas",
-        "ok": true,
-        "records": 0,
-        "detailLinks": 0
-      },
-      {
-        "id": "hiperber",
-        "ok": true,
-        "records": 0,
-        "detailLinks": 0
-      },
-      {
-        "id": "moeve",
-        "ok": true,
-        "records": 0,
-        "detailLinks": 0
-      }
-    ],
-    "structuredRecords": 247,
-    "detailLinks": 264,
-    "added": 2,
-    "enriched": 0,
-    "errors": [
-      {
-        "source": "carrefour",
-        "error": "Error: HTTP 403"
-      }
-    ]
-  },
+  "discovery": null,
+  "openData": null,
+  "firstParty": null,
   "dedupe": {
-    "before": 504,
-    "after": 504,
+    "before": 4182,
+    "after": 4182,
     "removed": 0,
     "merged": 0,
     "nearMatchKm": 0.04
