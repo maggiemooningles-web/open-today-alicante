@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Open Today Alicante">
+  <rect width="128" height="128" rx="28" fill="#ecfdf5"/>
+  <circle cx="64" cy="64" r="31" fill="#047857"/>
+  <path d="M44 57h40v28H44z" fill="#fff"/>
+  <path d="M48 53h32l-6-12H54l-6 12Z" fill="#fff"/>
+  <circle cx="54" cy="69" r="4" fill="#047857"/>
+  <circle cx="74" cy="69" r="4" fill="#047857"/>
+  <path d="M54 78h20" stroke="#047857" stroke-width="4" stroke-linecap="round"/>
+</svg>
