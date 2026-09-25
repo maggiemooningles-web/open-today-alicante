@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mercadona">
+  <rect width="64" height="64" rx="16" fill="#ffffff"/>
+  <circle cx="32" cy="28" r="18" fill="#16a34a" opacity=".12"/>
+  <text x="32" y="35" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="900" fill="#16a34a">M</text>
+  <text x="32" y="53" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="5.5" font-weight="800" fill="#334155">Mercadona</text>
+</svg>
