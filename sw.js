@@ -1,4 +1,4 @@
-const CACHE_NAME = 'open-today-alicante-v10-pages';
+const CACHE_NAME = 'open-today-alicante-v14-pages';
 const BASE_PATH = '/open-today-alicante';
 const APP_SHELL = [
   `${BASE_PATH}/`,
