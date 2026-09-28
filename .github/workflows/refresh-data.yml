@@ -40,6 +40,9 @@ jobs:
       - name: Ingest first-party locators
         run: node scripts/ingest-first-party.mjs
 
+      - name: Ingest official estanco registry
+        run: node scripts/ingest-estancos.mjs
+
       - name: Deduplicate generated batch
         run: node scripts/dedupe-data.mjs
 
