@@ -34,6 +34,9 @@ jobs:
       - name: Check source health
         run: node scripts/update-data.mjs
 
+      - name: Test store matching
+        run: node scripts/test-match-store.mjs
+
       - name: Ingest official open data
         run: node scripts/ingest-open-data.mjs
 

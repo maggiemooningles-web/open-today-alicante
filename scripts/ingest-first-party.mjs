@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { matchStore, sourceRank } from './match-store.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const DATA_PATH = path.join(ROOT, 'data', 'stores.json');
@@ -189,20 +190,6 @@ function uniqueRecords(rows) {
   for (const r of rows) if (r) m.set(r.canonical, r);
   return [...m.values()];
 }
-function distance(a,b) {
-  if (![a.lat,a.lng,b.lat,b.lng].every(Number.isFinite)) return Infinity;
-  const R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLon=(b.lng-a.lng)*Math.PI/180;
-  const z=Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)**2;
-  return 2*R*Math.atan2(Math.sqrt(z),Math.sqrt(1-z));
-}
-function match(stores, r) {
-  const an=norm(r.name), aa=norm(r.address), at=norm(r.town);
-  for (const x of stores) {
-    if (norm(x.name)===an && norm(x.address)===aa) return x;
-    if (norm(x.name)===an && at && norm(x.town)===at && distance(x,r)<=0.18) return x;
-  }
-  return null;
-}
 async function fetchText(url, timeout=50000) {
   const c=new AbortController(), tm=setTimeout(()=>c.abort(),timeout);
   try {
@@ -320,25 +307,41 @@ for (const src of SOURCES) {
     stats.structuredRecords += rows.length;
 
     for (const r of rows) {
-      const m=match(stores,r);
+      const m=matchStore(stores,r);
       if (m) {
         let changed=false;
+        const stronger = sourceRank(r) > sourceRank(m);
         if (!Number.isFinite(m.lat) && Number.isFinite(r.lat)) { m.lat=r.lat; m.lng=r.lng; m.locationStatus='mapped'; changed=true; }
         if (!m.phone && r.phone) { m.phone=r.phone; changed=true; }
         if (!m.website && r.website) { m.website=r.website; changed=true; }
-        if (r.hoursVerified && m.hoursVerified===false) {
+
+        if (stronger) {
+          m.sourceType=r.sourceType;
+          m.sourceName=r.officialSource;
+          m.officialSource=r.officialSource;
+          m.sourceUrl=r.sourceUrl;
+          m.dataScope=r.dataScope || 'first-party';
+          m.lastVerified=r.lastVerified || m.lastVerified;
+          m.locationStatus=r.locationStatus || m.locationStatus;
+          m.verification=structuredClone(r.verification);
+          changed=true;
+        }
+
+        if (r.hoursVerified && (!m.hoursVerified || stronger)) {
           Object.assign(m,{
             weeklyHours:r.weeklyHours,weekOpenHour:r.weekOpenHour,weekCloseHour:r.weekCloseHour,
             sunOpenHour:r.sunOpenHour,sunCloseHour:r.sunCloseHour,isSundayOpen:r.isSundayOpen,
-            hoursVerified:true,hoursStatus:'checked'
+            hoursVerified:true,hoursStatus:'checked',lastVerified:r.lastVerified || m.lastVerified
           });
           changed=true;
         }
-        if (r.sourceUrl && !m.verification?.sourceUrl) {
-          m.sourceUrl=r.sourceUrl;
-          m.verification=Object.assign({},m.verification,{sourceUrl:r.sourceUrl});
-          changed=true;
+
+        if (r.sourceUrl) {
+          const before=JSON.stringify(m.sources||[]);
+          m.sources=Array.from(new Set([...(Array.isArray(m.sources)?m.sources:[]),r.sourceUrl])).slice(0,10);
+          if (JSON.stringify(m.sources)!==before) changed=true;
         }
+
         if (changed) stats.enriched++;
       } else {
         delete r.canonical;
