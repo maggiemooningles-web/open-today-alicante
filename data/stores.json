@@ -162753,13 +162753,13 @@
     "phone": "",
     "descriptionES": "Local descubierto mediante OpenStreetMap. Horario pendiente de verificación.",
     "descriptionEN": "Location discovered via OpenStreetMap. Opening hours pending verification.",
-    "sourceType": "osm-discovery",
+    "sourceType": "official-open-data",
     "sourceName": "OpenStreetMap",
-    "sourceUrl": "https://www.openstreetmap.org/node/535222320",
-    "officialSource": "OpenStreetMap",
-    "lastVerified": null,
+    "sourceUrl": "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx",
+    "officialSource": "Comisionado para el Mercado de Tabacos — listado de expendedurías",
+    "lastVerified": "2026-09-28",
     "hoursVerified": false,
-    "dataScope": "discovery",
+    "dataScope": "official-registry",
     "discoveryStatus": "unverified",
     "rawOpeningHours": null,
     "community": {
@@ -162768,19 +162768,20 @@
       "closedToday": 0,
       "updatedAt": null
     },
-    "locationStatus": "mapped",
-    "hoursStatus": "unknown",
+    "locationStatus": "pending",
+    "hoursStatus": "unconfirmed",
     "verification": {
-      "sourceName": "OpenStreetMap",
-      "sourceUrl": "https://www.openstreetmap.org/node/535222320",
-      "sourceType": "osm-discovery",
-      "verifiedAt": null,
-      "status": "discovered",
+      "sourceName": "Comisionado para el Mercado de Tabacos — listado de expendedurías",
+      "sourceUrl": "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx",
+      "sourceType": "official-open-data",
+      "verifiedAt": "2026-09-28",
+      "status": "official-registry",
       "hoursVerified": false
     },
     "weeklyHours": null,
     "sources": [
-      "https://www.openstreetmap.org/node/535222320"
+      "https://www.openstreetmap.org/node/535222320",
+      "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx"
     ],
     "confirmations": 0
   },
