@@ -136,5 +136,14 @@
     "type": "official-open-data",
     "checkHours": false,
     "notes": "CKAN-style catalogue searched for commerce, premises, licences and market datasets."
+  },
+  {
+    "id": "cmt-estancos",
+    "name": "Comisionado para el Mercado de Tabacos — listado de expendedurías",
+    "url": "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx",
+    "type": "official-registry",
+    "scope": "Official tobacco shops / expendedurías",
+    "checkHours": false,
+    "notes": "Official CSV registry used to discover estancos in Alicante province. The registry does not confirm opening hours."
   }
 ]
