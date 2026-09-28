@@ -60,6 +60,11 @@ function buildAreaQueries() {
       'nwr["shop"~"^(' + shopExpr + ')$"]["name"](area.alicante);\n' +
       'out center tags;';
   });
+  queries.push('[out:json][timeout:60];\n' +
+    'area(' + ALICANTE_PROVINCE_AREA_ID + ')->.alicante;\n' +
+    'nwr["tobacco"="yes"]["name"](area.alicante);\n' +
+    'nwr["shop"~"^(lottery|convenience)$"]["name"~"estanco|tabaco|tabacs",i](area.alicante);\n' +
+    'out center tags;');
   const amenityExpr = AMENITY_TAGS.join('|');
   queries.push('[out:json][timeout:60];\n' +
     'area(' + ALICANTE_PROVINCE_AREA_ID + ')->.alicante;\n' +
