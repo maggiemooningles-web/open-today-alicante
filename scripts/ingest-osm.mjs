@@ -92,6 +92,7 @@ async function pause(ms){ await new Promise(r=>setTimeout(r,ms)); }
 async function main(){
   const current=JSON.parse(await fs.readFile(DATA_PATH,'utf8'));
   const existingByOsmId=new Set(current.filter(x=>x.osmId).map(x=>x.osmId));
+  const existingStoreByOsmId=new Map(current.filter(x=>x.osmId).map(x=>[x.osmId,x]));
   const existingSlugs=new Set(current.map(x=>x.slug));
   const nameAddressKeys=new Set(current.map(x=>`${normalize(x.name)}|${normalize(x.address)}`));
   const groupedByName=new Map();
@@ -117,10 +118,13 @@ async function main(){
         const [lat,lng]=point(el);
         if(!Number.isFinite(lat)||!Number.isFinite(lng)) continue;
         const osmId=`osm:${el.type}:${el.id}`;
-        if(existingByOsmId.has(osmId)) continue;
-
         const rawTag=tags.shop||tags.amenity||'';
         const category=CATEGORY_BY_TAG[rawTag]||GENERIC_CATEGORY;
+        if(existingByOsmId.has(osmId)) {
+          const existingStore=existingStoreByOsmId.get(osmId);
+          if(existingStore && existingStore.category==='other' && category!=='other') existingStore.category=category;
+          continue;
+        }
         const town=townFromTags(tags);
         const address=addressFromTags(tags);
         const key=`${normalize(name)}|${normalize(address)}`;
