@@ -52,7 +52,8 @@ const CATEGORY_RULES = [
   ['hardware',/\bferretería\b|\bferreteria\b|\bbricolaje\b|\bherramientas\b/i],
   ['garden',/\bjardinería\b|\bvivero\b|\bviver\b|\bplantas\b/i],
   ['electronics',/\belectrónica\b|\binformática\b|\btelefonía\b/i],
-  ['mall',/\bcentro comercial\b|\bcentre comercial\b|\bmercado\b/i]
+  ['mall',/\bcentro comercial\b|\bcentre comercial\b|\bmercado\b/i],
+  ['tobacco',/\bestanco\b|\bestancos\b|\btabaco\b|\btobacco\b/i]
 ];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function text(v){if(v==null)return'';if(typeof v==='object'){return text(v.label??v.value??v['@value']??v['@id']??v.id??'');}return String(v).replace(/\s+/g,' ').trim();}
