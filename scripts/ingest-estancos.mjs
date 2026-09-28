@@ -28,7 +28,7 @@ function first(row, keys) {
 }
 function parseCsv(text) {
   const sample = text.slice(0,12000);
-  const candidates = ['; ',',','\\t','|'].map(x => [x, (sample.split(x).length - 1)]).sort((a,b)=>b[1]-a[1]);
+  const candidates = [';',',','\\t','|'].map(x => [x, (sample.split(x).length - 1)]).sort((a,b)=>b[1]-a[1]);
   const delimiter = candidates[0][1] > 0 ? candidates[0][0] : ';';
   const rows = [], row = [];
   let cell = '', quoted = false;
