@@ -282,7 +282,7 @@ const stores=JSON.parse(await fs.readFile(DATA_PATH,'utf8'));
 const stats={sources:[],structuredRecords:0,detailLinks:0,added:0,enriched:0,errors:[]};
 
 for (const r of MANUAL_RECORDS.map(makeManualRecord)) {
-  const m=match(stores,r);
+  const m=matchStore(stores,r);
   if (!m) { stores.push(r); stats.added++; }
   else if (!m.sourceUrl) { m.sourceUrl=r.sourceUrl; m.officialSource=r.sourceName; m.verification=Object.assign({},m.verification,{sourceUrl:r.sourceUrl,sourceName:r.sourceName}); stats.enriched++; }
 }
