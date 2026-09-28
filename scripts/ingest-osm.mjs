@@ -11,14 +11,14 @@ const OVERPASS_ENDPOINTS = [
 ];
 const USER_AGENT = 'OpenTodayAlicante/1.4 (+https://github.com/maggiemooningles-web/open-today-alicante)';
 
-const SHOP_TAGS = ['supermarket','convenience','department_store','mall','bakery','butcher','greengrocer','seafood','deli','hardware','doityourself','garden_centre','electronics','computer','mobile_phone','pet'];
+const SHOP_TAGS = ['supermarket','convenience','department_store','mall','bakery','butcher','greengrocer','seafood','deli','hardware','doityourself','garden_centre','electronics','computer','mobile_phone','pet','tobacco'];
 
 const AMENITY_TAGS = ['pharmacy','fuel','veterinary'];
 
 const CATEGORY_BY_TAG = {
   supermarket:'supermarket', convenience:'express', bakery:'bakery',
   hardware:'hardware', doityourself:'hardware', garden_centre:'garden',
-  electronics:'electronics', computer:'electronics', mobile_phone:'electronics',
+  electronics:'electronics', computer:'electronics', mobile_phone:'electronics', tobacco:'tobacco',
   mall:'mall', department_store:'mall', pharmacy:'pharmacy', fuel:'petrol',
   veterinary:'vet'
 };
