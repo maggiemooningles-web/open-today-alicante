@@ -339,6 +339,17 @@ body { background:var(--ota-cream) !important; }
   .store-v12-address{font-size:.69rem}
 }
 </style>
+    <style>
+        /* Revenue + data freshness layer */
+        #monetizationSlot { margin: 0 0 1.1rem; }
+        .ota-ad-slot { min-height: 90px; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0; background:rgba(255,255,255,.72); border-radius:1rem; overflow:hidden; }
+        .ota-ad-label { font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#94a3b8; }
+        .ota-sponsor-strip { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.85rem 1rem; border:1px solid #d1fae5; background:linear-gradient(90deg,#f0fdf4,#ffffff); border-radius:1rem; box-shadow:0 8px 24px rgba(15,23,42,.04); }
+        .ota-sponsor-strip strong { color:#0f172a; font-size:.82rem; }
+        .ota-sponsor-strip span { color:#64748b; font-size:.7rem; }
+        .ota-sponsor-strip a { display:inline-flex; align-items:center; gap:.35rem; padding:.55rem .75rem; border-radius:.75rem; background:#047857; color:#fff; font-size:.72rem; font-weight:900; text-decoration:none; white-space:nowrap; }
+        @media (max-width:640px){ .ota-sponsor-strip { align-items:flex-start; flex-direction:column; } .ota-sponsor-strip a { width:100%; justify-content:center; } }
+    </style>
 </head>
 <body class="bg-[#f6f8f6] text-slate-900 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
     <a href="#mainContent" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-emerald-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Saltar al contenido</a>
@@ -432,8 +443,8 @@ body { background:var(--ota-cream) !important; }
 
         <div class="fresh-ribbon" aria-label="Información de los datos">
             <span class="fresh-ribbon-item"><i class="fa-solid fa-database"></i><span data-i18n="freshDataRibbon">Miles de lugares, una sola búsqueda.</span></span>
-            <span class="fresh-ribbon-item"><i class="fa-solid fa-shield-heart"></i><span data-i18n="freshTrustRibbon">Cada ficha enseña su fuente.</span></span>
-            <span class="fresh-ribbon-item"><i class="fa-solid fa-clock-rotate-left"></i><span data-i18n="freshHoursRibbon">“Abierto ahora” solo usa horarios confirmados.</span></span>
+            <span class="fresh-ribbon-item"><i class="fa-solid fa-rotate"></i><span id="dataFreshnessText">Comprobando datos…</span></span>
+            <span class="fresh-ribbon-item"><i class="fa-solid fa-shield-heart"></i><span data-i18n="freshHoursRibbon">“Abierto ahora” solo usa horarios confirmados.</span></span>
         </div>
 
         <!-- SEARCH & CONTROLS TOOLBAR -->
@@ -534,6 +545,7 @@ body { background:var(--ota-cream) !important; }
                 </div>
                 <div id="resultsContextV6" class="text-[11px] font-semibold text-slate-500">Solo horarios confirmados</div>
             </div>
+            <div id="monetizationSlot" class="hidden" aria-label="Publicidad y colaboraciones"></div>
             <div id="storeGridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- Store cards dynamically rendered here -->
             </div>
@@ -19355,6 +19367,8 @@ body { background:var(--ota-cream) !important; }
         }
 
         function applyLanguageUI() {
+            renderDataFreshness();
+            if (monetizationRendered) renderMonetizationSlot();
             document.documentElement.lang = currentLang;
             document.getElementById('langLabel').innerText = currentLang === 'es' ? 'ES | EN' : 'ES | EN';
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -20010,6 +20024,7 @@ body { background:var(--ota-cream) !important; }
             const townBrowseAll = document.getElementById('townBrowseAllBtn');
             if (townBrowseAll) townBrowseAll.classList.add('hidden');
 
+            renderMonetizationSlot();
             if (viewMode === 'grid') {
                 document.getElementById('storeGridView').classList.remove('hidden');
                 document.getElementById('mapViewContainer').classList.add('hidden');
@@ -20822,6 +20837,85 @@ body { background:var(--ota-cream) !important; }
         let MUNICIPALITY_INDEX_LOADED = false;
         let lastDatasetFingerprint = '';
 
+        const DATA_REPORT_URL = SITE_BASE_PATH + '/data/update-report.json';
+        const MONETIZATION_URL = SITE_BASE_PATH + '/data/monetization.json';
+        let DATA_REPORT = null;
+        let MONETIZATION = { adsense:{enabled:false,publisherId:"",autoAds:true}, affiliate:{enabled:false,cards:[]}, sponsors:{enabled:false,items:[]} };
+        let monetizationRendered = false;
+
+        function formatReportTime(iso) {
+            if (!iso) return currentLang === 'es' ? 'Datos en comprobación' : 'Checking data';
+            const date = new Date(iso);
+            if (Number.isNaN(date.getTime())) return currentLang === 'es' ? 'Datos en comprobación' : 'Checking data';
+            const label = date.toLocaleString(currentLang === 'es' ? 'es-ES' : 'en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+            return currentLang === 'es' ? 'Actualizado ' + label : 'Updated ' + label;
+        }
+
+        function renderDataFreshness() {
+            const el = document.getElementById('dataFreshnessText');
+            if (!el) return;
+            el.textContent = formatReportTime(DATA_REPORT?.checkedAt);
+            el.title = currentLang === 'es'
+                ? 'La publicación de datos se actualiza automáticamente. Los horarios solo se consideran abiertos ahora cuando están confirmados.'
+                : 'Published data refreshes automatically. Open-now status only uses confirmed hours.';
+        }
+
+        async function loadDataReport() {
+            try {
+                const response = await fetch(DATA_REPORT_URL, { cache:'no-store' });
+                if (!response.ok) return false;
+                DATA_REPORT = await response.json();
+                renderDataFreshness();
+                return true;
+            } catch (_) {
+                renderDataFreshness();
+                return false;
+            }
+        }
+
+        function loadAdSenseIfConfigured() {
+            const cfg = MONETIZATION?.adsense;
+            if (!cfg?.enabled || !/^ca-pub-\d+$/.test(String(cfg.publisherId || ''))) return;
+            if (window.__otaAdsenseLoaded) return;
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(cfg.publisherId);
+            s.crossOrigin = 'anonymous';
+            document.head.appendChild(s);
+            window.__otaAdsenseLoaded = true;
+        }
+
+        function renderMonetizationSlot() {
+            const slot = document.getElementById('monetizationSlot');
+            if (!slot) return;
+            const cfg = MONETIZATION || {};
+            const sponsors = Array.isArray(cfg.sponsors?.items) ? cfg.sponsors.items.filter(x => x && x.name && x.url) : [];
+            const affiliateCards = Array.isArray(cfg.affiliate?.cards) ? cfg.affiliate.cards.filter(x => x && x.title && x.url) : [];
+            const parts = [];
+
+            if (cfg.sponsors?.enabled && sponsors.length) {
+                const s = sponsors[0];
+                parts.push('<div class="ota-sponsor-strip"><div><div class="ota-ad-label">' + (currentLang === 'es' ? 'Publicidad' : 'Sponsored') + '</div><strong>' + escapeHtml(s.name) + '</strong><span class="ml-2">' + escapeHtml(s.text || '') + '</span></div><a href="' + escapeHtml(s.url) + '" target="_blank" rel="sponsored nofollow noopener">' + escapeHtml(s.cta || (currentLang === 'es' ? 'Ver más' : 'Learn more')) + '<i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>');
+            } else if (cfg.affiliate?.enabled && affiliateCards.length) {
+                const a = affiliateCards[0];
+                parts.push('<div class="ota-sponsor-strip"><div><div class="ota-ad-label">Partner</div><strong>' + escapeHtml(a.title) + '</strong><span class="ml-2">' + escapeHtml(a.text || '') + '</span></div><a href="' + escapeHtml(a.url) + '" target="_blank" rel="sponsored nofollow noopener">' + escapeHtml(a.cta || (currentLang === 'es' ? 'Ver oferta' : 'View offer')) + '<i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>');
+            }
+
+            slot.innerHTML = parts.join('');
+            slot.classList.toggle('hidden', parts.length === 0);
+            loadAdSenseIfConfigured();
+            monetizationRendered = true;
+        }
+
+        async function loadMonetizationConfig() {
+            try {
+                const response = await fetch(MONETIZATION_URL, { cache:'no-store' });
+                if (response.ok) MONETIZATION = await response.json();
+            } catch (_) {}
+            renderMonetizationSlot();
+            return true;
+        }
+
         async function refreshDatasetSilently() {
             try {
                 const response = await fetch(DATASET_URL, { cache: 'no-store' });
@@ -20835,6 +20929,8 @@ body { background:var(--ota-cream) !important; }
                 DATASET_META.totalRecords = STORES_DATA.length;
                 populateTownSelect();
                 renderZoneQuickLinks();
+                await loadDataReport();
+                renderMonetizationSlot();
                 lastDatasetFingerprint = fingerprint;
                 if (!activeStoreSlug) { renderStoresList(); updateRouteSeo(); }
                 return true;
@@ -20880,6 +20976,8 @@ body { background:var(--ota-cream) !important; }
             }
             await loadLaunchDataset();
             await loadMunicipalityIndex();
+            await loadDataReport();
+            await loadMonetizationConfig();
             lastDatasetFingerprint = `${STORES_DATA.length}:${STORES_DATA[0]?.updatedAt || STORES_DATA[0]?.lastVerified || ''}:${STORES_DATA.at(-1)?.updatedAt || STORES_DATA.at(-1)?.lastVerified || ''}`;
             validateStoreData();
             const banner = document.getElementById('liveStatusBannerText');
@@ -20895,6 +20993,7 @@ body { background:var(--ota-cream) !important; }
                 if (!document.hidden && !activeStoreSlug) renderStoresList();
             }, 30000);
             setInterval(refreshDatasetSilently, DATASET_REFRESH_MS);
+            setInterval(loadDataReport, DATASET_REFRESH_MS);
             document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshDatasetSilently(); });
         };
     </script>
