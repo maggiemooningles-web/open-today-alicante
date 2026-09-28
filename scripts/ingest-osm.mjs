@@ -119,7 +119,8 @@ async function main(){
         if(!Number.isFinite(lat)||!Number.isFinite(lng)) continue;
         const osmId=`osm:${el.type}:${el.id}`;
         const rawTag=tags.shop||tags.amenity||'';
-        const category=CATEGORY_BY_TAG[rawTag]||GENERIC_CATEGORY;
+        let category=CATEGORY_BY_TAG[rawTag]||GENERIC_CATEGORY;
+        if (/\bestanco\b|\btabaco\b|\btobacco\b/i.test(name)) category='tobacco';
         if(existingByOsmId.has(osmId)) {
           const existingStore=existingStoreByOsmId.get(osmId);
           if(existingStore && existingStore.category==='other' && category!=='other') existingStore.category=category;
