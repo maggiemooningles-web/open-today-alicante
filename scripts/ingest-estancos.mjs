@@ -136,11 +136,22 @@ function match(stores, r) {
   return null;
 }
 
-const response=await fetch(CMT_URL,{
-  headers:{'user-agent':'OpenTodayAlicanteBot/1.6 (+https://github.com/maggiemooningles-web/open-today-alicante)'},
-  redirect:'follow'
-});
-if(!response.ok) throw new Error('CMT HTTP '+response.status);
+let response;
+try {
+  response=await fetch(CMT_URL,{
+    headers:{'user-agent':'OpenTodayAlicanteBot/1.6 (+https://github.com/maggiemooningles-web/open-today-alicante)'},
+    redirect:'follow',
+    signal:AbortSignal.timeout(30000)
+  });
+  if(!response.ok) throw new Error('CMT HTTP '+response.status);
+} catch (error) {
+  let report={}; try { report=JSON.parse(await fs.readFile(REPORT_PATH,'utf8')); } catch (_) {}
+  report.checkedAt=new Date().toISOString();
+  report.estancos={source:CMT_URL,rowsRead:0,accepted:0,added:0,enriched:0,error:String(error)};
+  await fs.writeFile(REPORT_PATH,JSON.stringify(report,null,2)+'\\n');
+  console.warn('Official estanco registry unavailable; continuing without replacing existing data:', String(error));
+  process.exit(0);
+}
 const bytes=new Uint8Array(await response.arrayBuffer());
 const text=new TextDecoder('windows-1252').decode(bytes);
 const rows=parseCsv(text);
