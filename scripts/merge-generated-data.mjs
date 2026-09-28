@@ -31,6 +31,7 @@ function quality(s) {
   return q;
 }
 function mergeInto(primary, secondary) {
+  if (primary.category==='other' && secondary.category && secondary.category!=='other') primary.category=secondary.category;
   for (const f of ['chain','phone','website','district','suburb','neighbourhood','quarter','address','town','townSlug','descriptionES','descriptionEN','officialSource','sourceUrl']) {
     if (!primary[f] && secondary[f]) primary[f]=secondary[f];
   }
