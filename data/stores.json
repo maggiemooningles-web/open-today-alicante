@@ -155966,7 +155966,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/252665344"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-273377747",
@@ -156014,7 +156018,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/273377747"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-286615666",
@@ -156062,7 +156070,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/286615666"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-535222304",
@@ -156110,7 +156122,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/535222304"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-559131730",
@@ -156158,7 +156174,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/559131730"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-778259107",
@@ -156206,7 +156226,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/778259107"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-908058616",
@@ -156254,7 +156278,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/908058616"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1104362366",
@@ -156302,7 +156330,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1104362366"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1147035381",
@@ -156350,7 +156382,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1147035381"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1195755206",
@@ -156398,7 +156434,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1195755206"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1477930868",
@@ -156446,7 +156486,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1477930868"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1796466720",
@@ -156494,7 +156538,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1796466720"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1896323250",
@@ -156542,7 +156590,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1896323250"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1963161365",
@@ -156590,7 +156642,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1963161365"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-2318188041",
@@ -156638,7 +156694,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/2318188041"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-2354684769",
@@ -156686,7 +156746,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/2354684769"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-3018702043",
@@ -156734,7 +156798,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/3018702043"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-3833453638",
@@ -156782,7 +156850,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/3833453638"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-4394812540",
@@ -156830,7 +156902,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/4394812540"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-4426991747",
@@ -156878,7 +156954,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/4426991747"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-4736344134",
@@ -156926,7 +157006,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/4736344134"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-4980574529",
@@ -156974,7 +157058,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/4980574529"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-5814680668",
@@ -157022,7 +157110,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/5814680668"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-6139703476",
@@ -157070,7 +157162,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/6139703476"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-13030445602",
@@ -157118,7 +157214,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/13030445602"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-13289125901",
@@ -157166,7 +157266,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/13289125901"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-way-113272189",
@@ -157214,7 +157318,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/way/113272189"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-way-380766768",
@@ -157262,7 +157370,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/way/380766768"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-way-1058023168",
@@ -157310,7 +157422,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/way/1058023168"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-253449513",
@@ -157358,7 +157474,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/253449513"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-616226471",
@@ -157406,7 +157526,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/616226471"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-2330623809",
@@ -157454,7 +157578,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/2330623809"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-5255490559",
@@ -157502,7 +157630,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/5255490559"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-9463483424",
@@ -157550,7 +157682,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/9463483424"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-10665631795",
@@ -157598,7 +157734,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/10665631795"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14063469249",
@@ -157646,7 +157786,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14063469249"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-245568530",
@@ -157694,7 +157838,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/245568530"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-286619281",
@@ -157742,7 +157890,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/286619281"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-504595671",
@@ -157790,7 +157942,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/504595671"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-839487155",
@@ -157838,7 +157994,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/839487155"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-1965459220",
@@ -157886,7 +158046,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1965459220"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-5077468325",
@@ -157934,7 +158098,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/5077468325"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-5233569633",
@@ -157982,7 +158150,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/5233569633"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-5499100161",
@@ -158030,7 +158202,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/5499100161"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-6393893151",
@@ -158078,7 +158254,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/6393893151"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-7663511844",
@@ -158126,7 +158306,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/7663511844"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-way-925456765",
@@ -158174,6 +158358,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/way/925456765"
+    ],
+    "confirmations": 0
   }
 ]
