@@ -1,6 +1,6 @@
 {
   "version": "12.1.0",
-  "checkedAt": "2026-09-28T06:28:54.939Z",
+  "checkedAt": "2026-09-28T06:29:25.635Z",
   "status": "combined-refresh-with-review",
   "automaticMode": "combined-open-data-first-party-osm-refresh",
   "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
@@ -125,5 +125,11 @@
     "removed": 0,
     "merged": 0,
     "nearMatchKm": 0.04
+  },
+  "scopeCleanup": {
+    "scope": "OpenStreetMap Province of Alicante area",
+    "before": 3090,
+    "after": 3090,
+    "removedOutOfScope": 0
   }
 }
