@@ -28,6 +28,7 @@ function quality(s) {
 }
 function mergeInto(primary, secondary) {
   const fields=['chain','phone','website','district','suburb','neighbourhood','quarter','address'];
+  if(primary.category==='other' && secondary.category && secondary.category!=='other') primary.category=secondary.category;
   for (const f of fields) if (!primary[f] && secondary[f]) primary[f]=secondary[f];
   if (!Number.isFinite(primary.lat)&&Number.isFinite(secondary.lat)) { primary.lat=secondary.lat; primary.lng=secondary.lng; }
   if (!primary.hoursVerified && secondary.hoursVerified) {
