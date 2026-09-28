@@ -8,6 +8,7 @@
     "ingest:first-party": "node scripts/ingest-first-party.mjs",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "discover:locations": "node scripts/ingest-osm.mjs",
-    "dedupe:data": "node scripts/dedupe-data.mjs"
+    "dedupe:data": "node scripts/dedupe-data.mjs",
+    "ingest:estancos": "node scripts/ingest-estancos.mjs"
   }
 }
