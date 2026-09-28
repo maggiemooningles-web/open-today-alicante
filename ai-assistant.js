@@ -118,59 +118,67 @@
     box.scrollTop=box.scrollHeight;
   }
 
-  function detectCategory(text) {
-    var rules = [
-      ['supermarket', /\bsupermercad|\bsuper\b|\bgrocery\b|\bmarket\b|\balimentacion\b|\balimentación\b/],
-      ['pharmacy', /\bfarmacia\b|\bpharmacy\b|\bchemist\b|\bmedicina\b|\bmedicinas\b/],
-      ['petrol', /\bgasolinera\b|\bpetrol\b|\bfuel\b|\bcombustible\b|\bgasoil\b/],
-      ['bakery', /\bpanaderia\b|\bpanadería\b|\bforn\b|\bbakery\b|\bdesayuno\b|\bcroissant\b/],
-      ['hardware', /\bbricolaje\b|\bferreteria\b|\bferretería\b|\bhardware\b|\bherramientas\b/],
-      ['garden', /\bjardineria\b|\bjardinería\b|\bvivero\b|\bgarden\b|\bplantas\b/],
-      ['electronics', /\belectronica\b|\belectrónica\b|\binformatica\b|\binformática\b|\btelefonia\b|\btelefonía\b|\belectronics\b/],
-      ['vet', /\bveterinario\b|\bveterinaria\b|\bvet\b|\bmascota\b|\bmascotas\b/],
-      ['tobacco', /\bestanco\b|\bestancos\b|\btabaco\b|\btobacco\b|\bcigarrillo/],
-      ['mall', /\bcentro comercial\b|\bshopping center\b|\bmall\b/],
-      ['express', /\bexpress\b|\bconveniencia\b|\bconvenience\b/]
+  function levenshtein(a,b){
+    a=norm(a);b=norm(b);if(a===b)return 0;if(!a)return b.length;if(!b)return a.length;
+    var p=[];for(var j=0;j<=b.length;j++)p[j]=j;
+    for(var i=1;i<=a.length;i++){var q=[i];for(var k=1;k<=b.length;k++)q[k]=Math.min(q[k-1]+1,p[k]+1,p[k-1]+(a[i-1]===b[k-1]?0:1));p=q;}
+    return p[b.length];
+  }
+  function fuzzyContains(text,term){
+    var t=norm(term);if(!t)return false;if(text.indexOf(t)>=0)return true;
+    return text.split(' ').some(function(w){return w.length>=4&&levenshtein(w,t)<=Math.max(1,Math.floor(t.length*.22));});
+  }
+  function detectCategory(text){
+    var rules=[
+      ['supermarket',/\b(supermercad|supermarket|grocery|alimentacion|alimentación|compras?|comida|milk|leche)\w*/],
+      ['pharmacy',/\bfarmaci|pharmacy|chemist|medicin|prescrip|receta|parafarm/],
+      ['petrol',/\bgasolin|petrol|fuel|combustible|gasoil|diesel|carburante/],
+      ['bakery',/\bpanader|pan|forn|bakery|desayuno|breakfast|croissant|bread|bolleri/],
+      ['hardware',/\bbricolaj|ferreter|hardware|herramient|tools?|paint|pintura|diy/],
+      ['garden',/\bjardineri|jardinería|vivero|garden|plantas|plants/],
+      ['electronics',/\belectronica|electrónica|informatica|informática|telefonia|telefonía|electronics|computer|mobile/],
+      ['vet',/\bveterinari|\bvet\b|mascota|mascotas|animal hospital|pet clinic/],
+      ['tobacco',/\bestanc|tabaco|tobacco|cigarr|cigar|fumar|smoke/],
+      ['mall',/\bcentro comercial|shopping center|shopping centre|\bmall\b/],
+      ['express',/\bexpress|convenien|conveniencia|corner shop/]
     ];
-    for (var i=0;i<rules.length;i++) if (rules[i][1].test(text)) return rules[i][0];
+    for(var i=0;i<rules.length;i++)if(rules[i][1].test(text))return rules[i][0];
     return null;
   }
-
-  function detectTown(text) {
-    try {
-      var entries = typeof getTownEntries === 'function' ? getTownEntries() : [];
-      for (var i=0;i<entries.length;i++) {
-        var item=entries[i], names=[item.es,item.en,item.slug].concat(item.aliases||[]);
-        for (var j=0;j<names.length;j++) {
-          if (names[j] && text.indexOf(norm(names[j])) >= 0) return item;
-        }
+  function detectTown(text){
+    var entries=[];try{entries=typeof getTownEntries==='function'?getTownEntries():[];}catch(_){}
+    var best=null,len=0;
+    for(var i=0;i<entries.length;i++){
+      var item=entries[i],names=[item.es,item.en,item.slug].concat(item.aliases||[]);
+      for(var j=0;j<names.length;j++){
+        if(!names[j])continue;var n=norm(names[j]);
+        if(text.indexOf(n)>=0)return item;
+        n.split(' ').forEach(function(w){if(w.length>=5&&fuzzyContains(text,w)&&w.length>len){best=item;len=w.length;}});
       }
-    } catch (_) {}
-    return null;
+    }
+    return best;
   }
-
-  function detectBrand(text) {
-    var preferred=['Mercadona','Lidl','ALDI','Consum','Charter','Carrefour','Carrefour Express','Repsol','Cepsa','bp','Moeve','Leroy Merlin','MediaMarkt','Supercor','DIA','Unide','Udaco','Hiperber','Dialprix','masymas'];
-    for (var i=0;i<preferred.length;i++) if (text.indexOf(norm(preferred[i]))>=0) return preferred[i];
-    try {
-      if (typeof STORES_DATA !== 'undefined') {
-        for (var k=0;k<STORES_DATA.length;k++) if (STORES_DATA[k].chain && text.indexOf(norm(STORES_DATA[k].chain))>=0) return STORES_DATA[k].chain;
-      }
-    } catch (_) {}
-    return null;
+  function detectBrand(text){
+    var brands=['Mercadona','Lidl','ALDI','Consum','Charter','Carrefour','Carrefour Express','Repsol','Cepsa','bp','Moeve','Leroy Merlin','MediaMarkt','Supercor','DIA','Unide','Udaco','Hiperber','Dialprix','masymas'];
+    var best=null,len=0;
+    for(var i=0;i<brands.length;i++){var n=norm(brands[i]);if(text.indexOf(n)>=0)return brands[i];if(n.length>=4&&fuzzyContains(text,n)&&n.length>len){best=brands[i];len=n.length;}}
+    try{for(var k=0;k<STORES_DATA.length;k++){var chain=STORES_DATA[k].chain,cn=norm(chain||'');if(!cn)continue;if(text.indexOf(cn)>=0)return chain;if(cn.length>=4&&fuzzyContains(text,cn)&&cn.length>len){best=chain;len=cn.length;}}}catch(_){}
+    return best;
   }
-
-  function analyze(query) {
-    var text=norm(query);
-    var radiusMatch=text.match(/\b(\d+(?:[.,]\d+)?)\s*(?:km|kilometros|kilómetros)\b/);
-    return {
-      query:query, text:text, category:detectCategory(text), town:detectTown(text), brand:detectBrand(text),
-      nearMe:/\b(cerca de mi|cerca de mí|near me|closest|nearest|lo mas cercano|lo más cercano)\b/.test(text),
-      openNow:/\b(abierto|abierta|abiertos|abiertas|open|ahora|now|hoy|today|puedo comprar|necesito)\b/.test(text),
-      sunday:/\b(domingo|domingos|sunday)\b/.test(text),
-      twentyFour:/\b24\s*h\b|\b24h\b|\b24\s*horas\b|\b24\/7\b/.test(text),
-      radiusKm:radiusMatch ? Number(radiusMatch[1].replace(',','.')) : null
-    };
+  function parseHour(text){
+    var m=text.match(/\b(?:after|despues de|después de|desde|until|hasta|a partir de)\s*(\d{1,2})(?::(\d{2}))?\s*(?:h|hrs?|pm|am)?\b/);
+    if(!m)return null;var h=Number(m[1]),min=Number(m[2]||0),raw=m[0].toLowerCase();if(/pm/.test(raw)&&h<12)h+=12;return h+min/60;
+  }
+  function analyze(query){
+    var text=norm(query),rm=text.match(/\b(\d+(?:[.,]\d+)?)\s*(km|kilometros|kilómetros|m)\b/);
+    var category=detectCategory(text);
+    var need=!category&&(/\b(leche|milk|groceries|comida|compra)\b/.test(text)?'supermarket':/\bpan|bread|desayuno|breakfast/.test(text)?'bakery':/\btabaco|cigarr|tobacco/.test(text)?'tobacco':/\bmedicina|receta|prescripcion|prescripción/.test(text)?'pharmacy':/\bgasolina|diesel|fuel|gasoil/.test(text)?'petrol':/\bmascota|pet food|animal/.test(text)?'vet':null);
+    var nearMe=/\b(cerca de mi|cerca de mí|near me|closest|nearest|lo mas cercano|lo más cercano|nearby|por aqui|por aquí)\b/.test(text);
+    var openNow=/\b(ahora|ahora mismo|open now|currently|right now|abierto ahora|abierta ahora|abiertos ahora|abiertas ahora)\b/.test(text);
+    var tomorrow=/\b(mañana|tomorrow)\b/.test(text),sunday=/\b(domingo|domingos|sunday)\b/.test(text),today=/\b(hoy|today)\b/.test(text);
+    var afterHour=parseHour(text),late=afterHour!==null||/\b(late|tarde|tonight|esta noche|hasta tarde)\b/.test(text);
+    var twentyFour=/\b24\s*h\b|\b24h\b|\b24\s*horas\b|\b24\/7\b|\bsiempre abierto\b/.test(text);
+    return {query:query,text:text,category:category||need,town:detectTown(text),brand:detectBrand(text),nearMe,openNow,today,tomorrow,sunday,twentyFour,late,afterHour,radiusKm:rm?(rm[2]==='m'?Number(rm[1])/1000:Number(rm[1].replace(',','.'))):null,sortHint:/\b(cerca|closest|nearest|near me|más cerca|mas cerca)\b/.test(text)?'distance':(/\b(late|tarde|hasta tarde|open latest)\b/.test(text)?'latest':'openFirst'),priceRequest:/\b(barato|barata|cheap|cheapest|precio|price)\b/.test(text)};
   }
 
   function statusFor(store) {
@@ -180,48 +188,36 @@
     return {isOpen:false,isConfirmed:false,badgeText:{es:'Horario no confirmado',en:'Hours unconfirmed'},detailText:{es:'Horario no confirmado',en:'Hours unconfirmed'}};
   }
 
-  function matches(store,intent) {
-    if (intent.category && store.category!==intent.category) return false;
-    if (intent.town && typeof storeMatchesTown==='function' && !storeMatchesTown(store,intent.town.slug)) return false;
-    if (intent.brand && norm(store.chain).indexOf(norm(intent.brand))<0 && norm(intent.brand).indexOf(norm(store.chain))<0) return false;
-    if (intent.nearMe && !(userGeo && Number.isFinite(userGeo.lat) && Number.isFinite(userGeo.lng))) return false;
-    var st=statusFor(store);
-    if (intent.openNow && (!st.isConfirmed || !st.isOpen)) return false;
-    if (intent.sunday && !store.isSundayOpen) return false;
-    if (intent.twentyFour) {
-      var op=Number(store.weekOpenHour), cl=Number(store.weekCloseHour);
-      if (!(op===0 && cl>=24) && store.is24h!==true) return false;
-    }
-    if (!intent.category && !intent.town && !intent.brand) {
-      var hay=norm([store.name,store.chain,store.address,store.town,store.district,store.suburb,store.neighbourhood].filter(Boolean).join(' '));
-      var stop=/^(abierto|abierta|ahora|open|now|today|hoy|cerca|de|mi|me|near|en|el|la|un|una|por|favor)$/;
-      var words=intent.text.split(' ').filter(function(w){return w.length>2 && !stop.test(w);});
-      if (words.length && !words.some(function(w){return hay.indexOf(w)>=0;})) return false;
-    }
+  function scheduleFor(store,date){
+    try{if(store.hoursVerified===false||typeof getScheduleForDate!=='function')return null;var s=getScheduleForDate(store,date);return s&&s.isOpenDay&&s.openHour!=null&&s.closeHour!=null?s:null;}catch(_){return null;}
+  }
+  function matches(store,intent){
+    if(intent.category&&store.category!==intent.category)return false;
+    if(intent.town&&typeof storeMatchesTown==='function'&&!storeMatchesTown(store,intent.town.slug))return false;
+    if(intent.brand&&norm(store.chain||'').indexOf(norm(intent.brand))<0&&norm(intent.brand).indexOf(norm(store.chain||''))<0)return false;
+    if(intent.nearMe&&!(userGeo&&Number.isFinite(userGeo.lat)&&Number.isFinite(userGeo.lng)))return false;
+    var st=statusFor(store);if(intent.openNow&&(!st.isConfirmed||!st.isOpen))return false;
+    if(intent.sunday){var d=new Date(),su=new Date(d);su.setDate(d.getDate()+((7-d.getDay())%7||7));if(!scheduleFor(store,su))return false;}
+    if(intent.tomorrow){var tm=new Date();tm.setDate(tm.getDate()+1);if(!scheduleFor(store,tm))return false;}
+    if(intent.twentyFour){var op=Number(store.weekOpenHour),cl=Number(store.weekCloseHour);if(!(op===0&&cl>=24)&&store.is24h!==true)return false;}
+    if(intent.afterHour!=null||intent.late){var target=intent.afterHour!=null?intent.afterHour:21,sch=scheduleFor(store,new Date());if(!sch||Number(sch.closeHour)<target)return false;}
+    if(intent.radiusKm!=null&&userGeo&&Number.isFinite(userGeo.lat)&&Number.isFinite(userGeo.lng)&&Number.isFinite(store.lat)&&Number.isFinite(store.lng)){var dk=typeof calculateDistance==='function'?calculateDistance(userGeo.lat,userGeo.lng,store.lat,store.lng):Infinity;if(dk>intent.radiusKm)return false;}
     return true;
   }
-
-  function rowsFor(intent) {
-    var out=[];
-    if (typeof STORES_DATA==='undefined') return out;
-    for (var i=0;i<STORES_DATA.length;i++) {
-      var store=STORES_DATA[i]; if (!matches(store,intent)) continue;
-      var dist;
-      if (intent.nearMe && Number.isFinite(store.lat) && Number.isFinite(store.lng)) {
-        dist = typeof calculateDistance==='function' ? calculateDistance(userGeo.lat,userGeo.lng,store.lat,store.lng) : undefined;
-      }
-      if (intent.radiusKm!=null && Number.isFinite(dist) && dist>intent.radiusKm) continue;
-      out.push({store:store,status:statusFor(store),distance:dist});
+  function rowsFor(intent){
+    var out=[];if(typeof STORES_DATA==='undefined')return out;
+    for(var i=0;i<STORES_DATA.length;i++){var s=STORES_DATA[i];if(!matches(s,intent))continue;
+      var d;if(userGeo&&Number.isFinite(userGeo.lat)&&Number.isFinite(userGeo.lng)&&Number.isFinite(s.lat)&&Number.isFinite(s.lng))d=typeof calculateDistance==='function'?calculateDistance(userGeo.lat,userGeo.lng,s.lat,s.lng):undefined;
+      var st=statusFor(s),score=0;if(st.isOpen)score+=100;if(st.isConfirmed)score+=8;if(s.sourceType==='official-locator')score+=4;else if(s.sourceType==='configured-source')score+=3;else if(s.sourceType==='official-open-data')score+=2;
+      if(intent.nearMe&&Number.isFinite(d))score+=Math.max(0,30-Math.min(30,d*8));out.push({store:s,status:st,distance:d,score:score});
     }
     out.sort(function(a,b){
-      if(intent.nearMe){var ad=Number.isFinite(a.distance)?a.distance:Infinity,bd=Number.isFinite(b.distance)?b.distance:Infinity;if(ad!==bd)return ad-bd;}
-      if(a.status.isOpen!==b.status.isOpen)return a.status.isOpen?-1:1;
-      if(a.store.isSundayOpen!==b.store.isSundayOpen)return a.store.isSundayOpen?-1:1;
-      return String(a.store.name).localeCompare(String(b.store.name));
+      if(intent.sortHint==='distance'||intent.nearMe){var ad=Number.isFinite(a.distance)?a.distance:Infinity,bd=Number.isFinite(b.distance)?b.distance:Infinity;if(ad!==bd)return ad-bd;}
+      if(intent.sortHint==='latest'){var sa=scheduleFor(a.store,new Date()),sb=scheduleFor(b.store,new Date()),ac=sa?Number(sa.closeHour):0,bc=sb?Number(sb.closeHour):0;if(ac!==bc)return bc-ac;}
+      if(a.status.isOpen!==b.status.isOpen)return a.status.isOpen?-1:1;if(a.score!==b.score)return b.score-a.score;return String(a.store.name).localeCompare(String(b.store.name));
     });
     return out;
   }
-
   function distanceText(km) { return !Number.isFinite(km) ? '' : (km<1 ? Math.round(km*1000)+' m' : km.toFixed(1)+' km'); }
 
   function resultCard(row) {
@@ -268,54 +264,31 @@
     } catch (_) {}
   }
 
-  function askRemote(query,intent) {
-    var endpoint=window.OTA_AI_ENDPOINT;
-    if(!endpoint) return Promise.resolve(null);
-    try {
-      return fetch(endpoint,{
-        method:'POST',
-        headers:{'content-type':'application/json'},
-        body:JSON.stringify({query:query,language:isEN()?'en':'es',intent:intent,userGeo:(typeof userGeo!=='undefined'?userGeo:null)}),
-        signal:AbortSignal.timeout(10000)
-      }).then(function(r){return r.ok?r.json():null;}).then(function(p){return p&&p.answer?String(p.answer):null;}).catch(function(){return null;});
-    } catch (_) { return Promise.resolve(null); }
+  function askRemote(query,intent){
+    var endpoint=window.OTA_AI_ENDPOINT;if(!endpoint)return Promise.resolve(null);
+    try{
+      var rows=rowsFor(intent).slice(0,12),candidates=rows.map(function(r){var s=r.store;return{slug:s.slug,name:s.name,chain:s.chain||'',category:s.category||'',town:s.town||'',address:s.address||'',distanceKm:Number.isFinite(r.distance)?Number(r.distance.toFixed(2)):null,openNow:Boolean(r.status&&r.status.isConfirmed&&r.status.isOpen),status:r.status?r.status.badgeText[isEN()?'en':'es']:'',sourceType:s.sourceType||'',lastVerified:s.lastVerified||s.verification?.verifiedAt||null};});
+      return fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:query,language:isEN()?'en':'es',intent:intent,userGeo:(typeof userGeo!=='undefined'?userGeo:null),candidates:candidates,dataContext:{count:typeof STORES_DATA!=='undefined'?STORES_DATA.length:0,refreshedAt:typeof DATA_REPORT!=='undefined'?DATA_REPORT?.checkedAt:null}}),signal:AbortSignal.timeout(12000)}).then(function(r){return r.ok?r.json():null;}).then(function(p){return p&&p.answer?String(p.answer):null;}).catch(function(){return null;});
+    }catch(_){return Promise.resolve(null);}
   }
 
-  function ask(query) {
-    query=String(query||'').trim();
-    if(!query||state.busy)return;
-    state.busy=true;
-    var input=document.getElementById('otaAiInput');if(input)input.value='';
-    addMessage('user',esc(query));
+  function ask(query){
+    query=String(query||'').trim();if(!query||state.busy)return;state.busy=true;
+    var input=document.getElementById('otaAiInput');if(input)input.value='';addMessage('user',esc(query));
     var intent=analyze(query);state.lastIntent=intent;
-
-    if(intent.nearMe && !(typeof userGeo!=='undefined' && userGeo && Number.isFinite(userGeo.lat) && Number.isFinite(userGeo.lng))) {
-      addMessage('assistant',esc(L('Puedo buscarlo cerca de ti, pero necesito tu ubicación.','I can search near you, but I need your location.')) +
-        '<button class="ota-ai-locate" data-ai-locate="1">📍 '+esc(L('Usar mi ubicación','Use my location'))+'</button>');
-      state.busy=false;return;
-    }
-
+    if(intent.priceRequest)addMessage('assistant',esc(L('Puedo buscar sitios abiertos y cercanos, pero este directorio no tiene precios fiables para compararlos.','I can find places that are open and nearby, but this directory does not have reliable price data for comparisons.')));
+    if(intent.nearMe&&!(typeof userGeo!=='undefined'&&userGeo&&Number.isFinite(userGeo.lat)&&Number.isFinite(userGeo.lng))){addMessage('assistant',esc(L('Para buscar “cerca de mí” necesito tu ubicación.','To search “near me” I need your location.'))+'<button class="ota-ai-locate" data-ai-locate="1">📍 '+esc(L('Usar mi ubicación','Use my location'))+'</button>');state.busy=false;return;}
     askRemote(query,intent).then(function(remote){
       if(remote){addMessage('assistant',esc(remote).replace(/\n/g,'<br>'));state.busy=false;return;}
       var rows=rowsFor(intent);
-      if(!rows.length&&intent.openNow){
-        var relaxed=Object.assign({},intent,{openNow:false}), all=rowsFor(relaxed);
-        if(all.length){
-          addMessage('assistant',esc(L('No encuentro un horario confirmado como abierto ahora. Sí encuentro '+all.length+' coincidencias, pero algunas pueden tener el horario sin confirmar.','I cannot find a confirmed place open now. I did find '+all.length+' matches, but some may have unconfirmed hours.')));
-          rows=all;
-        }
-      }
-      if(!rows.length){
-        addMessage('assistant',esc(L('No he encontrado una coincidencia con esos criterios. Prueba con otro municipio, categoría o marca.','I could not find a match with those criteria. Try another town, category or brand.'))+
-          '<br><button class="ota-ai-action" data-ai-open-main="1">'+esc(L('Abrir el buscador completo','Open the full search'))+'</button>');
-        state.busy=false;return;
-      }
-      var shown=rows.slice(0,5), msg=esc(L('He encontrado '+rows.length+' opción'+(rows.length===1?'':'es'),'I found '+rows.length+' option'+(rows.length===1?'':'s')));
-      if(summary(intent))msg+='<div style="margin-top:.2rem;color:#64748b;font-size:.66rem">'+esc(summary(intent))+'</div>';
-      msg+='<div class="ota-ai-results">'+shown.map(resultCard).join('')+'</div>';
-      msg+='<button class="ota-ai-action" data-ai-apply="1">✨ '+esc(L('Ver estos resultados en la web','Show these results on the site'))+'</button>';
-      addMessage('assistant',msg,L('La respuesta usa el directorio actual; “abierto ahora” requiere horario confirmado.','Uses the current directory; “open now” requires confirmed hours.'));
-      state.busy=false;
+      if(!rows.length&&intent.openNow){var relaxed=Object.assign({},intent,{openNow:false}),all=rowsFor(relaxed);if(all.length){addMessage('assistant',esc(L('No encuentro un local con horario confirmado como abierto ahora. Sí encuentro '+all.length+' coincidencias, pero algunas tienen el horario sin confirmar.','I cannot find a place with confirmed hours open right now. I did find '+all.length+' matches, but some have unconfirmed hours.')));rows=all;}}
+      if(!rows.length){addMessage('assistant',esc(L('No encuentro una coincidencia exacta. Prueba con otro municipio, categoría o marca.','I could not find an exact match. Try another town, category or chain.'))+'<br><button class="ota-ai-action" data-ai-open-main="1">'+esc(L('Abrir el buscador completo','Open the full search'))+'</button>');state.busy=false;return;}
+      var open=rows.filter(function(r){return r.status.isConfirmed&&r.status.isOpen;}).length;
+      var lead=L('He encontrado '+rows.length+' opción'+(rows.length===1?'':'es')+(open?'. '+open+' está'+(open===1?'':'n')+' abierta'+(open===1?'':'s')+' ahora.':'.'),'I found '+rows.length+' option'+(rows.length===1?'':'s')+(open?'. '+open+' '+(open===1?'is':'are')+' open now.':'.'));
+      var msg=esc(lead);
+      var bits=[];if(intent.category&&typeof categoryLabel==='function')bits.push(categoryLabel(intent.category));if(intent.brand)bits.push(intent.brand);if(intent.town)bits.push(isEN()?(intent.town.en||intent.town.es):(intent.town.es||intent.town.en));if(intent.openNow)bits.push(L('abierto ahora','open now'));if(intent.nearMe)bits.push(L('cerca de ti','near you'));if(intent.tomorrow)bits.push(L('mañana','tomorrow'));if(intent.late)bits.push(L('hasta tarde','open late'));if(bits.length)msg+='<div style="margin-top:.2rem;color:#64748b;font-size:.66rem">'+esc(bits.join(' · '))+'</div>';
+      msg+='<div class="ota-ai-results">'+rows.slice(0,6).map(resultCard).join('')+'</div>';if(rows.length>6)msg+='<button class="ota-ai-action" data-ai-apply="1">✨ '+esc(L('Ver estos resultados en la web','Show these results on the site'))+'</button>';
+      addMessage('assistant',msg,L('Respuesta basada en el directorio actual. “Abierto ahora” requiere horario confirmado.','Answer based on the current directory. “Open now” requires confirmed hours.'));state.busy=false;
     });
   }
 
