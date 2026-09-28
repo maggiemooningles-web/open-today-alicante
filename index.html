@@ -227,6 +227,7 @@
 .quick-help-chip.supermarket{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
 .quick-help-chip.pharmacy{background:#ecfeff;border-color:#a5f3fc;color:#0e7490}
 .quick-help-chip.petrol{background:#f8fafc;border-color:#cbd5e1;color:#334155}
+.quick-help-chip.tobacco{background:#fff7ed;border-color:#fdba74;color:#9a3412}
 .quick-help-chip.bakery{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
 .quick-help-chip.vet{background:#faf5ff;border-color:#e9d5ff;color:#7e22ce}
 .quick-help-chip.reset{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
@@ -281,6 +282,7 @@ body { background:var(--ota-cream) !important; }
 #storeGridView > .store-card[data-category="hardware"]::before { background:linear-gradient(90deg,#64748b,#0f172a); }
 #storeGridView > .store-card[data-category="garden"]::before { background:linear-gradient(90deg,#16a34a,#84cc16); }
 #storeGridView > .store-card[data-category="electronics"]::before { background:linear-gradient(90deg,#2563eb,#06b6d4); }
+#storeGridView > .store-card[data-category="tobacco"]::before { background:linear-gradient(90deg,#f97316,#ef4444); }
 @media (max-width:760px) { #heroSection.hero-v10 { display:block; } .hero-side-v10 { margin-top:1rem; } .hero-search-v11 { grid-template-columns:auto 1fr; } .hero-search-v11 button { grid-column:1 / -1; width:100%; } .zone-strip-v11 { align-items:flex-start; flex-direction:column; gap:.55rem; } }
 </style>
 <style id="ux-v12">
@@ -403,6 +405,7 @@ body { background:var(--ota-cream) !important; }
                     <button type="button" onclick="quickIntent('petrol')" class="hero-v12-chip">⛽ <span data-i18n="heroFuel">Gasolineras</span></button>
                     <button type="button" onclick="quickIntent('bakery')" class="hero-v12-chip">🥖 <span data-i18n="heroBakeries">Panaderías</span></button>
                     <button type="button" onclick="quickIntent('vet')" class="hero-v12-chip">🐾 <span data-i18n="heroVets">Veterinarios</span></button>
+                    <button type="button" onclick="quickIntent('tobacco')" class="hero-v12-chip">🚬 <span data-i18n="heroTobacco">Estancos</span></button>
                 </div>
                 <button type="button" class="hero-v12-filter-link" onclick="toggleHomepageFilters()">
                     <i class="fa-solid fa-sliders"></i>
@@ -423,6 +426,7 @@ body { background:var(--ota-cream) !important; }
   <button type="button" class="quick-help-chip petrol" onclick="quickIntent('petrol')"><span class="quick-help-emoji">⛽</span><span data-i18n="quickFuel">Gasolina</span></button>
   <button type="button" class="quick-help-chip bakery" onclick="quickIntent('bakery')"><span class="quick-help-emoji">🥐</span><span data-i18n="quickBreakfast">Desayuno</span></button>
   <button type="button" class="quick-help-chip vet" onclick="quickIntent('vet')"><span class="quick-help-emoji">🐾</span><span data-i18n="quickPets">Mascotas</span></button>
+  <button type="button" class="quick-help-chip tobacco" onclick="quickIntent('tobacco')"><span class="quick-help-emoji">🚬</span><span data-i18n="quickTobacco">Estancos</span></button>
   <button type="button" class="quick-help-chip reset" onclick="quickIntent('all')"><span class="quick-help-emoji">✨</span><span data-i18n="quickAll">Ver todo</span></button>
 </div>
 
@@ -468,6 +472,7 @@ body { background:var(--ota-cream) !important; }
                         <option value="garden" data-i18n="optGarden">Jardinería / Viveros</option>
                         <option value="electronics" data-i18n="optElectronics">Electrónica</option>
                         <option value="vet" data-i18n="optVet">Veterinarios / Urgencias</option>
+                        <option value="tobacco" data-i18n="optTobacco">Estancos / Tabaco</option>
                         <option value="other" data-i18n="optOther">Otros servicios y comercios</option>
                     </select>
                 </div>
@@ -585,7 +590,7 @@ body { background:var(--ota-cream) !important; }
                 <p class="mt-0.5 text-slate-500" data-i18n="footerTagline">Encuentra un lugar abierto cerca de ti, ahora mismo.</p>
                 <p class="mt-2 text-slate-600">Datos de ubicación: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="hover:text-slate-300">© OpenStreetMap contributors</a></p>
             </div>
-            <div class="flex items-center space-x-4"><a href="/open-today-alicante/panaderias-abiertas" onclick="event.preventDefault(); navigateTo('/panaderias-abiertas')" class="hover:text-emerald-400 transition"><span data-i18n="footerBakery">Panaderías</span></a><a href="/open-today-alicante/veterinarios-urgencias-24h" onclick="event.preventDefault(); navigateTo('/veterinarios-urgencias-24h')" class="hover:text-emerald-400 transition"><span data-i18n="footerVet">Urgencias vet</span></a><a href="/open-today-alicante/privacy.html" class="hover:text-emerald-400 transition"><span data-i18n="footerPrivacy">Privacidad</span></a><a href="#faqSection" class="hover:text-brand-400 transition" data-i18n="footerFaq">Preguntas Frecuentes</a>
+            <div class="flex items-center space-x-4"><a href="/open-today-alicante/panaderias-abiertas" onclick="event.preventDefault(); navigateTo('/panaderias-abiertas')" class="hover:text-emerald-400 transition"><span data-i18n="footerBakery">Panaderías</span></a><a href="/open-today-alicante/estancos-abiertos" onclick="event.preventDefault(); navigateTo('/estancos-abiertos')" class="hover:text-emerald-400 transition"><span data-i18n="footerTobacco">Estancos</span></a><a href="/open-today-alicante/veterinarios-urgencias-24h" onclick="event.preventDefault(); navigateTo('/veterinarios-urgencias-24h')" class="hover:text-emerald-400 transition"><span data-i18n="footerVet">Urgencias vet</span></a><a href="/open-today-alicante/privacy.html" class="hover:text-emerald-400 transition"><span data-i18n="footerPrivacy">Privacidad</span></a><a href="#faqSection" class="hover:text-brand-400 transition" data-i18n="footerFaq">Preguntas Frecuentes</a>
                 <span class="text-slate-700">|</span>
                 <span class="text-emerald-400 font-medium"><i class="fa-solid fa-circle text-[8px] mr-1"></i> <span data-i18n="footerSourceStatus">Alicante · Abierto ahora</span></span>
             </div>
@@ -18857,7 +18862,7 @@ body { background:var(--ota-cream) !important; }
                 heroSearchPlaceholder: "Busca una tienda, servicio o municipio…",
                 heroSearchButton: "Buscar",
                 heroSearchHint: "Prueba con “Mercadona”, “farmacia”, “Playa San Juan” o una calle.",
-                quickNeedTitle: "¿Qué necesitas?", quickNow: "Abierto ahora", quickShop: "Compra rápida", quickMeds: "Medicinas", quickFuel: "Gasolina", quickBreakfast: "Desayuno", quickPets: "Mascotas", quickAll: "Ver todo",
+                quickNeedTitle: "¿Qué necesitas?", quickNow: "Abierto ahora", quickShop: "Compra rápida", quickMeds: "Medicinas", quickFuel: "Gasolina", quickBreakfast: "Desayuno", quickPets: "Mascotas", quickTobacco: "Estancos", quickAll: "Ver todo",
                 zoneStripTitle: "Explora por zona",
                 nearMeCta: "📍 ¿Qué está abierto cerca de mí ahora?",
                 nearMeCtaPrimary: "📍 Muéstrame qué está abierto cerca de mí",
@@ -18865,9 +18870,10 @@ body { background:var(--ota-cream) !important; }
                 moreFilters: "Más filtros",
                 heroTrustShort: "Los horarios mostrados como “abierto ahora” están confirmados.",
                 nearMeDesc: "Activa GPS, prioriza distancia y muestra solo locales abiertos en este momento.",
-                browseCta: "Buscar por nombre o localidad", heroSupermarkets: "Supermercados", heroPharmacies: "Farmacias", heroFuel: "Gasolineras", heroBakeries: "Panaderías", heroVets: "Veterinarios", heroAll: "Ver todo", heroTrust: "Mostramos la fuente y la fecha de verificación en cada ficha.", fastHelpKicker: "LA FORMA MÁS RÁPIDA", fastHelpTitle: "Busca. Comprueba. Ve.", stepOneTitle: "Activa tu ubicación", stepOneText: "Calculamos qué tienes más cerca.", stepTwoTitle: "Filtra “Abiertos ahora”", stepTwoText: "Quitamos los que no puedes visitar.", stepThreeTitle: "Pulsa “Cómo llegar”", stepThreeText: "Te enviamos a Google Maps.",
+                browseCta: "Buscar por nombre o localidad", heroSupermarkets: "Supermercados", heroPharmacies: "Farmacias", heroFuel: "Gasolineras", heroBakeries: "Panaderías", heroVets: "Veterinarios", heroTobacco: "Estancos", heroAll: "Ver todo", heroTrust: "Mostramos la fuente y la fecha de verificación en cada ficha.", fastHelpKicker: "LA FORMA MÁS RÁPIDA", fastHelpTitle: "Busca. Comprueba. Ve.", stepOneTitle: "Activa tu ubicación", stepOneText: "Calculamos qué tienes más cerca.", stepTwoTitle: "Filtra “Abiertos ahora”", stepTwoText: "Quitamos los que no puedes visitar.", stepThreeTitle: "Pulsa “Cómo llegar”", stepThreeText: "Te enviamos a Google Maps.",
                 footerBakery: "Panaderías",
                 footerVet: "Urgencias vet",
+                footerTobacco: "Estancos",
                 footerTrust: "Cómo comprobamos",
                 footerSourceStatus: "Alicante · Abierto ahora",
                 footerTagline: "Encuentra un lugar abierto cerca de ti, ahora mismo.",
@@ -18885,6 +18891,7 @@ body { background:var(--ota-cream) !important; }
                 optGarden: "Jardinería / Viveros",
                 optElectronics: "Electrónica",
                 optVet: "Veterinarios / Urgencias",
+                optTobacco: "Estancos / Tabaco",
                 optOther: "Otros servicios y comercios",
                 sortOpenFirst: "⚡ Abiertos primero",
                 sortDistance: "📍 Distancia GPS",
@@ -18949,16 +18956,17 @@ body { background:var(--ota-cream) !important; }
                 statData: "Data",
                 statDataDesc: "latest recorded check",
                 heroSearchHint: "Try “Mercadona”, “pharmacy”, “Playa San Juan” or a street.",
-                quickNeedTitle: "What do you need?", quickNow: "Open now", quickShop: "Quick groceries", quickMeds: "Medicines", quickFuel: "Fuel", quickBreakfast: "Breakfast", quickPets: "Pets", quickAll: "See everything",
+                quickNeedTitle: "What do you need?", quickNow: "Open now", quickShop: "Quick groceries", quickMeds: "Medicines", quickFuel: "Fuel", quickBreakfast: "Breakfast", quickPets: "Pets", quickTobacco: "Tobacco shops", quickAll: "See everything",
                 nearMeCta: "📍 What's open near me right now?",
                 nearMeCtaPrimary: "📍 Show me what's open near me",
                 nearMeCtaHint: "Use your location and we'll put the closest first.",
                 moreFilters: "More filters",
                 heroTrustShort: "Places shown as “open now” use confirmed opening hours.",
                 nearMeDesc: "Use GPS, prioritise distance and show only places open right now.",
-                browseCta: "Search by name or town", heroSupermarkets: "Supermarkets", heroPharmacies: "Pharmacies", heroFuel: "Fuel stations", heroBakeries: "Bakeries", heroVets: "Vets", heroAll: "View all", heroTrust: "Every listing shows its source and verification date.", fastHelpKicker: "FASTEST WAY", fastHelpTitle: "Search. Check. Go.", stepOneTitle: "Use your location", stepOneText: "We calculate what's closest.", stepTwoTitle: "Filter “Open now”", stepTwoText: "We remove places you can't visit.", stepThreeTitle: "Tap “Directions”", stepThreeText: "We'll hand you over to Google Maps.",
+                browseCta: "Search by name or town", heroSupermarkets: "Supermarkets", heroPharmacies: "Pharmacies", heroFuel: "Fuel stations", heroBakeries: "Bakeries", heroVets: "Vets", heroTobacco: "Tobacco shops", heroAll: "View all", heroTrust: "Every listing shows its source and verification date.", fastHelpKicker: "FASTEST WAY", fastHelpTitle: "Search. Check. Go.", stepOneTitle: "Use your location", stepOneText: "We calculate what's closest.", stepTwoTitle: "Filter “Open now”", stepTwoText: "We remove places you can't visit.", stepThreeTitle: "Tap “Directions”", stepThreeText: "We'll hand you over to Google Maps.",
                 footerBakery: "Bakeries",
                 footerVet: "Vet emergencies",
+                footerTobacco: "Tobacco shops",
                 footerTrust: "How we check",
                 footerSourceStatus: "Data with identified sources",
                 footerTagline: "Hours, sources and special openings to help you decide where to go now.",
@@ -18976,6 +18984,7 @@ body { background:var(--ota-cream) !important; }
                 optGarden: "Garden Centres",
                 optElectronics: "Electronics",
                 optVet: "Veterinary / Emergency",
+                optTobacco: "Tobacco shops",
                 optOther: "Other services & shops",
                 sortOpenFirst: "⚡ Open Now First",
                 sortDistance: "📍 Distance (GPS)",
@@ -19295,6 +19304,7 @@ body { background:var(--ota-cream) !important; }
             '/bricolaje-abierto': { title: 'Bricolaje y Ferreterías Abiertas en Alicante', description: 'Encuentra tiendas de bricolaje, ferreterías y mejora del hogar abiertas en Alicante.' },
             '/jardineria-abierta': { title: 'Jardinería y Viveros Abiertos en Alicante', description: 'Encuentra viveros y centros de jardinería abiertos en Alicante y alrededores.' },
             '/electronica-abierta': { title: 'Electrónica Abierta en Alicante', description: 'Encuentra tiendas de electrónica y electrodomésticos abiertas en Alicante.' },
+            '/estancos-abiertos': { title: 'Estancos Abiertos Ahora en Alicante', description: 'Encuentra estancos y tiendas de tabaco abiertas ahora en Alicante y la Costa Blanca.' },
             '/veterinarios-urgencias-24h': { title: 'Veterinarios y Urgencias 24h en Alicante', description: 'Encuentra veterinarios y hospitales de urgencias abiertos ahora en Alicante.' },
             '/aperturas-1-enero-alicante': {
                 title: 'Aperturas 1 de Enero en Alicante | Qué está Abierto',
@@ -19330,6 +19340,7 @@ body { background:var(--ota-cream) !important; }
             '/bricolaje-abierto': { es: ['Bricolaje y ferreterías abiertas en Alicante', 'Tiendas para reparaciones, herramientas y hogar abiertas ahora.'], en: ['DIY & hardware stores open in Alicante', 'Find hardware, tools and home-improvement stores open now.'] },
             '/jardineria-abierta': { es: ['Jardinería y viveros abiertos en Alicante', 'Encuentra viveros y centros de jardinería con horario disponible.'], en: ['Garden centres open in Alicante', 'Find nurseries and garden centres with available opening hours.'] },
             '/electronica-abierta': { es: ['Electrónica abierta en Alicante', 'Tiendas de electrónica y electrodomésticos abiertas ahora.'], en: ['Electronics stores open in Alicante', 'Electronics and appliance stores open now.'] },
+            '/estancos-abiertos': { es: ['Estancos abiertos ahora en Alicante', 'Encuentra estancos y tiendas de tabaco abiertas ahora.'], en: ['Tobacco shops open now in Alicante', 'Find tobacco shops and estancos open now.'] },
             '/veterinarios-urgencias-24h': { es: ['Veterinarios y urgencias 24h en Alicante', 'Servicios veterinarios para urgencias y atención inmediata.'], en: ['24h vets & emergency care in Alicante', 'Veterinary services for emergencies and immediate care.'] },
             '/aperturas-1-enero-alicante': { es: ['Aperturas del 1 de Enero', 'Consulta los horarios configurados para el próximo 1 de enero.'], en: ['1 January openings', 'Check the configured opening hours for the next 1 January.'] },
             '/aperturas-semana-santa-alicante': { es: ['Semana Santa', 'Consulta los horarios configurados para el Domingo de Ramos y las aperturas especiales.'], en: ['Holy Week', 'Check the configured hours for Palm Sunday and special holiday openings.'] },
@@ -19390,6 +19401,7 @@ body { background:var(--ota-cream) !important; }
             '/bricolaje-abierto': { title: 'DIY & Hardware Stores Open in Alicante', description: 'Find DIY, hardware and home-improvement stores open in Alicante.' },
             '/jardineria-abierta': { title: 'Garden Centres Open in Alicante', description: 'Find nurseries and garden centres open in Alicante and nearby towns.' },
             '/electronica-abierta': { title: 'Electronics Stores Open in Alicante', description: 'Find electronics and appliance shops open in Alicante.' },
+            '/estancos-abiertos': { title: 'Tobacco Shops Open Now in Alicante', description: 'Find tobacco shops and estancos open now in Alicante and the Costa Blanca.' },
             '/veterinarios-urgencias-24h': { title: '24h Vets & Emergency Care in Alicante', description: 'Find veterinary and emergency services open now in Alicante.' },
             '/aperturas-1-enero-alicante': { title: '1 January openings in Alicante | What’s open', description: 'Check configured opening hours for 1 January in Alicante and nearby towns.' },
             '/aperturas-semana-santa-alicante': { title: 'Holy Week openings in Alicante | Open shops', description: 'Check configured Holy Week opening hours in Alicante and nearby towns.' },
@@ -19628,6 +19640,8 @@ body { background:var(--ota-cream) !important; }
                 selectedCategory = 'garden'; openNowOnly = true; updateHeroBanner('Jardinería y viveros abiertos en Alicante', 'Encuentra viveros y centros de jardinería con horario disponible.');
             } else if (path === '/electronica-abierta') {
                 selectedCategory = 'electronics'; openNowOnly = true; updateHeroBanner('Electrónica abierta en Alicante', 'Tiendas de electrónica y electrodomésticos abiertas ahora.');
+            } else if (path === '/estancos-abiertos') {
+                selectedCategory = 'tobacco'; openNowOnly = true; updateHeroBanner('Estancos abiertos ahora en Alicante', 'Encuentra estancos y tiendas de tabaco abiertas ahora.');
             } else if (path === '/veterinarios-urgencias-24h') {
                 selectedCategory = 'vet'; openNowOnly = true; updateHeroBanner('Veterinarios y urgencias 24h en Alicante', 'Servicios veterinarios para urgencias y atención inmediata.');
             } else if (path === '/aperturas-1-enero-alicante') {
@@ -19815,7 +19829,7 @@ body { background:var(--ota-cream) !important; }
         const CATEGORY_ICONS = {
             supermarket: 'fa-cart-shopping', pharmacy: 'fa-prescription-bottle-medical', express: 'fa-basket-shopping',
             petrol: 'fa-gas-pump', mall: 'fa-building', bakery: 'fa-bread-slice', hardware: 'fa-screwdriver-wrench',
-            garden: 'fa-seedling', electronics: 'fa-microchip', vet: 'fa-paw', other: 'fa-store'
+            garden: 'fa-seedling', electronics: 'fa-microchip', vet: 'fa-paw', tobacco: 'fa-smoking', other: 'fa-store'
         };
         function categoryLabel(category) {
             const key = 'opt' + String(category).charAt(0).toUpperCase() + String(category).slice(1);
