@@ -57,6 +57,9 @@ jobs:
           console.log(`Validated ${javascript.length} inline scripts.`);
           NODE
 
+      - name: Validate AI assistant JavaScript
+        run: node --check ai-assistant.js
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
