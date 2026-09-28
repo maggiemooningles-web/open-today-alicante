@@ -17,6 +17,7 @@ const CORE_ROUTES = [
   '/bricolaje-abierto',
   '/jardineria-abierta',
   '/electronica-abierta',
+  '/estancos-abiertos',
   '/veterinarios-urgencias-24h',
   '/domingos-alicante',
   '/farmacias-guardia-alicante',
