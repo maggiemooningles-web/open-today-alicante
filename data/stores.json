@@ -166943,5 +166943,48 @@
       "https://www.openstreetmap.org/node/1965459220"
     ],
     "confirmations": 0
+  },
+  {
+    "id": "cmt-estanco-estanco-alicante",
+    "slug": "estanco-estanco-alicante",
+    "name": "Estanco",
+    "chain": "",
+    "town": "Alicante",
+    "townSlug": "alicante",
+    "address": "Alicante",
+    "lat": null,
+    "lng": null,
+    "category": "tobacco",
+    "weekOpenHour": 0,
+    "weekCloseHour": 0,
+    "sunOpenHour": null,
+    "sunCloseHour": null,
+    "isSundayOpen": null,
+    "holidayOpenNote": "Horario festivo específico no confirmado.",
+    "officialSource": "Comisionado para el Mercado de Tabacos — listado de expendedurías",
+    "sourceType": "official-open-data",
+    "sourceUrl": "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx",
+    "lastVerified": "2026-09-28",
+    "hoursVerified": false,
+    "confirmations": 0,
+    "phone": null,
+    "descriptionES": "Expendeduría incluida en el listado oficial del Comisionado para el Mercado de Tabacos. El listado no se usa para confirmar horarios de apertura.",
+    "descriptionEN": "Tobacco shop included in the official Spanish tobacco-market registry. The registry is not used to confirm opening hours.",
+    "dataScope": "official-registry",
+    "discoveryStatus": "official-registry",
+    "locationStatus": "pending",
+    "hoursStatus": "unconfirmed",
+    "verification": {
+      "sourceName": "Comisionado para el Mercado de Tabacos — listado de expendedurías",
+      "sourceUrl": "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx",
+      "sourceType": "official-open-data",
+      "verifiedAt": "2026-09-28",
+      "status": "official-registry",
+      "hoursVerified": false
+    },
+    "weeklyHours": null,
+    "sources": [
+      "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx"
+    ]
   }
 ]
