@@ -1,6 +1,6 @@
 {
   "version": "12.1.0",
-  "checkedAt": "2026-09-28T06:28:18.507Z",
+  "checkedAt": "2026-09-28T06:28:54.939Z",
   "status": "combined-refresh-with-review",
   "automaticMode": "combined-open-data-first-party-osm-refresh",
   "note": "Combined report: official/first-party enrichment is merged with the latest discovery dataset; unverified discovery records remain excluded from Open Now until their hours are verified.",
