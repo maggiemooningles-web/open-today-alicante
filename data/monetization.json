@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "adsense": {
+    "enabled": false,
+    "publisherId": "",
+    "autoAds": true
+  },
+  "affiliate": {
+    "enabled": false,
+    "cards": []
+  },
+  "sponsors": {
+    "enabled": false,
+    "items": []
+  },
+  "notes": [
+    "AdSense can be enabled after Google approves the site and a ca-pub publisher ID is supplied.",
+    "Affiliate links should only be added after the relevant partner program approves this site.",
+    "Sponsored listings must be clearly labelled as advertising."
+  ]
+}
