@@ -167034,6 +167034,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14246841200"
+    ],
+    "confirmations": 0
   }
 ]
