@@ -166987,5 +166987,53 @@
     "sources": [
       "https://serviciostelematicosext.hacienda.gob.es/CMT/Visor/csvExpendedurias.aspx"
     ]
+  },
+  {
+    "id": "osm-node-14246841200",
+    "osmId": "osm:node:14246841200",
+    "slug": "sabor-a-espana-alicante",
+    "name": "Sabor a España",
+    "chain": "Sabor a España",
+    "town": "Alicante",
+    "townSlug": "alicante",
+    "address": "Alicante, Alicante",
+    "lat": 38.3448922,
+    "lng": -0.4817596,
+    "category": "other",
+    "weekOpenHour": null,
+    "weekCloseHour": null,
+    "sunOpenHour": null,
+    "sunCloseHour": null,
+    "isSundayOpen": null,
+    "holidayOpenNote": "",
+    "phone": "+34 653 86 25 42",
+    "descriptionES": "Local descubierto mediante OpenStreetMap. Horario pendiente de verificación.",
+    "descriptionEN": "Location discovered via OpenStreetMap. Opening hours pending verification.",
+    "sourceType": "osm-discovery",
+    "sourceName": "OpenStreetMap",
+    "sourceUrl": "https://www.openstreetmap.org/node/14246841200",
+    "officialSource": "OpenStreetMap",
+    "lastVerified": null,
+    "hoursVerified": false,
+    "dataScope": "discovery",
+    "discoveryStatus": "unverified",
+    "rawOpeningHours": "Mo-Su 10:00-23:00",
+    "community": {
+      "seedReports": 0,
+      "openToday": 0,
+      "closedToday": 0,
+      "updatedAt": null
+    },
+    "locationStatus": "mapped",
+    "hoursStatus": "unknown",
+    "verification": {
+      "sourceName": "OpenStreetMap",
+      "sourceUrl": "https://www.openstreetmap.org/node/14246841200",
+      "sourceType": "osm-discovery",
+      "verifiedAt": null,
+      "status": "discovered",
+      "hoursVerified": false
+    },
+    "weeklyHours": null
   }
 ]
