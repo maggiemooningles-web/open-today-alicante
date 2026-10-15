@@ -167078,6 +167078,9 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   }
 ]
