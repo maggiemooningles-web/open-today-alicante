@@ -167039,5 +167039,45 @@
       "https://www.openstreetmap.org/node/14246841200"
     ],
     "confirmations": 0
+  },
+  {
+    "id": "first-party-repsol-gasolinera-en-alcoy-calle-alacant-nº-62-repsol-calle-alacant-nº-62-03801-",
+    "slug": "first-party-gasolinera-en-alcoy-calle-alacant-nº-62-repsol-calle-alacant-nº-62-03801-alcoy-a",
+    "name": "Gasolinera en ALCOY | CALLE ALACANT, Nº 62 | Repsol",
+    "chain": "Repsol",
+    "town": "ALCOY",
+    "townSlug": "alcoy",
+    "address": "CALLE ALACANT, Nº 62, 03801, ALCOY, Alicante",
+    "lat": 38.68861197,
+    "lng": -0.47961333,
+    "category": "petrol",
+    "weekOpenHour": 0,
+    "weekCloseHour": 0,
+    "sunOpenHour": null,
+    "sunCloseHour": null,
+    "isSundayOpen": false,
+    "holidayOpenNote": "Horario festivo específico no confirmado.",
+    "officialSource": "Repsol · Estaciones Alicante",
+    "sourceType": "official-locator",
+    "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+    "lastVerified": "2026-10-15",
+    "hoursVerified": false,
+    "confirmations": 0,
+    "phone": null,
+    "website": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/alcoy/calle-alacant-n-62/",
+    "descriptionES": "Ficha localizada en el directorio oficial de Repsol · Estaciones Alicante.",
+    "descriptionEN": "Listing found in the official Repsol · Estaciones Alicante directory.",
+    "dataScope": "first-party",
+    "locationStatus": "mapped",
+    "hoursStatus": "unconfirmed",
+    "verification": {
+      "sourceName": "Repsol · Estaciones Alicante",
+      "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+      "sourceType": "official-locator",
+      "verifiedAt": "2026-10-15",
+      "status": "official-locator",
+      "hoursVerified": false
+    },
+    "weeklyHours": {}
   }
 ]
