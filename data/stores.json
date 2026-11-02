@@ -167808,7 +167808,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/10316703640"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-13270917863",
@@ -167856,7 +167860,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/13270917863"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14308518214",
@@ -167904,7 +167912,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14308518214"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14318665225",
@@ -167952,7 +167964,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14318665225"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14322802408",
@@ -168000,7 +168016,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14322802408"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14324968267",
@@ -168048,7 +168068,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14324968267"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14338070355",
@@ -168096,6 +168120,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14338070355"
+    ],
+    "confirmations": 0
   }
 ]
