@@ -168168,5 +168168,45 @@
     "sources": [
       "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
     ]
+  },
+  {
+    "id": "first-party-repsol-estacion-de-servicio-es-petroinnova-energy-cr-a-220-san-vicente-agost-md-",
+    "slug": "first-party-estacion-de-servicio-es-petroinnova-energy-cr-a-220-san-vicente-agost-md-km-3-8",
+    "name": "Estación de servicio ES PETROINNOVA ENERGY",
+    "chain": "Repsol",
+    "town": "Alicante",
+    "townSlug": "alicante",
+    "address": "CR A-220 SAN VICENTE-AGOST MD KM 3,8",
+    "lat": null,
+    "lng": null,
+    "category": "petrol",
+    "weekOpenHour": 0,
+    "weekCloseHour": 0,
+    "sunOpenHour": null,
+    "sunCloseHour": null,
+    "isSundayOpen": false,
+    "holidayOpenNote": "Horario festivo específico no confirmado.",
+    "officialSource": "Repsol · Estaciones Alicante",
+    "sourceType": "official-locator",
+    "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+    "lastVerified": "2026-11-13",
+    "hoursVerified": false,
+    "confirmations": 0,
+    "phone": "965662218",
+    "website": null,
+    "descriptionES": "Ficha localizada en el directorio oficial de Repsol · Estaciones Alicante.",
+    "descriptionEN": "Listing found in the official Repsol · Estaciones Alicante directory.",
+    "dataScope": "first-party",
+    "locationStatus": "pending",
+    "hoursStatus": "unconfirmed",
+    "verification": {
+      "sourceName": "Repsol · Estaciones Alicante",
+      "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+      "sourceType": "official-locator",
+      "verifiedAt": "2026-11-13",
+      "status": "official-locator",
+      "hoursVerified": false
+    },
+    "weeklyHours": {}
   }
 ]
