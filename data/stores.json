@@ -168211,5 +168211,74 @@
     "sources": [
       "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
     ]
+  },
+  {
+    "id": "first-party-repsol-gasolinera-en-moralet-carretera-cv-820-km-1-4-repsol-carretera-cv-820-km-",
+    "slug": "first-party-gasolinera-en-moralet-carretera-cv-820-km-1-4-repsol-carretera-cv-820-km-1-4-036",
+    "name": "Gasolinera en MORALET | CARRETERA CV-820 KM 1,4 | Repsol",
+    "chain": "Repsol",
+    "town": "MORALET",
+    "townSlug": "moralet",
+    "address": "CARRETERA CV-820 KM 1,4, 03699, MORALET, Alicante",
+    "lat": 38.41108368,
+    "lng": -0.56629114,
+    "category": "petrol",
+    "weekOpenHour": 0,
+    "weekCloseHour": 0,
+    "sunOpenHour": 0,
+    "sunCloseHour": 0,
+    "isSundayOpen": true,
+    "holidayOpenNote": "Horario festivo específico no confirmado.",
+    "officialSource": "Repsol · Estaciones Alicante",
+    "sourceType": "official-locator",
+    "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+    "lastVerified": "2026-11-14",
+    "hoursVerified": true,
+    "confirmations": 0,
+    "phone": "965663863",
+    "website": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/moralet/carretera-cv-820-km-14/",
+    "descriptionES": "Ficha localizada en el directorio oficial de Repsol · Estaciones Alicante.",
+    "descriptionEN": "Listing found in the official Repsol · Estaciones Alicante directory.",
+    "dataScope": "first-party",
+    "locationStatus": "mapped",
+    "hoursStatus": "checked",
+    "verification": {
+      "sourceName": "Repsol · Estaciones Alicante",
+      "sourceUrl": "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/",
+      "sourceType": "official-locator",
+      "verifiedAt": "2026-11-14",
+      "status": "official-locator",
+      "hoursVerified": true
+    },
+    "weeklyHours": {
+      "0": [
+        0,
+        0
+      ],
+      "1": [
+        0,
+        0
+      ],
+      "2": [
+        0,
+        0
+      ],
+      "3": [
+        0,
+        0
+      ],
+      "4": [
+        0,
+        0
+      ],
+      "5": [
+        0,
+        0
+      ],
+      "6": [
+        0,
+        0
+      ]
+    }
   }
 ]
