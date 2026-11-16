@@ -168330,7 +168330,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/6681830366"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14354966901",
@@ -168378,7 +168382,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14354966901"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-node-14379315502",
@@ -168426,6 +168434,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/14379315502"
+    ],
+    "confirmations": 0
   }
 ]
