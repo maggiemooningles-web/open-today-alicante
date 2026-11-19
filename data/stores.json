@@ -168521,7 +168521,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-cox-footwear-cl-avenida-del-carmen-94",
@@ -168561,7 +168564,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-aljub-footwork-avda-de-crevillente-sn",
@@ -168601,7 +168607,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-san-jose-footwork-cr-n-340-714-1",
@@ -168641,7 +168650,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-altabix-footwork-cl-avenida-de-alicante-72",
@@ -168681,7 +168693,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-callosa-villafranqueza-cr-cv913-km-1",
@@ -168721,7 +168736,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-orihuela-footwear-cr-n-340-688-6",
@@ -168761,7 +168779,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-baden-footwork-cr-a-311-1-8",
@@ -168801,7 +168822,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-muchamiel-footwear-cr-a-214-villafranque-tange-5",
@@ -168841,7 +168865,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-sol-y-luz-footwear-cr-a-214-1-5",
@@ -168881,7 +168908,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-moraira-petromoraira-cr-cv-743-p-k-6",
@@ -168921,7 +168951,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-raspeig-footwear-cr-a-213-pk-13",
@@ -168961,7 +168994,10 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   },
   {
     "id": "first-party-repsol-estacion-de-servicio-e-s-san-carlos-footwear-cr-n-340-692-9",
@@ -169001,6 +169037,9 @@
       "status": "official-locator",
       "hoursVerified": false
     },
-    "weeklyHours": {}
+    "weeklyHours": {},
+    "sources": [
+      "https://www.repsol.es/buscador-eess-y-puntos-de-recarga/alicante/"
+    ]
   }
 ]
