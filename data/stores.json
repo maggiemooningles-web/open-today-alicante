@@ -169088,7 +169088,11 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/node/1806654246"
+    ],
+    "confirmations": 0
   },
   {
     "id": "osm-way-1581919960",
@@ -169136,6 +169140,10 @@
       "status": "discovered",
       "hoursVerified": false
     },
-    "weeklyHours": null
+    "weeklyHours": null,
+    "sources": [
+      "https://www.openstreetmap.org/way/1581919960"
+    ],
+    "confirmations": 0
   }
 ]
